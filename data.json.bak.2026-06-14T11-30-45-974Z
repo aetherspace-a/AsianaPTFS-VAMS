@@ -33,11 +33,6 @@
       "id": "111111",
       "username": "StaffAdmin",
       "role": "admin"
-    },
-    {
-      "id": "222222",
-      "username": "TestPilot",
-      "role": "pilot"
     }
   ],
   "flightBookings": []

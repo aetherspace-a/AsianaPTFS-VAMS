@@ -51,13 +51,19 @@ const DESTINATIONS = [
 ];
 
 // ── Helper functions for in-process use (Discord commands can call these) ─
-function isStaffMemberId(id) {
-  return staff.findIndex(s => s.id === id) !== -1;
+function isAdminId(id) {
+  if (!id) return false;
+  const idStr = String(id).trim();
+  const isEnvAdmin = ADMIN_IDS.length && ADMIN_IDS.map(x => String(x).trim()).includes(idStr);
+  const isStaffAdmin = staff.some(s => s.id && String(s.id).trim() === idStr && s.role && s.role.toLowerCase() === 'admin');
+  return !!(isEnvAdmin || isStaffAdmin);
 }
 
-function isAdminId(id) {
-  if (!ADMIN_IDS || !ADMIN_IDS.length) return false;
-  return ADMIN_IDS.includes(id);
+function isStaffMemberId(id) {
+  if (!id) return false;
+  const idStr = String(id).trim();
+  const isStaff = staff.some(s => s.id && String(s.id).trim() === idStr && (s.role && ['pilot', 'staff', 'admin'].includes(s.role.toLowerCase())));
+  return !!(isStaff || isAdminId(idStr));
 }
 
 function createFlightEntry({ id, origin, destination, departureTime, totalSeats, createdBy }) {
@@ -172,15 +178,13 @@ function registerOAuthRoutes(app) {
   // ── API: check admin status ───────────────────────────────
   app.get("/api/check-admin", (req, res) => {
     if (!req.session.user) return res.status(401).json({ isAdmin: false });
-    const isAdmin = ADMIN_IDS.length && ADMIN_IDS.includes(req.session.user.id);
-    res.json({ isAdmin });
+    res.json({ isAdmin: isAdminId(req.session.user.id) });
   });
 
   // ── API: check staff status ───────────────────────────────
   app.get("/api/check-staff", (req, res) => {
     if (!req.session.user) return res.status(401).json({ isStaff: false });
-    const isStaff = staff.some(s => s.id === req.session.user.id);
-    res.json({ isStaff });
+    res.json({ isStaff: isStaffMemberId(req.session.user.id) });
   });
 
   // ── API: destinations ─────────────────────────────────────
@@ -192,8 +196,7 @@ function registerOAuthRoutes(app) {
   app.get("/api/flights", (req, res) => {
     // Public view: only show flights created by staff. Admins see all.
     const userId = req.session?.user?.id;
-    const isAdminUser = userId && ADMIN_IDS.length && ADMIN_IDS.includes(userId);
-    if (isAdminUser) return res.json({ flights: FLIGHTS });
+    if (userId && isAdminId(userId)) return res.json({ flights: FLIGHTS });
     const visible = FLIGHTS.filter(f => !!f.createdBy);
     res.json({ flights: visible });
   });
@@ -204,8 +207,7 @@ function registerOAuthRoutes(app) {
     if (!f) return res.status(404).json({ error: 'Flight not found' });
     // If flight wasn't created by staff, hide it from non-admins
     const userId = req.session?.user?.id;
-    const isAdminUser = userId && ADMIN_IDS.length && ADMIN_IDS.includes(userId);
-    if (!f.createdBy && !isAdminUser) return res.status(404).json({ error: 'Flight not found' });
+    if (!f.createdBy && (!userId || !isAdminId(userId))) return res.status(404).json({ error: 'Flight not found' });
     res.json({ flight: f });
   });
 
@@ -295,15 +297,14 @@ function registerOAuthRoutes(app) {
   // ── Admin guard ─────────────────────────────────────────
   function requireAdmin(req, res, next) {
     if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
-    if (!ADMIN_IDS.length || !ADMIN_IDS.includes(req.session.user.id)) return res.status(403).json({ error: "Admin only" });
+    if (!isAdminId(req.session.user.id)) return res.status(403).json({ error: "Admin only" });
     next();
   }
 
   // ── Staff guard ─────────────────────────────────────────
   function requireStaff(req, res, next) {
     if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
-    const isStaffMember = staff.find(s => s.id === req.session.user.id);
-    if (!isStaffMember) return res.status(403).json({ error: "Staff only" });
+    if (!isStaffMemberId(req.session.user.id)) return res.status(403).json({ error: "Staff only" });
     next();
   }
 

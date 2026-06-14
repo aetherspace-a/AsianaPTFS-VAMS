@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+  <title>Access Denied — Asiana PTFS</title>
+  <link rel="stylesheet" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <style>
+    .page-main {
+      min-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7rem 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .error-card {
+      max-width: 550px;
+      width: 100%;
+      padding: 3.5rem 2.5rem;
+      text-align: center;
+      animation: fadeInScale 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .error-icon-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 69, 58, 0.1);
+      border: 1px solid rgba(255, 69, 58, 0.25);
+    }
+    .error-icon-wrapper::after {
+      content: '';
+      position: absolute;
+      top: -4px; left: -4px; right: -4px; bottom: -4px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 69, 58, 0.4);
+      animation: pulse-glow 2.5s infinite ease-in-out;
+    }
+    .error-icon {
+      font-size: 3rem;
+      color: var(--red);
+    }
+    .error-card h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.8rem;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--text), var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .error-card p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 2.5rem;
+    }
+    .badge-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .badge-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .error-actions .btn {
+      padding: 0.9rem 2rem;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .error-actions .btn .material-symbols-outlined {
+      font-size: 1.2rem;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+        box-shadow: 0 0 0 0 rgba(255, 69, 58, 0.4);
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 1;
+        box-shadow: 0 0 16px 4px rgba(255, 69, 58, 0.2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+  <div class="apple-ambient">
+    <div class="mesh-blob mesh-1"></div>
+    <div class="mesh-blob mesh-2"></div>
+    <div class="mesh-blob mesh-3"></div>
+  </div>
+
+  <nav>
+    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/flights.html">Flights</a></li>
+      <li><a href="/pilot.html">Pilot</a></li>
+      <li><a href="/economy.html">Economy</a></li>
+      <li><a href="/admin.html">Admin</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
+      <a href="/auth/discord" class="discord-login-btn" id="login-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        Login with Discord
+      </a>
+      <div class="nav-user" id="nav-user">
+        <img class="nav-avatar" id="nav-avatar" src="" alt="Avatar">
+        <span class="nav-username" id="nav-username"></span>
+        <button class="nav-logout" onclick="window.location.href='/auth/logout'">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <div class="error-card apple-glass">
+      <div class="error-icon-wrapper">
+        <span class="material-symbols-outlined error-icon">shield_lock</span>
+      </div>
+      <h1>Restricted Access</h1>
+      <p>Your current account does not have the required permissions to access this terminal. If you are a staff member or pilot, please ensure you are logged into the correct Discord account or contact an Administrator.</p>
+
+      <div class="user-badge" id="denied-user-badge" style="display: none;">
+        <img class="badge-avatar" id="denied-avatar" src="" alt="Avatar">
+        <span class="badge-name" id="denied-username"></span>
+      </div>
+
+      <div class="error-actions">
+        <a href="/" class="btn btn-outline">
+          <span class="material-symbols-outlined">home</span> Return Home
+        </a>
+        <a href="/auth/logout" class="btn" id="action-logout" style="display: none;">
+          <span class="material-symbols-outlined">logout</span> Switch Account
+        </a>
+        <a href="/auth/discord" class="btn" id="action-login">
+          <span class="material-symbols-outlined">login</span> Sign In
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+        <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+        <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        </a>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="/#staff">Our Team</a></li><li><a href="/#fleet">Fleet</a></li><li><a href="/#apply">Contact Us</a></li></ul></div>
+        <div class="footer-col"><h4>Fly</h4><ul><li><a href="/#destinations">Search Flights</a></li><li><a href="/#logs">Flight Logs</a></li></ul></div>
+        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
+      <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTheme(){
+      const h=document.documentElement;
+      h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light');
+    }
+
+    async function initPage() {
+      try {
+        const res = await fetch('/api/user');
+        const data = await res.json();
+        if (res.ok && data.user) {
+          const u = data.user;
+          // Navbar
+          document.getElementById('login-btn').style.display = 'none';
+          const nu = document.getElementById('nav-user');
+          nu.classList.add('visible');
+          document.getElementById('nav-avatar').src = u.avatar;
+          document.getElementById('nav-username').textContent = u.username;
+
+          // Error page user details
+          document.getElementById('denied-user-badge').style.display = 'inline-flex';
+          document.getElementById('denied-avatar').src = u.avatar;
+          document.getElementById('denied-username').textContent = `@${u.username}`;
+
+          // Actions
+          document.getElementById('action-login').style.display = 'none';
+          document.getElementById('action-logout').style.display = 'inline-flex';
+        }
+      } catch (e) {
+        console.error('Error fetching user context:', e);
+      }
+    }
+    initPage();
+  </script>
+</body>
+</html>
