@@ -112,14 +112,14 @@
 
   <main class="page-main">
     <div class="page-header">
-      <p class="sub">Virtual Aviation Network</p>
-      <h1>Flight Listings</h1>
-      <p>Browse available flights and book your seat on the next departure.</p>
+      <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
+      <h1>Flight Schedule</h1>
+      <p>Discover our global network and experience the pinnacle of virtual aviation realism.</p>
     </div>
 
     <div class="view-toggle">
-      <button class="toggle-btn active" id="toggle-browse" onclick="switchView('browse')">Browse Flights</button>
-      <button class="toggle-btn" id="toggle-book" onclick="switchView('book')">Book a Flight</button>
+      <button class="toggle-btn active" id="toggle-browse" onclick="switchView('browse')">Network Search</button>
+      <button class="toggle-btn" id="toggle-book" onclick="switchView('book')">Seat Reservation</button>
     </div>
 
     <!-- Browse Flights View -->
@@ -258,31 +258,39 @@
 
     function renderFlights(flights){
       const mount=document.getElementById('flights-list');
-      if(!flights.length){ mount.innerHTML='<div class="empty-msg">No flights available at this time.</div>'; return; }
+      if(!flights.length){ mount.innerHTML='<div class="empty-msg">No flights found matching your search.</div>'; return; }
       mount.innerHTML=flights.map(f=>{
         const depTime=new Date(f.departureTime);
         const bookedCount=f.bookedSeats?.length||0;
         const availableSeats=(f.totalSeats||60)-bookedCount;
+        
+        let statusClass = 'status-scheduled';
+        if(f.status === 'Boarding') statusClass = 'status-boarding';
+        if(f.status === 'Departed') statusClass = 'status-departed';
+        if(f.status === 'Arrived') statusClass = 'status-arrived';
+        if(f.status === 'Delayed') statusClass = 'status-delayed';
+        if(f.status === 'Cancelled') statusClass = 'status-cancelled';
+
         return `
           <div class="flight-card apple-glass" onclick="selectForBooking('${f.id}')">
             <div class="flight-left">
               <div class="flight-num">${f.id}</div>
-              <div class="flight-status">Scheduled</div>
+              <div class="flight-status ${statusClass}">${f.status || 'Scheduled'}</div>
             </div>
             <div class="flight-center">
               <div class="flight-location">
                 <div class="flight-code">${f.origin}</div>
-                <div class="flight-name">Origin</div>
+                <div class="flight-name">Seoul (ICN)</div>
               </div>
               <div class="flight-arrow">✈</div>
               <div class="flight-location">
                 <div class="flight-code">${f.destination}</div>
-                <div class="flight-name">Destination</div>
+                <div class="flight-name">${f.destination}</div>
               </div>
             </div>
             <div class="flight-right">
-              <div class="flight-time">${depTime.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
-              <div class="flight-date">${depTime.toLocaleDateString()}</div>
+              <div class="flight-time">${depTime.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} UTC</div>
+              <div class="small-text" style="margin-top:0.25rem">${f.aircraft || 'TBA'} ${f.codeshare ? `• ${f.codeshare}` : ''}</div>
               <div class="flight-seats">${availableSeats} seats available</div>
             </div>
           </div>

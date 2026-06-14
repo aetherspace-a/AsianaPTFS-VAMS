@@ -74,7 +74,7 @@ const app  = express();
 const PORT = 3000;
 
 // Register OAuth2 + API routes (must come before static middleware)
-registerOAuthRoutes(app);
+registerOAuthRoutes(app, client);
 registerEconomyRoutes(app);
 
 // Serve everything in public/ — index.html, style.css, etc.

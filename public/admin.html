@@ -45,6 +45,7 @@
       <li><a href="/flights.html">Flights</a></li>
       <li><a href="/pilot.html">Pilot</a></li>
       <li><a href="/economy.html">Economy</a></li>
+      <li><a href="/finance.html">Finance</a></li>
       <li><a href="/admin.html">Admin</a></li>
     </ul>
     <div class="nav-right">
@@ -64,7 +65,7 @@
   <main class="page-main">
     <div class="hero-panel">
       <div class="hero-copy">
-        <p class="sub">Admin operations</p>
+        <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
         <h1>Flight control & staffing</h1>
         <p>Manage flights, review bookings, and update roster access in a polished administrator experience.</p>
         <div class="hero-actions">
@@ -97,17 +98,17 @@
         </div>
       </div>
       <div class="stat-card apple-glass animate-slide-up delay-200">
-        <span class="material-symbols-outlined card-icon">groups</span>
+        <span class="material-symbols-outlined card-icon">payments</span>
         <div class="stat-card-content">
-          <span class="stat-num" id="stat-staff">0</span>
-          <span class="stat-label">Staff Members</span>
+          <span class="stat-num" id="stat-revenue">$0</span>
+          <span class="stat-label">Total Revenue</span>
         </div>
       </div>
       <div class="stat-card apple-glass animate-slide-up delay-300">
-        <span class="material-symbols-outlined card-icon">airplane_ticket</span>
+        <span class="material-symbols-outlined card-icon">monitoring</span>
         <div class="stat-card-content">
-          <span class="stat-num" id="stat-bookings">0</span>
-          <span class="stat-label">Total Bookings</span>
+          <span class="stat-num" id="stat-miles">0</span>
+          <span class="stat-label">Miles Logged</span>
         </div>
       </div>
     </div>
@@ -122,12 +123,22 @@
         <input id="flight-origin" class="form-control" placeholder="Origin (e.g. ICN)" />
         <input id="flight-dest" class="form-control" placeholder="Destination (e.g. LAX)" />
         <input id="flight-time" class="form-control" type="datetime-local" />
+        <select id="flight-aircraft" class="form-control">
+          <option value="">Select Aircraft…</option>
+          <option value="Airbus A321-200">Airbus A321-200</option>
+          <option value="Airbus A321neo">Airbus A321neo</option>
+          <option value="Airbus A330-300">Airbus A330-300</option>
+          <option value="Airbus A350-900">Airbus A350-900</option>
+          <option value="Boeing B777-200ER">Boeing B777-200ER</option>
+          <option value="Airbus A380-800">Airbus A380-800</option>
+        </select>
+        <input id="flight-codeshare" class="form-control" placeholder="Codeshare (e.g. LH738)" />
         <input id="flight-seats" class="form-control" type="number" min="1" placeholder="Total seats (optional)" />
-        <button id="create-flight" class="btn" style="width:100%;max-width:260px">
+        <button id="create-flight" class="btn" style="width:100%;grid-column: span 2">
           <span class="material-symbols-outlined">add</span> Create Flight
         </button>
       </div>
-      <p class="data-note" style="margin-top:1rem">Departure time is stored in UTC and must be scheduled for a future date.</p>
+      <p class="data-note" style="margin-top:1rem">New flights are automatically announced to the Discord flight-logs channel.</p>
     </section>
 
     <div class="panel-grid">
@@ -201,14 +212,13 @@
 
     async function loadStats(){
       const flightsRes = await fetch('/api/flights');
-      const staffRes = await fetch('/api/staff');
-      const bookRes = await fetch('/api/bookings');
+      const finRes = await fetch('/api/finance');
       const flights = flightsRes.ok ? (await flightsRes.json()).flights : [];
-      const staff = staffRes.ok ? (await staffRes.json()).staff : [];
-      const bookings = bookRes.ok ? (await bookRes.json()).bookings : [];
+      const finance = finRes.ok ? (await finRes.json()) : { totalRevenue: 0, totalMiles: 0 };
+      
       document.getElementById('stat-flights').textContent = flights.length;
-      document.getElementById('stat-staff').textContent = staff.length;
-      document.getElementById('stat-bookings').textContent = bookings.length;
+      document.getElementById('stat-revenue').textContent = `$${finance.totalRevenue.toLocaleString()}`;
+      document.getElementById('stat-miles').textContent = `${finance.totalMiles.toLocaleString()} mi`;
     }
 
     async function loadFlights(){
@@ -220,17 +230,45 @@
         if(!js.flights.length){ mount.textContent='No scheduled flights.'; return; }
         mount.innerHTML = js.flights.map(f => `
           <div class="card-row apple-glass">
-            <div>
-              <div style="font-weight:700">${f.id} <span class="pill">${f.origin} → ${f.destination}</span></div>
-              <div class="small-text">${new Date(f.departureTime).toLocaleString()} UTC • ${f.bookedSeats?.length||0}/${f.totalSeats} seats booked</div>
+            <div style="flex:1">
+              <div style="font-weight:700">${f.id} <span class="pill" style="color:var(--red)">${f.origin} → ${f.destination}</span></div>
+              <div class="small-text">${new Date(f.departureTime).toLocaleString()} UTC</div>
+              <div class="small-text">${f.aircraft || 'No aircraft'} ${f.codeshare ? `• ${f.codeshare}` : ''}</div>
             </div>
             <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-              <button class="btn btn-outline delete-flight" data-id="${f.id}" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span> Delete
+              <select class="form-control update-status" data-id="${f.id}" style="min-height:36px; padding:0.4rem 0.8rem; font-size:0.8rem; width:120px; border-radius:10px">
+                <option value="Scheduled" ${f.status === 'Scheduled' ? 'selected' : ''}>Scheduled</option>
+                <option value="Boarding" ${f.status === 'Boarding' ? 'selected' : ''}>Boarding</option>
+                <option value="Departed" ${f.status === 'Departed' ? 'selected' : ''}>Departed</option>
+                <option value="Arrived" ${f.status === 'Arrived' ? 'selected' : ''}>Arrived</option>
+                <option value="Delayed" ${f.status === 'Delayed' ? 'selected' : ''}>Delayed</option>
+                <option value="Cancelled" ${f.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+              </select>
+              <button class="btn btn-outline delete-flight" data-id="${f.id}" style="padding: 0.5rem 1rem; font-size: 0.85rem; color:var(--red)">
+                <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span>
               </button>
             </div>
           </div>
         `).join('');
+        
+        // Status change listener
+        document.querySelectorAll('.update-status').forEach(sel => {
+          sel.addEventListener('change', async () => {
+            const flightId = sel.dataset.id;
+            const status = sel.value;
+            const res = await fetch(`/api/flights/${encodeURIComponent(flightId)}/status`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status })
+            });
+            if(!res.ok) {
+              const data = await res.json();
+              alert(data.error || 'Status update failed');
+              loadFlights();
+            }
+          });
+        });
+
         document.querySelectorAll('.delete-flight').forEach(btn=>{
           btn.addEventListener('click', async () => {
             const flightId = btn.dataset.id;
@@ -257,7 +295,7 @@
               <div class="small-text">${s.role.toUpperCase()}</div>
             </div>
             <button class="btn btn-outline remove-staff" data-id="${s.id}" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-              <span class="material-symbols-outlined" style="font-size: 1.1rem;">person_remove</span> Remove
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">person_remove</span>
             </button>
           </div>
         `).join('');
@@ -282,9 +320,9 @@
         if(!js.bookings.length){ mount.textContent='No bookings were found.'; return; }
         mount.innerHTML = js.bookings.slice(0, 8).map(b => `
           <div class="card-row apple-glass">
-            <div>
-              <div style="font-weight:700">${b.flightNumber}</div>
-              <div class="small-text">${b.destName} • Seat ${b.seat || 'N/A'} • ${b.username}</div>
+            <div style="flex:1">
+              <div style="font-weight:700">${b.flightNumber} <span class="pill">${b.destName}</span></div>
+              <div class="small-text">Seat ${b.seat || 'N/A'} • ${b.passengerName} (@${b.username})</div>
             </div>
             <span class="pill">${new Date(b.bookedAt).toLocaleString()}</span>
           </div>
@@ -300,23 +338,35 @@
       const origin = document.getElementById('flight-origin').value.trim();
       const destination = document.getElementById('flight-dest').value.trim();
       const flightTimeValue = document.getElementById('flight-time').value.trim();
+      const aircraft = document.getElementById('flight-aircraft').value;
+      const codeshare = document.getElementById('flight-codeshare').value.trim();
       const seatValue = document.getElementById('flight-seats').value.trim();
       const totalSeats = seatValue ? parseInt(seatValue, 10) : undefined;
+      
       if(!id||!origin||!destination||!flightTimeValue){ alert('Please complete all required fields.'); return; }
-      if(seatValue && (Number.isNaN(totalSeats) || totalSeats < 1)){ alert('Total seats must be a positive number.'); return; }
-      const departureTimeUtc = flightTimeValue.endsWith('Z') ? flightTimeValue : `${flightTimeValue}Z`;
-      const departureDate = new Date(departureTimeUtc);
+      
+      const departureDate = new Date(flightTimeValue);
       if(Number.isNaN(departureDate.getTime())){ alert('Invalid departure time.'); return; }
-      if(departureDate.getTime() <= Date.now()){ alert('Departure must be in the future.'); return; }
-      const confirmCopy = `Create flight:
-${id} ${origin} → ${destination}
-Departure (UTC): ${departureDate.toISOString()}
-Seats: ${totalSeats || 60}`;
-      if(!confirm(confirmCopy)) return;
+      
       try{
-        const res = await fetch('/api/flights',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,origin,destination,departureTime:departureDate.toISOString(),totalSeats})});
-        if(res.status===201){ alert('Flight created'); document.getElementById('flight-id').value=''; document.getElementById('flight-origin').value=''; document.getElementById('flight-dest').value=''; document.getElementById('flight-time').value=''; document.getElementById('flight-seats').value=''; loadFlights(); loadStats(); }
-        else{ const js=await res.json(); alert(js.error||'Create failed'); }
+        const res = await fetch('/api/flights',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({id,origin,destination,departureTime:departureDate.toISOString(),totalSeats,aircraft,codeshare})
+        });
+        if(res.status===201){ 
+          alert('Flight created and announced!'); 
+          document.getElementById('flight-id').value=''; 
+          document.getElementById('flight-origin').value=''; 
+          document.getElementById('flight-dest').value=''; 
+          document.getElementById('flight-time').value=''; 
+          document.getElementById('flight-seats').value=''; 
+          document.getElementById('flight-codeshare').value='';
+          loadFlights(); 
+          loadStats(); 
+        } else { 
+          const js=await res.json(); alert(js.error||'Create failed'); 
+        }
       }catch(e){ alert('Request failed'); }
     });
 

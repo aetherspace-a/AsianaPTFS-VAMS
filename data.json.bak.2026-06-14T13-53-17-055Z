@@ -26,16 +26,6 @@
       "totalSeats": 60,
       "bookedSeats": [],
       "createdBy": null
-    },
-    {
-      "id": "OZ111",
-      "origin": "ISS",
-      "destination": "ASD",
-      "departureTime": "2026-06-14T21:53:00.000Z",
-      "totalSeats": 60,
-      "bookedSeats": [],
-      "createdBy": "1135565178797309962",
-      "createdAt": "2026-06-14T13:53:17.055Z"
     }
   ],
   "staff": [

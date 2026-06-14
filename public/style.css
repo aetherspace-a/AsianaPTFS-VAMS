@@ -109,9 +109,32 @@ footer{background:var(--nav-bg);backdrop-filter:blur(60px) saturate(220%);-webki
 .flight-row{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.75rem;border-radius:20px;gap:1rem;flex-wrap:wrap}
 .flight-num{font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
 .flight-dest{color:var(--text-muted);font-size: .9rem;font-weight:500}
-.flight-status{font-size:.75rem;font-weight:700;padding:.35rem .9rem;border-radius:999px;background:rgba(52,199,89,.18);color:#34c759;text-transform:uppercase;letter-spacing:.1em}
+.flight-status{font-size:.75rem;font-weight:700;padding:.35rem .9rem;border-radius:999px;text-transform:uppercase;letter-spacing:.1em}
+.status-scheduled{background:rgba(0,122,255,.18);color:#007aff}
+.status-boarding{background:rgba(255,149,0,.18);color:#ff9500}
+.status-departed{background:rgba(52,199,89,.18);color:#34c759}
+.status-arrived{background:rgba(120,120,128,.18);color:var(--text-muted)}
+.status-delayed{background:rgba(255,59,48,.18);color:#ff3b30}
+.status-cancelled{background:rgba(0,0,0,.3);color:#86868b}
 .flight-time{font-size:.8rem;color:var(--text-muted);font-weight:500}
 .flights-empty{color:var(--text-muted);font-size:1rem;text-align:center;padding:3rem 0;font-weight:500}
+
+/* Asiana Branding */
+.asiana-brand {
+  font-family: inherit;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.asiana-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+}
+
 /* Footer and misc responsive rules omitted for brevity in this shared file */
 @media(max-width:768px){nav ul{display:none}}
 
