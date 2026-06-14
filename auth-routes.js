@@ -9,34 +9,11 @@ require("dotenv").config();
 const axios   = require("axios");
 const session = require("express-session");
 const dataManager = require('./data-manager');
+const dataService = require('./services/data-service');
 
-// ── In-memory flight store (swap for a database later) ───────
-let flightBookings = [];
-// ── In-memory staff store (pilots, flight staff, admins) ────
-let staff = [];
 const ADMIN_IDS = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(",") : [];
 
-// ── Master flights schedule (Master Flight Model)
-let FLIGHTS = [
-  { id: 'OZ101', origin: 'ICN', destination: 'FRA', departureTime: '2026-06-20T20:00:00Z', totalSeats: 60, bookedSeats: [], createdBy: null },
-  { id: 'OZ210', origin: 'FUK', destination: 'ICN', departureTime: '2026-06-21T12:00:00Z', totalSeats: 48, bookedSeats: [], createdBy: null },
-  { id: 'OZ250', origin: 'ITKO', destination: 'IMLR', departureTime: '2026-06-22T20:00:00Z', totalSeats: 60, bookedSeats: [], createdBy: null },
-];
-
-// Auto-load persisted data (if present)
-try {
-  const persisted = dataManager.loadData();
-  if (persisted) {
-    if (Array.isArray(persisted.FLIGHTS)) FLIGHTS = persisted.FLIGHTS;
-    if (Array.isArray(persisted.staff)) staff = persisted.staff;
-    if (Array.isArray(persisted.flightBookings)) flightBookings = persisted.flightBookings;
-    console.log('[data-manager] Loaded persisted data from data.json');
-  }
-} catch (e) {
-  console.warn('[data-manager] load error:', e.message || e);
-}
-
-// ── PTFS destination list ─────────────────────────────────────
+// ── DESTINATIONS ─────────────────────────────────────
 const DESTINATIONS = [
   { code: "IBAR", name: "Barra Airport" },
   { code: "IRFD", name: "Greater Rockford" },
@@ -55,20 +32,20 @@ function isAdminId(id) {
   if (!id) return false;
   const idStr = String(id).trim();
   const isEnvAdmin = ADMIN_IDS.length && ADMIN_IDS.map(x => String(x).trim()).includes(idStr);
-  const isStaffAdmin = staff.some(s => s.id && String(s.id).trim() === idStr && s.role && s.role.toLowerCase() === 'admin');
+  const isStaffAdmin = dataService.getStaff().some(s => s.id && String(s.id).trim() === idStr && s.role && s.role.toLowerCase() === 'admin');
   return !!(isEnvAdmin || isStaffAdmin);
 }
 
 function isStaffMemberId(id) {
   if (!id) return false;
   const idStr = String(id).trim();
-  const isStaff = staff.some(s => s.id && String(s.id).trim() === idStr && (s.role && ['pilot', 'staff', 'admin'].includes(s.role.toLowerCase())));
+  const isStaff = dataService.getStaff().some(s => s.id && String(s.id).trim() === idStr && (s.role && ['pilot', 'staff', 'admin'].includes(s.role.toLowerCase())));
   return !!(isStaff || isAdminId(idStr));
 }
 
 function createFlightEntry({ id, origin, destination, departureTime, totalSeats, createdBy }) {
   if (!id || !origin || !destination || !departureTime) throw new Error('Missing required flight fields');
-  if (FLIGHTS.find(f => f.id === id)) throw new Error('Flight id exists');
+  if (dataService.getFlightById(id)) throw new Error('Flight id exists');
 
   const parsedDeparture = new Date(departureTime);
   if (Number.isNaN(parsedDeparture.getTime())) throw new Error('Invalid departureTime');
@@ -84,8 +61,7 @@ function createFlightEntry({ id, origin, destination, departureTime, totalSeats,
     createdBy: createdBy || null,
     createdAt: new Date().toISOString(),
   };
-  FLIGHTS.push(flight);
-  try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
+  dataService.addFlight(flight);
   return flight;
 }
 
@@ -196,14 +172,15 @@ function registerOAuthRoutes(app) {
   app.get("/api/flights", (req, res) => {
     // Public view: only show flights created by staff. Admins see all.
     const userId = req.session?.user?.id;
-    if (userId && isAdminId(userId)) return res.json({ flights: FLIGHTS });
-    const visible = FLIGHTS.filter(f => !!f.createdBy);
+    const flights = dataService.getFlights();
+    if (userId && isAdminId(userId)) return res.json({ flights });
+    const visible = flights.filter(f => !!f.createdBy);
     res.json({ flights: visible });
   });
 
   // ── API: single flight by id ─────────────────────────────
   app.get('/api/flight/:id', (req, res) => {
-    const f = FLIGHTS.find(x => x.id === req.params.id);
+    const f = dataService.getFlightById(req.params.id);
     if (!f) return res.status(404).json({ error: 'Flight not found' });
     // If flight wasn't created by staff, hide it from non-admins
     const userId = req.session?.user?.id;
@@ -213,7 +190,7 @@ function registerOAuthRoutes(app) {
 
   // ── API: user's personal bookings ────────────────────────
   app.get('/api/mybookings', requireAuth, (req, res) => {
-    const my = flightBookings.filter(f => f.userId === req.session.user.id);
+    const my = dataService.getBookings().filter(f => f.userId === req.session.user.id);
     res.json({ bookings: my });
   });
 
@@ -226,7 +203,7 @@ function registerOAuthRoutes(app) {
       if (!flightId) return res.status(400).json({ error: 'flightId is required' });
       if (!seatId) return res.status(400).json({ error: 'seatId is required' });
 
-      const flight = FLIGHTS.find(f => f.id === flightId);
+      const flight = dataService.getFlightById(flightId);
       if (!flight) return res.status(400).json({ error: 'Unknown flightId' });
 
       // Check seat occupancy
@@ -253,9 +230,7 @@ function registerOAuthRoutes(app) {
         bookedAt: new Date().toISOString(),
       };
 
-      flightBookings.push(booking);
-      // persist
-      try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { /* already handled inside saveData */ }
+      dataService.addBooking(booking);
       console.log(`✈️  New booking: ${flight.id} seat ${seatId} by @${booking.username}`);
 
       return res.status(201).json({ booking });
@@ -280,9 +255,8 @@ function registerOAuthRoutes(app) {
         status: 'Scheduled',
         bookedAt: new Date().toISOString(),
       };
-      flightBookings.push(booking);
+      dataService.addBooking(booking);
       console.log(`✈️  New booking: ${flightNumber} → ${dest.name} by @${booking.username}`);
-      try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
       return res.status(201).json({ booking });
     }
 
@@ -291,7 +265,7 @@ function registerOAuthRoutes(app) {
 
   // ── API: list all bookings (admin only) ───────────────────
   app.get('/api/bookings', requireAuth, requireAdmin, (req, res) => {
-    res.json({ bookings: flightBookings });
+    res.json({ bookings: dataService.getBookings() });
   });
 
   // ── Admin guard ─────────────────────────────────────────
@@ -312,8 +286,6 @@ function registerOAuthRoutes(app) {
   app.post('/api/flights', requireAuth, requireStaff, (req, res) => {
     try {
       const flight = createFlightEntry({ ...req.body, createdBy: req.session.user.id });
-      // persist
-      try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
       console.log(`🆕 Flight created by ${req.session.user.username}: ${flight.id} → ${flight.destination}`);
       res.status(201).json({ flight });
     } catch (err) {
@@ -325,20 +297,23 @@ function registerOAuthRoutes(app) {
 
   // ── Delete flight (staff-only) ──────────────────────────
   app.delete('/api/flights/:id', requireAuth, requireStaff, (req, res) => {
-    const flightIndex = FLIGHTS.findIndex(f => f.id === req.params.id);
-    if (flightIndex === -1) return res.status(404).json({ error: 'Flight not found' });
-    const removed = FLIGHTS.splice(flightIndex, 1)[0];
-    const beforeCount = flightBookings.length;
-    flightBookings = flightBookings.filter(b => b.flightNumber !== removed.id);
-    const removedBookings = beforeCount - flightBookings.length;
-    try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
-    console.log(`🗑️ Flight deleted by ${req.session.user.username}: ${removed.id} (${removedBookings} related booking(s) removed)`);
+    const flight = dataService.getFlightById(req.params.id);
+    if (!flight) return res.status(404).json({ error: 'Flight not found' });
+
+    dataService.removeFlight(req.params.id);
+    // Cleanup bookings for this flight
+    const beforeCount = dataService.getBookings().length;
+    dataService._internal.flightBookings = dataService.getBookings().filter(b => b.flightNumber !== flight.id);
+    const removedBookings = beforeCount - dataService.getBookings().length;
+    dataService.save();
+
+    console.log(`🗑️ Flight deleted by ${req.session.user.username}: ${flight.id} (${removedBookings} related booking(s) removed)`);
     res.json({ ok: true });
   });
 
   // ── API: list staff ─────────────────────────────────────
   app.get('/api/staff', (req, res) => {
-    res.json({ staff });
+    res.json({ staff: dataService.getStaff() });
   });
 
   // ── Export helpers for in-process usage (discord commands)
@@ -348,50 +323,44 @@ function registerOAuthRoutes(app) {
   app.post('/api/staff', requireAuth, requireAdmin, (req, res) => {
     const { id, username, role } = req.body;
     if (!id || !username || !role) return res.status(400).json({ error: 'id, username and role are required' });
-    const exists = staff.find(s => s.id === id);
+    const exists = dataService.getStaffById(id);
     if (exists) return res.status(409).json({ error: 'Staff member already exists' });
     const entry = { id, username, role };
-    staff.push(entry);
+    dataService.addStaff(entry);
     console.log(`👥 Added staff: ${username} (${role})`);
-    try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
     res.status(201).json({ staff: entry });
   });
 
   // ── API: remove staff (admin only) ───────────────────────
   app.delete('/api/staff/:id', requireAuth, requireAdmin, (req, res) => {
-    const idx = staff.findIndex(s => s.id === req.params.id);
-    if (idx === -1) return res.status(404).json({ error: 'Not found' });
-    const removed = staff.splice(idx, 1)[0];
+    const removed = dataService.removeStaff(req.params.id);
+    if (!removed) return res.status(404).json({ error: 'Not found' });
     console.log(`🗑️ Removed staff: ${removed.username}`);
-    try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
     res.json({ ok: true });
   });
 
   console.log("🔐 Discord OAuth2 routes registered.");
-}
+  }
 
-module.exports = {
+  module.exports = {
   registerOAuthRoutes,
   // Staff management helpers for Discord commands
   addStaff: async ({ id, username, role }) => {
-    const exists = staff.find(s => s.id === id);
+    const exists = dataService.getStaffById(id);
     if (exists) throw new Error("User already has staff access");
     const entry = { id, username, role: role.toLowerCase() };
-    staff.push(entry);
-    try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
+    dataService.addStaff(entry);
     return entry;
   },
   removeStaff: async (userId) => {
-    const idx = staff.findIndex(s => s.id === userId);
-    if (idx === -1) throw new Error("Staff member not found");
-    const removed = staff.splice(idx, 1)[0];
-    try { dataManager.saveData({ FLIGHTS, staff, flightBookings }); } catch (e) { }
+    const removed = dataService.removeStaff(userId);
+    if (!removed) throw new Error("Staff member not found");
     return removed;
   },
-  getStaff: () => staff,
+  getStaff: () => dataService.getStaff(),
   // helpers for in-process usage
   createFlight: createFlightEntry,
   isStaff: isStaffMemberId,
   isAdmin: isAdminId,
-  _internal: { FLIGHTS, staff, flightBookings },
-};
+  _internal: dataService._internal,
+  };
