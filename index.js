@@ -21,6 +21,7 @@ const path    = require("path");
 const express = require("express");
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const { registerOAuthRoutes } = require("./auth-routes");
+const { registerEconomyRoutes } = require("./economy-routes");
 
 // ── Discord Client ────────────────────────────────────────────
 const client = new Client({
@@ -74,6 +75,7 @@ const PORT = 3000;
 
 // Register OAuth2 + API routes (must come before static middleware)
 registerOAuthRoutes(app);
+registerEconomyRoutes(app);
 
 // Serve everything in public/ — index.html, style.css, etc.
 app.use(express.static("public"));

@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+  <title>Economy Club — Asiana PTFS</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .page-main{max-width:1100px;margin:0 auto;padding:7rem 2rem 4rem;position:relative;z-index:1}
+    .hero-copy h1{font-size:3rem;margin-bottom:.6rem;line-height:1.05}
+    .hero-copy p{color:var(--text-muted);font-size:1rem;line-height:1.7;margin-bottom:1.5rem}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+    
+    .dash-tabs{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem;margin-bottom:2rem}
+    .dash-panel{display:none}
+    .dash-panel.active{display:block}
+    
+    /* Stats Layout */
+    .balance-grid {display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:1.5rem;margin-bottom:2rem}
+    .balance-card {padding:1.5rem;border-radius:24px;display:flex;flex-direction:column;gap:0.25rem}
+    .balance-val {font-size:2.2rem;font-weight:800;letter-spacing:-.03em;color:var(--text)}
+    .balance-lbl {font-size:0.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--text-muted)}
+
+    /* Level & Job Display */
+    .profile-card {display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem}
+    @media(max-width:768px){.profile-card {grid-template-columns:1fr; gap:1.5rem}}
+    
+    .job-info {display:flex;flex-direction:column;gap:1rem}
+    .job-badge {font-size:1.1rem;font-weight:700;color:var(--red)}
+    
+    .xp-section {display:flex;flex-direction:column;gap:0.5rem}
+    .xp-bar-bg {width:100%;height:14px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;border:1px solid var(--glass-border)}
+    .xp-bar-fill {height:100%;background:linear-gradient(90deg, var(--red), #ff7b00);width:0%;transition:width 0.5s ease}
+
+    /* Actions Panel */
+    .actions-row {display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
+    
+    /* Shop Layout */
+    .shop-grid {display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:1.5rem}
+    .item-card {padding:1.5rem;border-radius:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:260px}
+    .item-header {display:flex;gap:1rem;align-items:center;margin-bottom:1rem}
+    .item-emoji {font-size:2rem}
+    .item-name {font-weight:700;font-size:1.1rem}
+    .item-desc {font-size:0.9rem;color:var(--text-muted);line-height:1.4;margin-bottom:1rem}
+    .item-price {font-size:1.2rem;font-weight:800;color:var(--red)}
+    .item-discount {font-size:0.75rem;color:#34c759;font-weight:700;text-transform:uppercase}
+    
+    /* Inventory Backpack */
+    .inventory-list {display:flex;flex-direction:column;gap:1rem}
+    .inv-item-row {display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.75rem;border-radius:20px;gap:1rem;flex-wrap:wrap}
+    
+    /* Leaderboard Styles */
+    .lb-table {width:100%;border-collapse:collapse;margin-top:1rem;text-align:left}
+    .lb-table th {padding:1rem;color:var(--text-muted);font-weight:600;font-size:0.85rem;text-transform:uppercase;border-bottom:1px solid var(--glass-border)}
+    .lb-table td {padding:1.25rem 1rem;border-bottom:1px solid var(--glass-border);font-size:0.95rem}
+    .lb-table tr:hover {background:rgba(255,255,255,0.02)}
+    .rank-col {font-weight:800;font-size:1.1rem;width:60px}
+    .rank-1 {color:#ffd700}
+    .rank-2 {color:#c0c0c0}
+    .rank-3 {color:#cd7f32}
+    
+    /* Gambling Mini-games */
+    .gamble-container {display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+    @media(max-width:900px){.gamble-container {grid-template-columns:1fr}}
+    
+    .game-card {padding:2rem;border-radius:28px}
+    .slots-machine {display:flex;justify-content:center;gap:1.5rem;margin:2rem 0}
+    .slot-window {width:70px;height:90px;background:rgba(0,0,0,0.3);border-radius:18px;border:2px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:3rem;box-shadow:inset 0 4px 15px rgba(0,0,0,0.5)}
+    
+    .coin-display {width:100px;height:100px;border-radius:50%;background:radial-gradient(circle, #ffd700 30%, #b8860b 90%);color:#fff;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;margin:2rem auto;box-shadow:0 10px 25px rgba(0,0,0,0.4);border:4px solid #fff;transition:transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
+    .coin-display.tails {background:radial-gradient(circle, #c0c0c0 30%, #708090 90%);border-color:#e0e0e0}
+    .coin-spin-anim {animation: coinFlipAnim 1s infinite linear}
+    @keyframes coinFlipAnim {
+      0% {transform: rotateY(0deg)}
+      100% {transform: rotateY(360deg)}
+    }
+    
+    .roulette-wheel {width:180px;height:180px;border-radius:50%;border:8px solid #3e2723;background:repeating-conic-gradient(#ff3b30 0deg 18deg, #1d1d1f 18deg 36deg);margin:2rem auto;box-shadow:0 10px 25px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;position:relative;transition:transform 3s cubic-bezier(0.25, 0.8, 0.25, 1)}
+    .roulette-ball {width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:20px;box-shadow:0 2px 5px rgba(0,0,0,0.5)}
+    .roulette-center {width:70px;height:70px;background:#ffd700;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#000;box-shadow:0 4px 8px rgba(0,0,0,0.3)}
+
+    .form-group{margin-bottom:1rem}
+    .form-group label{display:block;margin-bottom:.5rem;font-size:.9rem;color:var(--text-muted);font-weight:600}
+    .form-control{width:100%;min-height:50px;padding:1rem 1.1rem;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:1rem;outline:none}
+    .radio-group {display:flex;gap:1rem;margin-top:0.5rem}
+    .radio-lbl {display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-weight:600}
+    
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--glass-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--glass-border);border-radius:999px;padding:.75rem 1.75rem;font-size:.9rem;font-weight:600;z-index:9998;transition:transform .5s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    .unauthorized-card {max-width:520px;margin:8rem auto;text-align:center;padding:3rem 2rem}
+    .unauthorized-card h2 {font-size:2.2rem;margin-bottom:1rem}
+    .unauthorized-card p {color:var(--text-muted);margin-bottom:2rem;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+  <div class="apple-ambient">
+    <div class="mesh-blob mesh-1"></div>
+    <div class="mesh-blob mesh-2"></div>
+    <div class="mesh-blob mesh-3"></div>
+  </div>
+
+  <nav>
+    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/flights.html">Flights</a></li>
+      <li><a href="/pilot.html">Pilot</a></li>
+      <li><a href="/economy.html">Economy</a></li>
+      <li><a href="/admin.html">Admin</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
+      <a href="/auth/discord" class="discord-login-btn" id="login-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        Login with Discord
+      </a>
+      <div class="nav-user" id="nav-user">
+        <img class="nav-avatar" id="nav-avatar" src="" alt="Avatar">
+        <span class="nav-username" id="nav-username"></span>
+        <button class="nav-logout" onclick="window.location.href='/auth/logout'">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Login Required Prompt -->
+  <div id="unauthorized" class="unauthorized-card apple-glass">
+    <h2>Asiana Economy Club</h2>
+    <p>Earn daily salaries, apply for airline roles, purchase first-class boosts, and gamble in the captain's lounge. Log in with your Discord account to begin.</p>
+    <a href="/auth/discord" class="btn" style="display:inline-flex;align-items:center;gap:0.75rem;padding:1.1rem 3rem">
+      <svg xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:currentColor" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      Login with Discord
+    </a>
+  </div>
+
+  <main class="page-main" id="authorized" style="display:none">
+    <div class="hero-copy">
+      <p class="sub">Asiana Airlines Economy Club</p>
+      <h1>Airline Club Lounge</h1>
+      <p>Manage your airline career, check your flight luggage backpack, shop for flight gear, and climb the global airline rich list.</p>
+    </div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab active" data-tab="overview">Overview</button>
+      <button class="dash-tab" data-tab="shop">Item Shop</button>
+      <button class="dash-tab" data-tab="inventory">My Backpack</button>
+      <button class="dash-tab" data-tab="gamble">Gambling Lounge</button>
+      <button class="dash-tab" data-tab="leaderboard">Leaderboard</button>
+    </div>
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview" class="dash-panel active">
+      <div class="balance-grid">
+        <div class="balance-card apple-glass">
+          <span class="balance-val" id="profile-wallet">$0</span>
+          <span class="balance-lbl">💼 Wallet Cash</span>
+        </div>
+        <div class="balance-card apple-glass">
+          <span class="balance-val" id="profile-bank">$0</span>
+          <span class="balance-lbl">🏛️ Safe Bank</span>
+        </div>
+        <div class="balance-card apple-glass">
+          <span class="balance-val" id="profile-bankspace">$0</span>
+          <span class="balance-lbl">💳 Bank Space Limit</span>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <div class="apple-glass" style="padding:2rem;">
+          <h2 style="font-size:1.6rem;margin-bottom:1.5rem">Career Profile</h2>
+          <div class="job-info">
+            <div>
+              <div class="balance-lbl">Current Occupation</div>
+              <div class="job-badge" id="profile-job">Unemployed</div>
+            </div>
+            
+            <div class="xp-section">
+              <div style="display:flex;justify-content:between;align-items:center">
+                <span class="balance-lbl" id="profile-level-lbl">Level 1</span>
+                <span style="font-size:0.8rem;font-weight:700;margin-left:auto" id="profile-xp-lbl">0 / 100 XP</span>
+              </div>
+              <div class="xp-bar-bg">
+                <div class="xp-bar-fill" id="profile-xp-fill"></div>
+              </div>
+            </div>
+            
+            <div class="actions-row">
+              <button class="btn" id="work-btn" onclick="runWork()">Go to Work</button>
+              <button class="btn btn-outline" id="daily-btn" onclick="claimDaily()">Claim Daily Rewards</button>
+            </div>
+            <p class="feedback" id="overview-feedback"></p>
+          </div>
+        </div>
+
+        <div class="apple-glass" style="padding:2rem;">
+          <h2 style="font-size:1.6rem;margin-bottom:1.5rem">Apply for Role</h2>
+          <div class="form-group">
+            <label for="job-select">Select airline role to apply</label>
+            <select id="job-select" class="form-control" onchange="checkJobApplication()">
+              <!-- Filled dynamically -->
+            </select>
+          </div>
+          <p class="feedback" id="job-details-lbl">Select a job from the list to view requirements and payout metrics.</p>
+          <div class="actions-row">
+            <button class="btn" id="job-apply-btn" onclick="applyJob()" disabled>Apply for Job</button>
+            <button class="btn btn-outline" id="job-resign-btn" onclick="resignJob()" style="display:none">Resign Position</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM SHOP TAB -->
+    <div id="tab-shop" class="dash-panel">
+      <div class="shop-grid" id="shop-grid">
+        <!-- Filled dynamically -->
+      </div>
+    </div>
+
+    <!-- MY BACKPACK TAB -->
+    <div id="tab-inventory" class="dash-panel">
+      <div class="apple-glass" style="padding:2rem;">
+        <h2 style="font-size:1.6rem;margin-bottom:1.5rem">My Backpack Inventory</h2>
+        <div id="inventory-mount" class="inventory-list">
+          <p class="feedback">Your backpack is currently empty. Visit the Item Shop to purchase flight equipment.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAMBLING LOUNGE TAB -->
+    <div id="tab-gamble" class="dash-panel">
+      <div class="gamble-container">
+        
+        <!-- Slots Machine -->
+        <div class="game-card apple-glass">
+          <h2 style="font-size:1.5rem">✈️ Flight Slots</h2>
+          <p class="feedback" style="margin-bottom:1rem">Bet wallet cash to spin. Doubles win 1.5x. Triples win up to 10x!</p>
+          
+          <div class="slots-machine">
+            <div class="slot-window" id="slot-0">❓</div>
+            <div class="slot-window" id="slot-1">❓</div>
+            <div class="slot-window" id="slot-2">❓</div>
+          </div>
+          
+          <div class="form-group">
+            <label>Bet Amount ($)</label>
+            <input type="number" id="slots-bet" class="form-control" value="100" min="1" max="10000" />
+          </div>
+          <button class="btn" id="slots-btn" onclick="playSlots()" style="width:100%">Spin Slots</button>
+          <p class="feedback" id="slots-result" style="margin-top:1rem;text-align:center"></p>
+        </div>
+
+        <!-- Coinflip -->
+        <div class="game-card apple-glass">
+          <h2 style="font-size:1.5rem">🪙 Coinflip</h2>
+          <p class="feedback" style="margin-bottom:1rem">Bet on Heads or Tails. 50/50 probability. Double or nothing!</p>
+          
+          <div class="coin-display" id="coin-visual">HEADS</div>
+          
+          <div class="form-group">
+            <label>Choose Side</label>
+            <div class="radio-group">
+              <label class="radio-lbl"><input type="radio" name="coin-choice" value="heads" checked> Heads</label>
+              <label class="radio-lbl"><input type="radio" name="coin-choice" value="tails"> Tails</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bet Amount ($)</label>
+            <input type="number" id="coin-bet" class="form-control" value="100" min="1" max="10000" />
+          </div>
+          <button class="btn" id="coin-btn" onclick="playCoinflip()" style="width:100%">Flip Coin</button>
+          <p class="feedback" id="coin-result" style="margin-top:1rem;text-align:center"></p>
+        </div>
+
+        <!-- Roulette Wheel -->
+        <div class="game-card apple-glass" style="grid-column: span 2">
+          <h2 style="font-size:1.5rem">🎡 Captain's Roulette</h2>
+          <p class="feedback" style="margin-bottom:1.5rem">Bet color (Red/Black pays 2x, Green pays 35x) or specific number (0-36 pays 35x).</p>
+          
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:2rem;align-items:center">
+            <div>
+              <div class="roulette-wheel" id="roulette-wheel">
+                <div class="roulette-ball"></div>
+                <div class="roulette-center" id="roulette-num-display">0</div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div class="form-group">
+                  <label>Bet Type</label>
+                  <select id="roulette-bet-type" class="form-control" onchange="adjustRouletteInput()">
+                    <option value="color">Bet Color</option>
+                    <option value="number">Bet Specific Number</option>
+                  </select>
+                </div>
+                <div class="form-group" id="roulette-color-group">
+                  <label>Color</label>
+                  <select id="roulette-color-val" class="form-control">
+                    <option value="red">🔴 Red (2x)</option>
+                    <option value="black">⚫ Black (2x)</option>
+                    <option value="green">🟢 Green (35x)</option>
+                  </select>
+                </div>
+                <div class="form-group" id="roulette-number-group" style="display:none">
+                  <label>Number (0-36)</label>
+                  <input type="number" id="roulette-number-val" class="form-control" min="0" max="36" value="7" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Bet Amount ($)</label>
+                <input type="number" id="roulette-bet" class="form-control" value="100" min="1" max="10000" />
+              </div>
+              <button class="btn" id="roulette-btn" onclick="playRoulette()" style="width:100%">Spin Roulette Wheel</button>
+            </div>
+          </div>
+          <p class="feedback" id="roulette-result" style="margin-top:1.5rem;text-align:center"></p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LEADERBOARD TAB -->
+    <div id="tab-leaderboard" class="dash-panel">
+      <div class="apple-glass" style="padding:2rem;overflow-x:auto;">
+        <h2 style="font-size:1.6rem;margin-bottom:1rem">Global Wealth Ranking</h2>
+        <table class="lb-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Username</th>
+              <th>Occupation</th>
+              <th>Level</th>
+              <th>Wallet Cash</th>
+              <th>Bank Balance</th>
+              <th>Net Wealth</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-mount">
+            <!-- Loaded dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+        <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+        <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        </a>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Team</a></li><li><a href="#">Fleet</a></li><li><a href="#">Contact Us</a></li></ul></div>
+        <div class="footer-col"><h4>Fly</h4><ul><li><a href="#">Search Flights</a></li><li><a href="#">Flight Logs</a></li></ul></div>
+        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
+      <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme Switcher
+    function toggleTheme(){
+      const h=document.documentElement;
+      h.setAttribute('data-theme', h.getAttribute('data-theme')==='light'?'dark':'light');
+    }
+
+    // Active User Profile State
+    let profileData = null;
+    let jobList = {};
+    let shopItemList = {};
+    let hasVipDiscount = false;
+
+    // Toast Notifications
+    function showToast(msg){
+      const t=document.getElementById('toast');
+      t.textContent=msg;
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),3200);
+    }
+
+    // Tab switcher
+    document.querySelectorAll('.dash-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+        
+        // Refresh specific data
+        if(tab.dataset.tab==='leaderboard') loadLeaderboard();
+        if(tab.dataset.tab==='shop') loadShop();
+        if(tab.dataset.tab==='inventory') updateInventoryUI();
+      });
+    });
+
+    // Page Load Auth Checking
+    async function initAuth(){
+      try {
+        const res = await fetch('/api/user');
+        const data = await res.json();
+        if(res.ok && data.user) {
+          const u = data.user;
+          document.getElementById('login-btn').style.display='none';
+          const nu=document.getElementById('nav-user');
+          nu.classList.add('visible');
+          document.getElementById('nav-avatar').src=u.avatar;
+          document.getElementById('nav-username').textContent=u.username;
+          
+          document.getElementById('unauthorized').style.display = 'none';
+          document.getElementById('authorized').style.display = 'block';
+          
+          await loadProfile();
+        } else {
+          document.getElementById('unauthorized').style.display = 'block';
+          document.getElementById('authorized').style.display = 'none';
+        }
+      } catch(e) {
+        document.getElementById('unauthorized').style.display = 'block';
+        document.getElementById('authorized').style.display = 'none';
+      }
+    }
+
+    // Load User Profile details
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/economy/profile');
+        if (!res.ok) return;
+        const data = await res.json();
+        profileData = data.profile;
+        jobList = data.jobs;
+        shopItemList = data.shopItems;
+
+        // Render Overview balances
+        document.getElementById('profile-wallet').textContent = `$${profileData.wallet.toLocaleString()}`;
+        document.getElementById('profile-bank').textContent = `$${profileData.bank.toLocaleString()}`;
+        document.getElementById('profile-bankspace').textContent = `$${profileData.bankSpace.toLocaleString()}`;
+        
+        // Render Job Info
+        const jobDetails = jobList[profileData.job];
+        document.getElementById('profile-job').textContent = jobDetails ? jobDetails.name : 'Unemployed';
+        
+        // Level info
+        document.getElementById('profile-level-lbl').textContent = `Level ${profileData.level}`;
+        const targetXp = profileData.level * 100;
+        document.getElementById('profile-xp-lbl').textContent = `${profileData.xp} / ${targetXp} XP`;
+        
+        const fillPct = Math.min((profileData.xp / targetXp) * 100, 100);
+        document.getElementById('profile-xp-fill').style.width = `${fillPct}%`;
+
+        // Render Cooldown indicators (buttons disable/text updates)
+        updateCooldownsUI();
+
+        // Render Jobs Dropdown
+        renderJobsSelect();
+        updateInventoryUI();
+      } catch(e) {
+        console.error('Failed to load profile', e);
+      }
+    }
+
+    function updateCooldownsUI() {
+      if (!profileData) return;
+      const now = Date.now();
+      
+      // Daily cooldown check (24 hours)
+      const dailyTimeLeft = 24 * 60 * 60 * 1000 - (now - (profileData.lastDaily || 0));
+      const dailyBtn = document.getElementById('daily-btn');
+      if (dailyTimeLeft > 0) {
+        dailyBtn.disabled = true;
+        const hours = Math.floor(dailyTimeLeft / (60 * 60 * 1000));
+        const mins = Math.floor((dailyTimeLeft % (60 * 60 * 1000)) / (60 * 1000));
+        dailyBtn.textContent = `Daily in ${hours}h ${mins}m`;
+      } else {
+        dailyBtn.disabled = false;
+        dailyBtn.textContent = 'Claim Daily Rewards';
+      }
+
+      // Work cooldown check (30 minutes)
+      const workTimeLeft = 30 * 60 * 1000 - (now - (profileData.cooldowns?.work || 0));
+      const workBtn = document.getElementById('work-btn');
+      if (!profileData.job) {
+        workBtn.disabled = true;
+        workBtn.textContent = 'Get a Job First';
+      } else if (workTimeLeft > 0) {
+        workBtn.disabled = true;
+        const mins = Math.floor(workTimeLeft / (60 * 1000));
+        const secs = Math.floor((workTimeLeft % (60 * 1000)) / 1000);
+        workBtn.textContent = `Work in ${mins}m ${secs}s`;
+      } else {
+        workBtn.disabled = false;
+        workBtn.textContent = 'Go to Work';
+      }
+    }
+
+    // Interval to count down cooldowns dynamically
+    setInterval(updateCooldownsUI, 1000);
+
+    // Claim Daily
+    async function claimDaily() {
+      const btn = document.getElementById('daily-btn');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/economy/daily', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          await loadProfile();
+        } else {
+          showToast(`⚠️ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Failed to submit claim request.');
+      }
+    }
+
+    // Go to work
+    async function runWork() {
+      const btn = document.getElementById('work-btn');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/economy/work', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          await loadProfile();
+        } else {
+          showToast(`⚠️ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Failed to run work shift.');
+      }
+    }
+
+    // Populate Jobs select
+    function renderJobsSelect() {
+      const select = document.getElementById('job-select');
+      const curJob = profileData.job;
+      
+      let html = '<option value="">Choose an airline role…</option>';
+      for (const [key, job] of Object.entries(jobList)) {
+        const selectedStr = curJob === key ? 'selected' : '';
+        html += `<option value="${key}" ${selectedStr}>${job.name} (Requires Level ${job.minLevel})</option>`;
+      }
+      select.innerHTML = html;
+      checkJobApplication();
+    }
+
+    function checkJobApplication() {
+      const select = document.getElementById('job-select');
+      const jobId = select.value;
+      const details = document.getElementById('job-details-lbl');
+      const applyBtn = document.getElementById('job-apply-btn');
+      const resignBtn = document.getElementById('job-resign-btn');
+      
+      // Resign button visible if currently employed
+      if (profileData && profileData.job) {
+        resignBtn.style.display = 'inline-block';
+      } else {
+        resignBtn.style.display = 'none';
+      }
+
+      if (!jobId) {
+        details.innerHTML = 'Select a job from the list to view requirements and payout metrics.';
+        applyBtn.disabled = true;
+        return;
+      }
+
+      const job = jobList[jobId];
+      const requirementsMet = profileData.level >= job.minLevel;
+      const isAlreadyJob = profileData.job === jobId;
+
+      let labelText = `<strong>${job.name}</strong><br/>
+                       💵 Salary range: $${job.payoutMin} - $${job.payoutMax} per shift<br/>
+                       ⚠️ Safety Failure rate: ${Math.floor(job.failChance * 100)}%<br/>
+                       🔐 Level Requirement: Level ${job.minLevel} ${requirementsMet ? '✅' : '❌'}`;
+      
+      details.innerHTML = labelText;
+      applyBtn.disabled = isAlreadyJob || !requirementsMet;
+      if (isAlreadyJob) {
+        applyBtn.textContent = 'Currently Employed';
+      } else {
+        applyBtn.textContent = 'Apply for Role';
+      }
+    }
+
+    async function applyJob() {
+      const select = document.getElementById('job-select');
+      const jobId = select.value;
+      if (!jobId) return;
+
+      try {
+        const res = await fetch('/api/economy/job', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'apply', jobId })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          await loadProfile();
+        } else {
+          showToast(`❌ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Application submission failed.');
+      }
+    }
+
+    async function resignJob() {
+      if (!confirm('Are you sure you want to resign from your position? You will earn no money until you apply for a new role.')) return;
+      try {
+        const res = await fetch('/api/economy/job', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'resign' })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          await loadProfile();
+        } else {
+          showToast(`❌ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Resignation failed.');
+      }
+    }
+
+    // --- Shop ---
+    async function loadShop() {
+      try {
+        const res = await fetch('/api/economy/shop');
+        const data = await res.json();
+        if(!res.ok) return;
+
+        hasVipDiscount = data.hasVipDiscount;
+        const items = data.items;
+        const grid = document.getElementById('shop-grid');
+        
+        grid.innerHTML = Object.entries(items).map(([id, item]) => {
+          const actualPrice = hasVipDiscount ? Math.floor(item.price * 0.9) : item.price;
+          return `
+            <div class="item-card apple-glass">
+              <div>
+                <div class="item-header">
+                  <span class="item-emoji">${item.emoji}</span>
+                  <div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">
+                      $${actualPrice}
+                      ${hasVipDiscount ? `<span class="item-discount">(10% VIP Discount)</span>` : ''}
+                    </div>
+                  </div>
+                </div>
+                <div class="item-desc">${item.description}</div>
+              </div>
+              <div class="actions-row" style="align-items:center;">
+                <input type="number" id="qty-${id}" class="form-control" value="1" min="1" style="width:70px; min-height:40px; padding:0.5rem; border-radius:12px; margin-bottom:0;" />
+                <button class="btn btn-outline" onclick="buyItem('${id}')" style="padding:0.7rem 1.2rem; font-size:0.9rem;">Buy</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch(e) {
+        console.error('Failed to load shop', e);
+      }
+    }
+
+    async function buyItem(itemId) {
+      const qtyInput = document.getElementById(`qty-${itemId}`);
+      const qty = parseInt(qtyInput.value, 10);
+      if (isNaN(qty) || qty <= 0) {
+        showToast('⚠️ Please enter a valid quantity.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/economy/buy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ itemId, quantity: qty })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          qtyInput.value = 1;
+          await loadProfile();
+        } else {
+          showToast(`❌ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Shop request failed.');
+      }
+    }
+
+    // --- Inventory / Backpack ---
+    function updateInventoryUI() {
+      if (!profileData) return;
+      const mount = document.getElementById('inventory-mount');
+      const inv = profileData.inventory || {};
+      
+      const entries = Object.entries(inv);
+      if (entries.length === 0) {
+        mount.innerHTML = '<p class="feedback">Your backpack is currently empty. Visit the Item Shop to purchase flight equipment.</p>';
+        return;
+      }
+
+      mount.innerHTML = entries.map(([id, qty]) => {
+        const item = shopItemList[id];
+        if (!item) return '';
+        const useBtnHtml = item.usable 
+          ? `<button class="btn" onclick="useItem('${id}')" style="padding:0.6rem 1.2rem; font-size:0.85rem;">Use Item</button>` 
+          : `<span class="pill" style="font-size:0.75rem; padding:0.4rem 0.8rem">Passive</span>`;
+          
+        return `
+          <div class="inv-item-row apple-glass">
+            <div>
+              <span style="font-size:1.5rem; margin-right:0.75rem;">${item.emoji}</span>
+              <strong>${item.name}</strong> x${qty}
+              <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;">${item.description}</div>
+            </div>
+            <div style="display:flex; gap:0.5rem; align-items:center">
+              ${useBtnHtml}
+              <button class="btn btn-outline" onclick="sellItem('${id}')" style="padding:0.6rem 1.2rem; font-size:0.85rem; color:var(--red);">Sell ($${item.sellPrice})</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function useItem(itemId) {
+      try {
+        const res = await fetch('/api/economy/use', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ itemId })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          await loadProfile();
+        } else {
+          showToast(`❌ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Consume request failed.');
+      }
+    }
+
+    async function sellItem(itemId) {
+      const count = prompt('How many would you like to sell?', '1');
+      if (!count) return;
+      const qty = parseInt(count, 10);
+      if (isNaN(qty) || qty <= 0) {
+        showToast('⚠️ Invalid quantity.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/economy/sell', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ itemId, quantity: qty })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message.replace(/\*\*/g, ''));
+          await loadProfile();
+        } else {
+          showToast(`❌ ${data.error}`);
+        }
+      } catch(e) {
+        showToast('❌ Sell request failed.');
+      }
+    }
+
+    // --- Gambling Lounge ---
+
+    // A. SLOTS
+    async function playSlots() {
+      const betInput = document.getElementById('slots-bet');
+      const bet = parseInt(betInput.value, 10);
+      if (isNaN(bet) || bet <= 0) {
+        showToast('⚠️ Please enter a valid bet amount.');
+        return;
+      }
+
+      const btn = document.getElementById('slots-btn');
+      const resultLbl = document.getElementById('slots-result');
+      btn.disabled = true;
+      resultLbl.textContent = 'Spinning... 🎰';
+
+      // Slot animations
+      const slotsWindows = [
+        document.getElementById('slot-0'),
+        document.getElementById('slot-1'),
+        document.getElementById('slot-2')
+      ];
+      
+      const symbols = ['✈️', '🚁', '🚀', '💎', '👑'];
+      let animInterval = setInterval(() => {
+        slotsWindows.forEach(win => {
+          win.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        });
+      }, 80);
+
+      try {
+        const res = await fetch('/api/economy/gamble', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'slots', betAmount: bet })
+        });
+        const data = await res.json();
+        
+        clearInterval(animInterval);
+        btn.disabled = false;
+
+        if (res.ok) {
+          // Render final rolls
+          slotsWindows[0].textContent = data.rolls[0];
+          slotsWindows[1].textContent = data.rolls[1];
+          slotsWindows[2].textContent = data.rolls[2];
+          
+          resultLbl.innerHTML = data.message.replace(/\*\*/g, '').replace(/\n/g, '<br/>');
+          await loadProfile();
+        } else {
+          resultLbl.textContent = `❌ Error: ${data.error}`;
+          showToast(`❌ ${data.error}`);
+        }
+      } catch(e) {
+        clearInterval(animInterval);
+        btn.disabled = false;
+        resultLbl.textContent = '❌ Request failed.';
+      }
+    }
+
+    // B. COINFLIP
+    async function playCoinflip() {
+      const betInput = document.getElementById('coin-bet');
+      const bet = parseInt(betInput.value, 10);
+      if (isNaN(bet) || bet <= 0) {
+        showToast('⚠️ Please enter a valid bet amount.');
+        return;
+      }
+
+      const radios = document.getElementsByName('coin-choice');
+      let choice = 'heads';
+      for (const radio of radios) {
+        if (radio.checked) choice = radio.value;
+      }
+
+      const btn = document.getElementById('coin-btn');
+      const visual = document.getElementById('coin-visual');
+      const resultLbl = document.getElementById('coin-result');
+      
+      btn.disabled = true;
+      resultLbl.textContent = 'Flipping coin... 🪙';
+      visual.classList.add('coin-spin-anim');
+
+      try {
+        const res = await fetch('/api/economy/gamble', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'coinflip', betAmount: bet, choice })
+        });
+        const data = await res.json();
+        
+        setTimeout(async () => {
+          visual.classList.remove('coin-spin-anim');
+          btn.disabled = false;
+
+          if (res.ok) {
+            visual.textContent = data.rolled.toUpperCase();
+            if (data.rolled === 'heads') {
+              visual.classList.remove('tails');
+            } else {
+              visual.classList.add('tails');
+            }
+            resultLbl.innerHTML = data.message.replace(/\*\*/g, '');
+            await loadProfile();
+          } else {
+            resultLbl.textContent = `❌ Error: ${data.error}`;
+            showToast(`❌ ${data.error}`);
+          }
+        }, 1000); // 1 sec spin delay
+
+      } catch(e) {
+        visual.classList.remove('coin-spin-anim');
+        btn.disabled = false;
+        resultLbl.textContent = '❌ Request failed.';
+      }
+    }
+
+    // C. ROULETTE
+    function adjustRouletteInput() {
+      const type = document.getElementById('roulette-bet-type').value;
+      document.getElementById('roulette-color-group').style.display = type === 'color' ? 'block' : 'none';
+      document.getElementById('roulette-number-group').style.display = type === 'number' ? 'block' : 'none';
+    }
+
+    async function playRoulette() {
+      const betInput = document.getElementById('roulette-bet');
+      const bet = parseInt(betInput.value, 10);
+      if (isNaN(bet) || bet <= 0) {
+        showToast('⚠️ Please enter a valid bet amount.');
+        return;
+      }
+
+      const betType = document.getElementById('roulette-bet-type').value;
+      let choice = '';
+      if (betType === 'color') {
+        choice = document.getElementById('roulette-color-val').value;
+      } else {
+        const numVal = parseInt(document.getElementById('roulette-number-val').value, 10);
+        if (isNaN(numVal) || numVal < 0 || numVal > 36) {
+          showToast('⚠️ Number must be between 0 and 36.');
+          return;
+        }
+        choice = numVal;
+      }
+
+      const btn = document.getElementById('roulette-btn');
+      const wheel = document.getElementById('roulette-wheel');
+      const resultLbl = document.getElementById('roulette-result');
+      const centerDisplay = document.getElementById('roulette-num-display');
+
+      btn.disabled = true;
+      resultLbl.textContent = 'Spinning roulette wheel... 🎡';
+      
+      // Random rotation
+      const spins = 3 + Math.floor(Math.random() * 3);
+      const degree = spins * 360 + Math.floor(Math.random() * 360);
+      wheel.style.transform = `rotate(${degree}deg)`;
+
+      try {
+        const res = await fetch('/api/economy/gamble', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'roulette', betAmount: bet, choice })
+        });
+        const data = await res.json();
+
+        setTimeout(async () => {
+          btn.disabled = false;
+          wheel.style.transform = 'none';
+
+          if (res.ok) {
+            centerDisplay.textContent = data.rolledNum;
+            if (data.rolledColor === 'red') {
+              centerDisplay.style.background = '#ff3b30';
+              centerDisplay.style.color = '#fff';
+            } else if (data.rolledColor === 'black') {
+              centerDisplay.style.background = '#1d1d1f';
+              centerDisplay.style.color = '#fff';
+            } else {
+              centerDisplay.style.background = '#34c759';
+              centerDisplay.style.color = '#000';
+            }
+
+            resultLbl.innerHTML = data.message.replace(/\*\*/g, '');
+            await loadProfile();
+          } else {
+            resultLbl.textContent = `❌ Error: ${data.error}`;
+            showToast(`❌ ${data.error}`);
+          }
+        }, 3000); // 3 sec spin duration
+
+      } catch(e) {
+        btn.disabled = false;
+        wheel.style.transform = 'none';
+        resultLbl.textContent = '❌ Request failed.';
+      }
+    }
+
+    // --- Leaderboard ---
+    async function loadLeaderboard() {
+      const mount = document.getElementById('leaderboard-mount');
+      try {
+        const res = await fetch('/api/economy/leaderboard');
+        const data = await res.json();
+        if (!res.ok) {
+          mount.innerHTML = '<tr><td colspan="7" class="feedback">Failed to load leaderboard.</td></tr>';
+          return;
+        }
+
+        const lb = data.leaderboard;
+        if (lb.length === 0) {
+          mount.innerHTML = '<tr><td colspan="7" class="feedback">No players logged in the bank yet.</td></tr>';
+          return;
+        }
+
+        mount.innerHTML = lb.map((user, idx) => {
+          const rank = idx + 1;
+          let rankClass = '';
+          if (rank === 1) rankClass = 'rank-col rank-1';
+          else if (rank === 2) rankClass = 'rank-col rank-2';
+          else if (rank === 3) rankClass = 'rank-col rank-3';
+          else rankClass = 'rank-col';
+
+          return `
+            <tr>
+              <td class="${rankClass}">#${rank}</td>
+              <td style="font-weight:700;">${user.username}</td>
+              <td>${user.jobName}</td>
+              <td style="font-weight:600;">Lvl ${user.level}</td>
+              <td>$${user.wallet.toLocaleString()}</td>
+              <td>$${user.bank.toLocaleString()}</td>
+              <td style="font-weight:700; color:var(--red);">$${user.netWorth.toLocaleString()}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch(e) {
+        mount.innerHTML = '<tr><td colspan="7" class="feedback">Network error loading ranking details.</td></tr>';
+      }
+    }
+
+    // Start Page logic
+    initAuth();
+  </script>
+</body>
+</html>
