@@ -23,6 +23,47 @@ const FLEET = [
 
 let staff = [];
 let flightBookings = [];
+let tickets = [];
+let botConfig = {
+  announcementChannel: '',
+  logChannel: '',
+  ticketCategory: '',
+  staffRole: '',
+  adminRole: '',
+  ticketWelcomeMessage: 'Welcome to Asiana Airlines Support. Our staff will be with you shortly.',
+  ticketPanels: [
+    { id: 'general', name: 'General Support', description: 'General inquiries and airline information.', icon: '🎫' },
+    { id: 'staff', name: 'Staff Application', description: 'Inquiries regarding recruitment and role applications.', icon: '🛡️' },
+    { id: 'report', name: 'Report a Pilot', description: 'File a report regarding flight safety or conduct.', icon: '⚠️' }
+  ],
+  templates: {
+    new: {
+        title: '🆕 New Flight Scheduled: {id}',
+        description: 'Asiana Airlines has scheduled a new operation.\n\n**Route:** {origin} → {destination}\n**Departure:** {time}\n**Aircraft:** {aircraft}\n\nReserve your seat on the website now!'
+    },
+    boarding: {
+        title: '🛫 Now Boarding: {id}',
+        description: 'Passengers for flight **{id}** to **{destination}** may now begin boarding at the gate.\n\n**Aircraft:** {aircraft}\n**Gate:** {origin} Terminal'
+    },
+    departed: {
+        title: '☁️ Flight Departed: {id}',
+        description: 'Flight **{id}** has departed from **{origin}** and is now en-route to **{destination}**.\n\n*Beautiful People, Beautiful Skies.*'
+    },
+    arrived: {
+        title: '🛬 Flight Arrived: {id}',
+        description: 'Flight **{id}** has safely landed at **{destination}**. Thank you for flying with Asiana Airlines.'
+    },
+    delayed: {
+        title: '⚠️ Flight Delayed: {id}',
+        description: 'Flight **{id}** to **{destination}** has been delayed due to operational requirements. We apologize for the inconvenience.'
+    }
+  },
+  embedDefaults: {
+    color: '#ff3b30',
+    footer: 'Asiana Airlines PTFS • "Beautiful People"',
+    thumbnail: 'https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png'
+  }
+};
 let finance = {
   totalRevenue: 125400,
   totalMiles: 842000,
@@ -43,6 +84,12 @@ function load() {
       if (Array.isArray(persisted.flightBookings)) {
         flightBookings.splice(0, flightBookings.length, ...persisted.flightBookings);
       }
+      if (Array.isArray(persisted.tickets)) {
+        tickets.splice(0, tickets.length, ...persisted.tickets);
+      }
+      if (persisted.botConfig) {
+        botConfig = { ...botConfig, ...persisted.botConfig };
+      }
       if (persisted.finance) finance = persisted.finance;
       console.log('[data-service] Loaded persisted data from data.json');
     }
@@ -53,13 +100,31 @@ function load() {
 
 // Save all data
 function save() {
-  dataManager.saveData({ FLIGHTS, staff, flightBookings, finance });
+  dataManager.saveData({ FLIGHTS, staff, flightBookings, finance, tickets, botConfig });
 }
 
 // Initial load
 load();
 
+function isAdminId(id) {
+  if (!id) return false;
+  const idStr = String(id).trim();
+  const ADMIN_IDS = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(",") : [];
+  const isEnvAdmin = ADMIN_IDS.length && ADMIN_IDS.map(x => String(x).trim()).includes(idStr);
+  const isStaffAdmin = staff.some(s => s.id && String(s.id).trim() === idStr && s.role && s.role.toLowerCase() === 'admin');
+  return !!(isEnvAdmin || isStaffAdmin);
+}
+
+function isStaffMemberId(id) {
+  if (!id) return false;
+  const idStr = String(id).trim();
+  const isStaff = staff.some(s => s.id && String(s.id).trim() === idStr && (s.role && ['pilot', 'staff', 'admin'].includes(s.role.toLowerCase())));
+  return !!(isStaff || isAdminId(idStr));
+}
+
 module.exports = {
+  isAdmin: isAdminId,
+  isStaff: isStaffMemberId,
   // Flights
   getFlights: () => FLIGHTS,
   getFlightById: (id) => FLIGHTS.find(f => f.id === id),
@@ -126,9 +191,33 @@ module.exports = {
     flightBookings.push(booking);
     save();
   },
+
+  // Tickets
+  getTickets: () => tickets,
+  addTicket: (ticket) => {
+    tickets.push(ticket);
+    save();
+  },
+  updateTicket: (id, updates) => {
+    const idx = tickets.findIndex(t => t.id === id);
+    if (idx !== -1) {
+      tickets[idx] = { ...tickets[idx], ...updates };
+      save();
+      return tickets[idx];
+    }
+    return null;
+  },
+
+  // Bot Config
+  getConfig: () => botConfig,
+  updateConfig: (updates) => {
+    botConfig = { ...botConfig, ...updates };
+    save();
+    return botConfig;
+  },
   
   // Re-expose internal arrays for legacy compatibility if needed
-  _internal: { FLIGHTS, staff, flightBookings },
+  _internal: { FLIGHTS, staff, flightBookings, tickets, botConfig },
   
   // Refresh from disk
   refresh: load

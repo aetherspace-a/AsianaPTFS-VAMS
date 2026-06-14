@@ -13,12 +13,29 @@ function toggleTheme() {
 
 // Reveal Animations
 function initReveal() {
-    const revealObs = new IntersectionObserver(entries => {
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealOnScroll = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('active');
+            if(entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
         });
-    }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+    }, { threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
+
+    revealElements.forEach(el => revealOnScroll.observe(el));
+}
+
+// Hero Parallax
+function initHeroParallax() {
+    const heroText = document.getElementById('hero');
+    if (!heroText) return;
+    window.addEventListener('scroll', () => {
+        const scroll = window.scrollY;
+        if(scroll < 600) {
+            heroText.style.transform = `translateY(${scroll * 0.3}px)`;
+            heroText.style.opacity = 1 - (scroll / 500);
+        }
+    });
 }
 
 // Toast Notifications
@@ -42,6 +59,7 @@ async function initNavAuth() {
         const data = await res.json();
         const loginBtn = document.getElementById('login-btn');
         const navUser = document.getElementById('nav-user');
+        const navUl = document.querySelector('nav ul');
         
         if (res.ok && data.user) {
             const u = data.user;
@@ -53,6 +71,19 @@ async function initNavAuth() {
                 if (avatar) avatar.src = u.avatar;
                 if (username) username.textContent = u.username;
             }
+
+            // Check admin status for navigation
+            const adminRes = await fetch('/api/check-admin');
+            const adminData = await adminRes.json();
+            if (adminData.isAdmin && navUl) {
+                const systemLinkExists = Array.from(navUl.querySelectorAll('a')).some(a => a.href.includes('admin-dashboard.html'));
+                if (!systemLinkExists) {
+                    const li = document.createElement('li');
+                    li.innerHTML = '<a href="/admin-dashboard.html" style="color:var(--red)">System</a>';
+                    navUl.appendChild(li);
+                }
+            }
+
             return u;
         } else {
             if (loginBtn) loginBtn.style.display = 'inline-flex';
@@ -68,5 +99,6 @@ async function initNavAuth() {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initReveal();
+    initHeroParallax();
     initNavAuth();
 });

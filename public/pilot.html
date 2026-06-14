@@ -1,35 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
   <title>Pilot Dashboard — Asiana PTFS</title>
   <link rel="stylesheet" href="/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
   <script src="/app.js" defer></script>
-  <style>
-    .seat-grid{display:grid;grid-template-columns:repeat(4,minmax(60px,1fr));gap:.75rem}
-    .seat-cell{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600;font-size:0.9rem;background:rgba(255,255,255,0.03);transition:all 0.25s cubic-bezier(0.22, 1, 0.36, 1);color:var(--text)}
-    .seat-cell:hover:not(.taken):not(.selected){background:rgba(120,120,128,0.1);border-color:rgba(120,120,128,0.3);transform:scale(1.05)}
-    .seat-cell.selected{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;box-shadow:0 0 12px rgba(255,69,58,0.4);transform:scale(1.03)}
-    .seat-cell.taken{background:rgba(120,120,128,0.05);color:var(--text-muted);border-color:rgba(120,120,128,0.05);cursor:not-allowed;opacity:0.35}
-    
-    .dash-tabs{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem;margin-bottom:2rem}
-    .dash-tab{display:inline-flex;align-items:center;gap:0.5rem;padding:.6rem 1.4rem;border-radius:999px;border:1px solid var(--glass-border);background:transparent;color:var(--text-muted);font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s}
-    .dash-tab:hover{color:var(--text);background:rgba(120,120,128,0.15)}
-    .dash-tab.active{background:var(--text);color:var(--bg-base);border-color:var(--text)}
-    .dash-tab .material-symbols-outlined{font-size:1.2rem;}
-
-    .dash-panel{display:none}
-    .dash-panel.active{display:block;animation:fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;}
-    
-    .panel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:1.5rem}
-    
-    .dash-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;padding:2.5rem 1.5rem;position:relative;}
-    .dash-stat .card-icon{font-size:2rem;color:var(--red);opacity:0.8;margin-bottom:0.3rem;}
-    
-    @media(max-width:900px){.panel-grid{grid-template-columns:1fr}}
-  </style>
 </head>
 <body>
   <div class="noise-overlay"></div>
@@ -40,12 +17,14 @@
   </div>
 
   <nav>
-    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <a class="logo" href="/">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines Logo" class="logo-img">
+    </a>
     <ul>
       <li><a href="/">Home</a></li>
+      <li><a href="/economy.html">Economy</a></li>
       <li><a href="/flights.html">Flights</a></li>
       <li><a href="/pilot.html">Pilot</a></li>
-      <li><a href="/economy.html">Economy</a></li>
       <li><a href="/finance.html">Finance</a></li>
       <li><a href="/admin.html">Admin</a></li>
     </ul>
@@ -64,90 +43,78 @@
   </nav>
 
   <main class="page-main">
-    <div class="page-header" style="text-align:left">
+    <div class="page-header reveal">
       <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
-      <h1>Captain’s console</h1>
-      <p>Choose flights, reserve seats, and review your booking history with the same premium visual system as the main site.</p>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
-        <a href="/flights.html" class="btn btn-outline">
-          <span class="material-symbols-outlined">format_list_bulleted</span> Flight Listings
-        </a>
-        <a href="/admin.html" class="btn btn-outline">
-          <span class="material-symbols-outlined">admin_panel_settings</span> Admin Console
-        </a>
-      </div>
+      <h1>Captain’s Console</h1>
+      <p>Choose flights, reserve seats, and review your booking history with premium precision.</p>
     </div>
 
-    <div class="dash-tabs">
-      <button class="dash-tab active" data-tab="overview"><span class="material-symbols-outlined">dashboard</span> Overview</button>
-      <button class="dash-tab" data-tab="book"><span class="material-symbols-outlined">airplane_ticket</span> Book Flight</button>
-      <button class="dash-tab" data-tab="flights"><span class="material-symbols-outlined">flight_takeoff</span> My Flights</button>
+    <div class="dash-tabs reveal">
+      <button class="dash-tab active" data-tab="overview">Overview</button>
+      <button class="dash-tab" data-tab="book">Book Flight</button>
+      <button class="dash-tab" data-tab="flights">My Bookings</button>
     </div>
 
-    <div id="tab-overview" class="dash-panel active apple-glass" style="padding:2rem;">
-      <div class="panel-grid">
-        <div class="dash-stat apple-glass">
-          <span class="material-symbols-outlined card-icon">book_online</span>
+    <div id="tab-overview" class="dash-panel apple-glass active">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:2.5rem">
+        <div class="stat-card apple-glass" style="background:rgba(255,255,255,0.03)">
+          <span class="material-symbols-outlined" style="font-size:2.5rem; color:var(--red); margin-bottom:1rem">book_online</span>
           <span class="stat-num" id="pilot-count">0</span>
           <span class="stat-label">Flights Booked</span>
         </div>
-        <div class="dash-stat apple-glass">
-          <span class="material-symbols-outlined card-icon">schedule</span>
-          <span class="stat-num" id="pilot-next" style="font-size:1.5rem">—</span>
+        <div class="stat-card apple-glass" style="background:rgba(255,255,255,0.03)">
+          <span class="material-symbols-outlined" style="font-size:2.5rem; color:var(--red); margin-bottom:1rem">schedule</span>
+          <span class="stat-num" style="font-size:1.5rem" id="pilot-next">—</span>
           <span class="stat-label">Next Departure</span>
         </div>
       </div>
-      <p class="small-text" style="text-align: center; margin-top: 1.5rem;">Your pilot activity is visible once you sign in and book a flight.</p>
+      <p class="small-text" style="text-align:center; margin-top:2rem">Your pilot activity is visible once you book a flight.</p>
     </div>
 
-    <div id="tab-book" class="dash-panel apple-glass" style="padding:2rem;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:2rem;align-items:start;">
+    <div id="tab-book" class="dash-panel apple-glass">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:3rem">
         <div>
           <div class="form-group">
-            <label for="flight-select">Pick a flight</label>
+            <label>Pick a flight</label>
             <select id="flight-select" class="form-control"><option>Loading…</option></select>
           </div>
-          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-            <button id="refresh-seats" class="btn btn-outline" style="padding:0.8rem 1.2rem; font-size:0.9rem">
-              <span class="material-symbols-outlined">refresh</span> Refresh Seats
-            </button>
-            <button id="book-btn" class="btn" style="padding:0.8rem 1.2rem; font-size:0.9rem">
-              <span class="material-symbols-outlined">airline_seat_recline_normal</span> Reserve Seat
-            </button>
+          <div style="display:flex; gap:1rem; margin-top:2rem">
+            <button id="refresh-seats" class="btn btn-outline">Refresh Map</button>
+            <button id="book-btn" class="btn">Reserve Seat</button>
           </div>
-          <p class="small-text" id="pilot-feedback" style="margin-top:1rem">Select a flight to view its available seats.</p>
+          <p id="pilot-feedback" class="small-text" style="margin-top:1.5rem">Select a flight to view available seats.</p>
         </div>
         <div>
-          <h3 style="margin-top:0; display:flex; align-items:center; gap:0.5rem;"><span class="material-symbols-outlined">map</span> Seat Map</h3>
-          <div id="seat-map" class="apple-glass" style="padding:1rem;min-height:320px; margin-top:0.8rem;"></div>
+          <h3 style="margin-bottom:1.5rem">Seat Map</h3>
+          <div class="apple-glass" style="padding:2rem; background:rgba(255,255,255,0.03)">
+            <div id="seat-map" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.75rem"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-flights" class="dash-panel apple-glass" style="padding:2rem;">
-      <h2 style="margin-top:0; display:flex; align-items:center; gap:0.5rem;"><span class="material-symbols-outlined">history</span> Your Bookings</h2>
-      <div id="pilot-flights" class="card-list" style="margin-top:1.2rem;">Loading…</div>
+    <div id="tab-flights" class="dash-panel apple-glass">
+      <h2 style="font-size:1.6rem;margin-bottom:1.5rem">Your Bookings</h2>
+      <div id="pilot-flights" class="card-list">Loading…</div>
     </div>
   </main>
 
   <footer>
     <div class="footer-container">
       <div class="footer-brand">
-        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines Logo" class="footer-logo">
         <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
         <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
         </a>
       </div>
       <div class="footer-links">
-        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Team</a></li><li><a href="#">Fleet</a></li><li><a href="#">Contact Us</a></li></ul></div>
-        <div class="footer-col"><h4>Fly</h4><ul><li><a href="#">Search Flights</a></li><li><a href="#">Flight Logs</a></li></ul></div>
-        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="/#staff">Our Team</a></li><li><a href="/#fleet">Fleet</a></li><li><a href="/#apply">Contact Us</a></li></ul></div>
+        <div class="footer-col"><h4>Fly</h4><ul><li><a href="/flights.html">Search Flights</a></li><li><a href="/#logs">Flight Logs</a></li></ul></div>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
-      <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
     </div>
   </footer>
 
@@ -155,28 +122,25 @@
     let selectedSeat = null;
     let allFlights = [];
 
+    document.querySelectorAll('.dash-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+      });
+    });
+
     async function initPilotPage(){
       const user = await initNavAuth();
-      if(!user){ window.location.href='/unauthorized.html'; return; }
+      if(!user) { window.location.href='/unauthorized.html'; return; }
       
-      // Check staff access
-      try {
-        const staffRes=await fetch('/api/check-staff');
-        const staffData=await staffRes.json();
-        if(!staffData.isStaff){ window.location.href='/unauthorized.html'; return; }
-      } catch(e) {
-        window.location.href='/unauthorized.html';
-        return;
-      }
+      const staffRes=await fetch('/api/check-staff');
+      const staffData=await staffRes.json();
+      if(!staffData.isStaff){ window.location.href='/unauthorized.html'; return; }
 
       await Promise.all([loadMasterFlights(), loadMyBookings()]);
     }
-
-    function activateTab(name){
-      document.querySelectorAll('.dash-tab').forEach(tab=>tab.classList.toggle('active', tab.dataset.tab===name));
-      document.querySelectorAll('.dash-panel').forEach(panel=>panel.classList.toggle('active', panel.id===`tab-${name}`));
-    }
-    document.querySelectorAll('.dash-tab').forEach(tab=>tab.addEventListener('click',()=>activateTab(tab.dataset.tab)));
 
     async function loadMasterFlights(){
       try{
@@ -185,23 +149,31 @@
         const js=await res.json();
         allFlights = js.flights || [];
         const sel=document.getElementById('flight-select');
-        sel.innerHTML = '<option value="">Choose a flight…</option>' + allFlights.map(f=>`<option value="${f.id}">${f.id} — ${f.origin} → ${f.destination} (${new Date(f.departureTime).toLocaleString()})</option>`).join('');
+        sel.innerHTML = '<option value="">Choose a flight…</option>' + allFlights.map(f=>`<option value="${f.id}">${f.id} — ${f.origin} → ${f.destination}</option>`).join('');
         sel.addEventListener('change', ()=> loadFlightSeats(sel.value));
-      }catch(e){ console.error('loadMasterFlights', e); }
+      }catch(e){}
     }
 
     async function loadMyBookings(){
       const mount = document.getElementById('pilot-flights');
       try{
         const res=await fetch('/api/mybookings');
-        if(!res.ok){ mount.textContent='Sign in to view bookings.'; return; }
+        if(!res.ok) return;
         const js=await res.json();
         document.getElementById('pilot-count').textContent = js.bookings.length;
-        if(!js.bookings.length){ mount.innerHTML='<p class="small-text">No bookings yet.</p>'; return; }
-        mount.innerHTML = js.bookings.map(b=>`<div class="card-row apple-glass"><div><strong>${b.flightNumber}</strong><div class="small-text">${b.destName} • Seat ${b.seat||'N/A'}</div></div><div class="small-text">${new Date(b.bookedAt).toLocaleString()}</div></div>`).join('');
+        if(!js.bookings.length){ mount.innerHTML='<p class="small-text">No bookings found.</p>'; return; }
+        mount.innerHTML = js.bookings.map(b=>`
+          <div class="card-row apple-glass" style="background:rgba(255,255,255,0.03)">
+            <div>
+              <div style="font-weight:700">${b.flightNumber}</div>
+              <div class="small-text">${b.destName} • Seat ${b.seat||'N/A'}</div>
+            </div>
+            <div class="small-text">${new Date(b.bookedAt).toLocaleDateString()}</div>
+          </div>
+        `).join('');
         const next = js.bookings.sort((a,b)=>new Date(a.bookedAt)-new Date(b.bookedAt))[0];
-        document.getElementById('pilot-next').textContent = next ? new Date(next.bookedAt).toLocaleString() : '—';
-      }catch(e){ mount.textContent='Could not load bookings.'; }
+        document.getElementById('pilot-next').textContent = next ? new Date(next.bookedAt).toLocaleDateString() : '—';
+      }catch(e){}
     }
 
     function renderSeatMap(totalSeats=60, takenSeats=[]){
@@ -209,44 +181,37 @@
       mount.innerHTML = '';
       const rows = Math.ceil(totalSeats / 4);
       const cols = ['A', 'B', 'C', 'D'];
-      
-      const grid = document.createElement('div');
-      grid.className = 'seat-grid';
-      
       for(let r=1; r<=rows; r++){
         cols.forEach(c => {
           const seatId = `${r}${c}`;
           const btn = document.createElement('button');
-          btn.type='button';
-          btn.className='seat-cell';
+          btn.className='dash-tab';
+          btn.style.width='100%';
+          btn.style.aspectRatio='1';
+          btn.style.justifyContent='center';
           btn.textContent=seatId;
           if(takenSeats.includes(seatId)){
-            btn.classList.add('taken'); btn.disabled=true;
+            btn.style.opacity='0.3'; btn.disabled=true;
           } else {
             btn.addEventListener('click', ()=>{
-              document.querySelectorAll('.seat-cell').forEach(el=>el.classList.remove('selected'));
-              btn.classList.add('selected'); selectedSeat = seatId;
+              document.querySelectorAll('#seat-map .dash-tab').forEach(el=>el.classList.remove('active'));
+              btn.classList.add('active'); selectedSeat = seatId;
             });
           }
-          grid.appendChild(btn);
+          mount.appendChild(btn);
         });
       }
-      mount.appendChild(grid);
     }
 
     async function loadFlightSeats(flightId){
-      if(!flightId) {
-          document.getElementById('seat-map').innerHTML = '';
-          return;
-      }
+      if(!flightId) { document.getElementById('seat-map').innerHTML = ''; return; }
       const flight = allFlights.find(f => f.id === flightId);
       try{
         const res=await fetch(`/api/flight/${encodeURIComponent(flightId)}`);
-        if(!res.ok){ document.getElementById('pilot-feedback').textContent='Could not load flight seats.'; return; }
         const js=await res.json();
         renderSeatMap(flight ? flight.totalSeats : 60, js.flight.bookedSeats || []);
-        document.getElementById('pilot-feedback').textContent = `Available seats loaded for ${js.flight.id}.`;
-      }catch(e){ document.getElementById('pilot-feedback').textContent='Seat map load error.'; }
+        document.getElementById('pilot-feedback').textContent = `Map loaded for ${js.flight.id}.`;
+      }catch(e){}
     }
 
     document.getElementById('refresh-seats').addEventListener('click', ()=>{
@@ -260,11 +225,13 @@
       if(!selectedSeat){ showToast('⚠️ Select a seat first.'); return; }
       try{
         const res=await fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flightId,seatId:selectedSeat})});
-        const js=await res.json();
-        if(!res.ok){ showToast(`❌ ${js.error||'Booking failed'}`); loadFlightSeats(flightId); return; }
-        showToast(`✅ Booked ${js.booking.flightNumber} seat ${js.booking.seat}`);
-        await loadMyBookings();
-        await loadFlightSeats(flightId);
+        if(res.ok){
+          showToast(`✅ Seat ${selectedSeat} reserved.`);
+          await loadMyBookings();
+          await loadFlightSeats(flightId);
+        } else {
+          const js=await res.json(); showToast(`❌ ${js.error}`);
+        }
       }catch(e){ showToast('❌ Network error.'); }
     });
 

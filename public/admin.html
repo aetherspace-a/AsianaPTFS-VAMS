@@ -7,15 +7,6 @@
   <link rel="stylesheet" href="/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
   <script src="/app.js" defer></script>
-  <style>
-    .hero-panel{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start}
-    @media(max-width:900px){.hero-panel{grid-template-columns:1fr}}
-    .stat-card{display:flex;align-items:center;gap:1.25rem;padding:2rem;border-radius:28px;}
-    .stat-card-content{display:flex;flex-direction:column;gap:0.25rem;}
-    .stat-card .card-icon{font-size:2.4rem;color:var(--red);background:rgba(255,69,58,0.08);padding:0.9rem;border-radius:20px;border:1px solid rgba(255,69,58,0.18);}
-    .panel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
-    .data-note{color:var(--text-muted);font-size:.92rem;line-height:1.5}
-  </style>
 </head>
 <body>
   <div class="noise-overlay"></div>
@@ -26,7 +17,9 @@
   </div>
 
   <nav>
-    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <a class="logo" href="/">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines Logo" class="logo-img">
+    </a>
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/economy.html">Economy</a></li>
@@ -50,335 +43,128 @@
   </nav>
 
   <main class="page-main">
-    <div class="hero-panel">
-      <div class="page-header" style="text-align:left; margin-bottom:0">
-        <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
-        <h1>Flight control & staffing</h1>
-        <p>Manage flights, review bookings, and update roster access in a polished administrator experience.</p>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
-          <a href="/flights.html" class="btn btn-outline">
-            <span class="material-symbols-outlined">format_list_bulleted</span> Flight Listings
-          </a>
-          <a href="/pilot.html" class="btn btn-outline">
-            <span class="material-symbols-outlined">dashboard</span> Pilot Dashboard
-          </a>
-        </div>
+    <div class="page-header reveal">
+      <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
+      <h1>Admin Console</h1>
+      <p>Manage flights, review bookings, and update roster access with authoritative control.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-bottom:3rem" class="reveal">
+      <div class="stat-card apple-glass">
+        <span class="stat-num" id="stat-flights">0</span>
+        <span class="stat-label">Scheduled Flights</span>
       </div>
-      <div class="apple-glass" style="padding:1.75rem;">
-        <div style="display:flex;gap:1rem;align-items:center">
-          <div style="width:56px;height:56px;border-radius:18px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text)">A</div>
-          <div>
-            <div style="font-size:.9rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.35rem">Administrator</div>
-            <div style="font-size:1.3rem;font-weight:700">Secure access</div>
-          </div>
-        </div>
-        <p class="data-note" style="margin-top:1.2rem">Only verified staff members can create or delete flights. Use ADMIN_IDS in .env to restrict high-level actions.</p>
+      <div class="stat-card apple-glass">
+        <span class="stat-num" id="stat-revenue">$0</span>
+        <span class="stat-label">Total Revenue</span>
+      </div>
+      <div class="stat-card apple-glass">
+        <span class="stat-num" id="stat-miles">0</span>
+        <span class="stat-label">Miles Logged</span>
       </div>
     </div>
 
-    <div class="form-grid" style="margin-top:2rem">
-      <div class="stat-card apple-glass">
-        <span class="material-symbols-outlined card-icon">flight_takeoff</span>
-        <div class="stat-card-content">
-          <span class="stat-num" id="stat-flights">0</span>
-          <span class="stat-label">Scheduled Flights</span>
-        </div>
+    <section class="apple-glass reveal" style="padding:3rem; margin-bottom:3rem">
+      <h2 style="font-size:1.8rem; margin-bottom:1.5rem">Create New Flight</h2>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem">
+        <div class="form-group"><label>Flight ID</label><input id="flight-id" class="form-control" placeholder="e.g. OZ300"></div>
+        <div class="form-group"><label>Aircraft</label><input id="flight-aircraft" class="form-control" placeholder="e.g. A350-900"></div>
+        <div class="form-group"><label>Origin</label><input id="flight-origin" class="form-control" placeholder="e.g. ICN"></div>
+        <div class="form-group"><label>Destination</label><input id="flight-dest" class="form-control" placeholder="e.g. FRA"></div>
+        <div class="form-group"><label>Departure Time</label><input id="flight-time" class="form-control" type="datetime-local"></div>
+        <div class="form-group"><label>Total Seats</label><input id="flight-seats" class="form-control" type="number" value="60"></div>
+        <button id="create-flight" class="btn" style="grid-column: span 2">Schedule Flight</button>
       </div>
-      <div class="stat-card apple-glass">
-        <span class="material-symbols-outlined card-icon">payments</span>
-        <div class="stat-card-content">
-          <span class="stat-num" id="stat-revenue">$0</span>
-          <span class="stat-label">Total Revenue</span>
-        </div>
-      </div>
-      <div class="stat-card apple-glass">
-        <span class="material-symbols-outlined card-icon">monitoring</span>
-        <div class="stat-card-content">
-          <span class="stat-num" id="stat-miles">0</span>
-          <span class="stat-label">Miles Logged</span>
-        </div>
-      </div>
-    </div>
-
-    <section class="apple-glass" style="margin-top:2rem;padding:2rem;">
-      <div class="section-header">
-        <h2><span class="material-symbols-outlined" style="font-size: 2.2rem; color: var(--red);">add_circle</span> Create a new flight</h2>
-        <span class="pill">Staff only</span>
-      </div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Flight ID</label>
-          <input id="flight-id" class="form-control" placeholder="OZ300" />
-        </div>
-        <div class="form-group">
-          <label>Origin</label>
-          <input id="flight-origin" class="form-control" placeholder="ICN" />
-        </div>
-        <div class="form-group">
-          <label>Destination</label>
-          <input id="flight-dest" class="form-control" placeholder="LAX" />
-        </div>
-        <div class="form-group">
-          <label>Departure Time</label>
-          <input id="flight-time" class="form-control" type="datetime-local" />
-        </div>
-        <div class="form-group">
-          <label>Aircraft</label>
-          <select id="flight-aircraft" class="form-control">
-            <option value="">Select Aircraft…</option>
-            <option value="Airbus A321-200">Airbus A321-200</option>
-            <option value="Airbus A321neo">Airbus A321neo</option>
-            <option value="Airbus A330-300">Airbus A330-300</option>
-            <option value="Airbus A350-900">Airbus A350-900</option>
-            <option value="Boeing B777-200ER">Boeing B777-200ER</option>
-            <option value="Airbus A380-800">Airbus A380-800</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Codeshare</label>
-          <input id="flight-codeshare" class="form-control" placeholder="LH738" />
-        </div>
-        <div class="form-group">
-          <label>Total Seats</label>
-          <input id="flight-seats" class="form-control" type="number" min="1" placeholder="60" />
-        </div>
-        <button id="create-flight" class="btn" style="width:100%;grid-column: span 2; margin-top: 1rem">
-          <span class="material-symbols-outlined">add</span> Create Flight
-        </button>
-      </div>
-      <p class="data-note" style="margin-top:1rem">New flights are automatically announced to the Discord flight-logs channel.</p>
     </section>
 
-    <div class="panel-grid">
-      <section class="apple-glass" style="padding:2rem;">
-        <div class="section-header">
-          <h2><span class="material-symbols-outlined">calendar_today</span> Flight schedule</h2>
-          <button id="reload-flights" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-            <span class="material-symbols-outlined" style="font-size: 1.1rem;">refresh</span> Refresh
-          </button>
-        </div>
-        <div id="flights-list" class="card-list">Loading flights…</div>
-      </section>
-      <section class="apple-glass" style="padding:2rem;">
-        <div class="section-header">
-          <h2><span class="material-symbols-outlined">badge</span> Staff roster</h2>
-          <button id="reload-staff" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-            <span class="material-symbols-outlined" style="font-size: 1.1rem;">refresh</span> Refresh
-          </button>
-        </div>
-        <div id="staff-list" class="card-list">Loading staff…</div>
-      </section>
-    </div>
-
-    <section class="apple-glass" style="margin-top:2rem;padding:2rem;">
-      <div class="section-header">
-        <h2><span class="material-symbols-outlined">receipt_long</span> Recent bookings</h2>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:2.5rem" class="reveal">
+      <div class="apple-glass" style="padding:2.5rem">
+        <h2 style="font-size:1.6rem; margin-bottom:1.5rem">Current Schedule</h2>
+        <div id="flights-list" class="card-list">Loading…</div>
       </div>
-      <div id="booking-list" class="card-list">Loading bookings…</div>
-    </section>
+      <div class="apple-glass" style="padding:2.5rem">
+        <h2 style="font-size:1.6rem; margin-bottom:1.5rem">Staff Roster</h2>
+        <div id="staff-list" class="card-list">Loading…</div>
+      </div>
+    </div>
   </main>
 
   <footer>
-    <div class="footer-container">
-      <div class="footer-brand">
-        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
-        <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
-        <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-        </a>
-      </div>
-      <div class="footer-links">
-        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Team</a></li><li><a href="#">Fleet</a></li><li><a href="#">Contact Us</a></li></ul></div>
-        <div class="footer-col"><h4>Fly</h4><ul><li><a href="#">Search Flights</a></li><li><a href="#">Flight Logs</a></li></ul></div>
-        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
-      </div>
-    </div>
     <div class="footer-bottom">
-      <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
-      <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
+      <p>© 2026 Asiana Airlines PTFS Admin Portal</p>
     </div>
   </footer>
 
   <script>
-    async function initAdminAuth(){
+    async function initAdminPage(){
       const user = await initNavAuth();
-      if(!user){ window.location.href='/unauthorized.html'; return; }
-      
-      // Check admin access
-      try {
-        const adminRes=await fetch('/api/check-admin');
-        const adminData=await adminRes.json();
-        if(!adminData.isAdmin){ window.location.href='/unauthorized.html'; return; }
-      } catch(e) {
-        window.location.href='/unauthorized.html';
-        return;
-      }
-      
-      await Promise.all([loadStats(), loadFlights(), loadStaff(), loadBookings()]);
+      if(!user) { window.location.href='/unauthorized.html'; return; }
+      const res = await fetch('/api/check-admin');
+      const data = await res.json();
+      if(!data.isAdmin) { window.location.href='/unauthorized.html'; return; }
+      await Promise.all([loadStats(), loadFlights(), loadStaff()]);
     }
 
     async function loadStats(){
-      const flightsRes = await fetch('/api/flights');
+      const fRes = await fetch('/api/flights');
       const finRes = await fetch('/api/finance');
-      const flights = flightsRes.ok ? (await flightsRes.json()).flights : [];
-      const finance = finRes.ok ? (await finRes.json()) : { totalRevenue: 0, totalMiles: 0 };
-      
+      const flights = (await fRes.json()).flights || [];
+      const finance = (await finRes.json());
       document.getElementById('stat-flights').textContent = flights.length;
       document.getElementById('stat-revenue').textContent = `$${finance.totalRevenue.toLocaleString()}`;
-      document.getElementById('stat-miles').textContent = `${finance.totalMiles.toLocaleString()}`;
+      document.getElementById('stat-miles').textContent = `${finance.totalMiles.toLocaleString()} mi`;
     }
 
     async function loadFlights(){
       const mount = document.getElementById('flights-list');
-      try{
-        const res = await fetch('/api/flights');
-        if(!res.ok){ mount.textContent='Unable to load flights.'; return; }
-        const js = await res.json();
-        if(!js.flights.length){ mount.innerHTML='<p class="small-text">No scheduled flights.</p>'; return; }
-        mount.innerHTML = js.flights.map(f => `
-          <div class="card-row apple-glass">
-            <div style="flex:1">
-              <div style="font-weight:700">${f.id} <span class="pill" style="color:var(--red)">${f.origin} → ${f.destination}</span></div>
-              <div class="small-text">${new Date(f.departureTime).toLocaleString()} UTC</div>
-              <div class="small-text">${f.aircraft || 'No aircraft'} ${f.codeshare ? `• ${f.codeshare}` : ''}</div>
-            </div>
-            <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-              <select class="form-control update-status" data-id="${f.id}" style="min-height:36px; padding:0.4rem 0.8rem; font-size:0.8rem; width:120px; border-radius:10px">
-                <option value="Scheduled" ${f.status === 'Scheduled' ? 'selected' : ''}>Scheduled</option>
-                <option value="Boarding" ${f.status === 'Boarding' ? 'selected' : ''}>Boarding</option>
-                <option value="Departed" ${f.status === 'Departed' ? 'selected' : ''}>Departed</option>
-                <option value="Arrived" ${f.status === 'Arrived' ? 'selected' : ''}>Arrived</option>
-                <option value="Delayed" ${f.status === 'Delayed' ? 'selected' : ''}>Delayed</option>
-                <option value="Cancelled" ${f.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-              </select>
-              <button class="btn btn-outline delete-flight" data-id="${f.id}" style="padding: 0.5rem 1rem; font-size: 0.85rem; color:var(--red)">
-                <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span>
-              </button>
-            </div>
+      const res = await fetch('/api/flights');
+      const js = await res.json();
+      mount.innerHTML = js.flights.map(f => `
+        <div class="card-row apple-glass" style="background:rgba(255,255,255,0.03)">
+          <div>
+            <div style="font-weight:700">${f.id} (${f.origin}→${f.destination})</div>
+            <div class="small-text">${f.status}</div>
           </div>
-        `).join('');
-        
-        // Status change listener
-        document.querySelectorAll('.update-status').forEach(sel => {
-          sel.addEventListener('change', async () => {
-            const flightId = sel.dataset.id;
-            const status = sel.value;
-            const res = await fetch(`/api/flights/${encodeURIComponent(flightId)}/status`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ status })
-            });
-            if(!res.ok) {
-              const data = await res.json();
-              alert(data.error || 'Status update failed');
-              loadFlights();
-            }
-          });
-        });
-
-        document.querySelectorAll('.delete-flight').forEach(btn=>{
-          btn.addEventListener('click', async () => {
-            const flightId = btn.dataset.id;
-            if(!confirm(`Delete flight ${flightId}? This will remove it from the schedule.`)) return;
-            const res = await fetch(`/api/flights/${encodeURIComponent(flightId)}`, { method: 'DELETE' });
-            if(res.ok){ loadFlights(); loadStats(); }
-            else { const js = await res.json(); alert(js.error||'Delete failed'); }
-          });
-        });
-      }catch(e){ mount.textContent='Load error'; }
+          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem; color:var(--red)" onclick="deleteFlight('${f.id}')">Delete</button>
+        </div>
+      `).join('');
     }
 
     async function loadStaff(){
       const mount = document.getElementById('staff-list');
-      try{
-        const res = await fetch('/api/staff');
-        if(!res.ok){ mount.textContent='Unable to load staff.'; return; }
-        const js = await res.json();
-        if(!js.staff.length){ mount.innerHTML='<p class="small-text">No staff configured.</p>'; return; }
-        mount.innerHTML = js.staff.map(s => `
-          <div class="card-row apple-glass">
-            <div>
-              <div style="font-weight:700">${s.username}</div>
-              <div class="small-text">${s.role.toUpperCase()}</div>
-            </div>
-            <button class="btn btn-outline remove-staff" data-id="${s.id}" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-              <span class="material-symbols-outlined" style="font-size: 1.1rem;">person_remove</span>
-            </button>
+      const res = await fetch('/api/staff');
+      const js = await res.json();
+      mount.innerHTML = js.staff.map(s => `
+        <div class="card-row apple-glass" style="background:rgba(255,255,255,0.03)">
+          <div>
+            <div style="font-weight:700">${s.username}</div>
+            <div class="small-text">${s.role.toUpperCase()}</div>
           </div>
-        `).join('');
-        document.querySelectorAll('.remove-staff').forEach(btn=>{
-          btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            if(!confirm('Remove this staff member?')) return;
-            const res = await fetch(`/api/staff/${encodeURIComponent(id)}`, { method: 'DELETE' });
-            if(res.ok){ loadStaff(); loadStats(); }
-            else { const js = await res.json(); alert(js.error||'Delete failed'); }
-          });
-        });
-      }catch(e){ mount.textContent='Load error'; }
+        </div>
+      `).join('');
     }
 
-    async function loadBookings(){
-      const mount = document.getElementById('booking-list');
-      try{
-        const res = await fetch('/api/bookings');
-        if(!res.ok){ mount.textContent='Unable to load bookings.'; return; }
-        const js = await res.json();
-        if(!js.bookings.length){ mount.innerHTML='<p class="small-text">No bookings were found.</p>'; return; }
-        mount.innerHTML = js.bookings.slice(0, 8).map(b => `
-          <div class="card-row apple-glass">
-            <div style="flex:1">
-              <div style="font-weight:700">${b.flightNumber} <span class="pill">${b.destName}</span></div>
-              <div class="small-text">Seat ${b.seat || 'N/A'} • ${b.passengerName} (@${b.username})</div>
-            </div>
-            <span class="pill">${new Date(b.bookedAt).toLocaleString()}</span>
-          </div>
-        `).join('');
-      }catch(e){ mount.textContent='Load error'; }
+    async function deleteFlight(id){
+      if(!confirm(`Delete flight ${id}?`)) return;
+      await fetch(`/api/flights/${id}`, { method: 'DELETE' });
+      await loadFlights(); await loadStats();
     }
-
-    document.getElementById('reload-flights').addEventListener('click', loadFlights);
-    document.getElementById('reload-staff').addEventListener('click', loadStaff);
 
     document.getElementById('create-flight').addEventListener('click', async () => {
-      const id = document.getElementById('flight-id').value.trim();
-      const origin = document.getElementById('flight-origin').value.trim();
-      const destination = document.getElementById('flight-dest').value.trim();
-      const flightTimeValue = document.getElementById('flight-time').value.trim();
-      const aircraft = document.getElementById('flight-aircraft').value;
-      const codeshare = document.getElementById('flight-codeshare').value.trim();
-      const seatValue = document.getElementById('flight-seats').value.trim();
-      const totalSeats = seatValue ? parseInt(seatValue, 10) : undefined;
-      
-      if(!id||!origin||!destination||!flightTimeValue){ showToast('⚠️ Please complete all required fields.'); return; }
-      
-      const departureDate = new Date(flightTimeValue);
-      if(Number.isNaN(departureDate.getTime())){ showToast('⚠️ Invalid departure time.'); return; }
-      
-      try{
-        const res = await fetch('/api/flights',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({id,origin,destination,departureTime:departureDate.toISOString(),totalSeats,aircraft,codeshare})
-        });
-        if(res.status===201){ 
-          showToast('✅ Flight created and announced!'); 
-          document.getElementById('flight-id').value=''; 
-          document.getElementById('flight-origin').value=''; 
-          document.getElementById('flight-dest').value=''; 
-          document.getElementById('flight-time').value=''; 
-          document.getElementById('flight-seats').value=''; 
-          document.getElementById('flight-codeshare').value='';
-          loadFlights(); 
-          loadStats(); 
-        } else { 
-          const js=await res.json(); showToast(js.error||'Create failed'); 
-        }
-      }catch(e){ showToast('❌ Request failed'); }
+      const body = {
+        id: document.getElementById('flight-id').value,
+        origin: document.getElementById('flight-origin').value,
+        destination: document.getElementById('flight-dest').value,
+        departureTime: document.getElementById('flight-time').value,
+        aircraft: document.getElementById('flight-aircraft').value,
+        totalSeats: parseInt(document.getElementById('flight-seats').value)
+      };
+      const res = await fetch('/api/flights', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if(res.ok) { showToast('✅ Flight Scheduled'); await loadFlights(); await loadStats(); }
+      else showToast('❌ Failed to create flight');
     });
 
-    document.addEventListener('DOMContentLoaded', initAdminAuth);
+    document.addEventListener('DOMContentLoaded', initAdminPage);
   </script>
 </body>
 </html>
-

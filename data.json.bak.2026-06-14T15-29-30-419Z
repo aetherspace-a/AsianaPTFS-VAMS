@@ -57,17 +57,7 @@
     "totalMiles": 842000,
     "lastUpdated": "2026-06-14T14:20:16.404Z"
   },
-  "tickets": [
-    {
-      "id": "1515739970785247243",
-      "userId": "1135565178797309962",
-      "username": "aetherspace_",
-      "subject": "General Support",
-      "status": "closed",
-      "createdAt": "2026-06-14T15:29:30.419Z",
-      "closedAt": "2026-06-14T15:29:35.821Z"
-    }
-  ],
+  "tickets": [],
   "botConfig": {
     "announcementChannel": "",
     "logChannel": "",
@@ -75,26 +65,6 @@
     "staffRole": "",
     "adminRole": "",
     "ticketWelcomeMessage": "Welcome to Asiana Airlines Support. Our staff will be with you shortly.",
-    "ticketPanels": [
-      {
-        "id": "general",
-        "name": "General Support",
-        "description": "General inquiries and airline information.",
-        "icon": "🎫"
-      },
-      {
-        "id": "staff",
-        "name": "Staff Application",
-        "description": "Inquiries regarding recruitment and role applications.",
-        "icon": "🛡️"
-      },
-      {
-        "id": "report",
-        "name": "Report a Pilot",
-        "description": "File a report regarding flight safety or conduct.",
-        "icon": "⚠️"
-      }
-    ],
     "templates": {
       "new": {
         "title": "🆕 New Flight Scheduled: {id}",

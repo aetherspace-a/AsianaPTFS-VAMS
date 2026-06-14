@@ -63,9 +63,8 @@
       "userId": "1135565178797309962",
       "username": "aetherspace_",
       "subject": "General Support",
-      "status": "closed",
-      "createdAt": "2026-06-14T15:29:30.419Z",
-      "closedAt": "2026-06-14T15:29:35.821Z"
+      "status": "open",
+      "createdAt": "2026-06-14T15:29:30.419Z"
     }
   ],
   "botConfig": {

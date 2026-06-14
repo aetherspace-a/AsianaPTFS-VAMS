@@ -20,7 +20,9 @@
 </div>
 
 <nav>
-  <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+  <a class="logo" href="/">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines Logo" class="logo-img">
+  </a>
   <ul>
     <li><a href="#about">About</a></li>
     <li><a href="#fleet">Fleet</a></li>
@@ -28,10 +30,7 @@
     <li><a href="#logs">Flight Logs</a></li>
     <li><a href="#staff">Staff</a></li>
     <li><a href="/economy.html">Economy</a></li>
-    <li><a href="/finance.html">Finance</a></li>
     <li><a href="/flights.html">Flights</a></li>
-    <li><a href="/pilot.html">Pilot</a></li>
-    <li><a href="/admin.html">Admin</a></li>
   </ul>
   <div class="nav-right">
     <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
@@ -48,10 +47,10 @@
 </nav>
 
 <div id="hero">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines" class="hero-logo-img">
-  <h1 class="reveal">"Beautiful People"</h1>
-  <h3 class="asiana-brand reveal">ASIANA AIRLINES • 아시아나항공</h3>
-  <p class="reveal">Experience the pinnacle of PTFS aviation. Rooted in South Korean excellence, Asiana Airlines delivers uncompromising realism, strict safety standards, and our signature "Golden Grand Slam" service.</p>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines Logo" class="hero-logo-img">
+  <h1>"Beautiful People"</h1>
+  <h3>ASIANA AIRLINES • 아시아나항공</h3>
+  <p>Experience the pinnacle of PTFS aviation. Rooted in South Korean excellence, Asiana Airlines delivers uncompromising realism, strict safety standards, and our signature "Golden Grand Slam" service.</p>
   <div class="hero-actions">
     <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="btn">Join Server</a>
     <a href="#apply" class="btn btn-outline">Apply to Staff</a>
@@ -60,18 +59,25 @@
 
 <div class="stats">
   <div class="stat-card apple-glass reveal"><span id="stat-flights" class="stat-num">8+</span><span class="stat-label">Scheduled Flights</span></div>
-  <div class="stat-card apple-glass reveal" style="transition-delay:.1s"><span class="stat-num">10</span><span class="stat-label">Destinations</span></div>
-  <div class="stat-card apple-glass reveal" style="transition-delay:.2s"><span class="stat-num">6</span><span class="stat-label">Aircraft Types</span></div>
-  <div class="stat-card apple-glass reveal" style="transition-delay:.3s"><span class="stat-num">1k+</span><span class="stat-label">Flights Logged</span></div>
+  <div class="stat-card apple-glass reveal" style="transition-delay: 0.1s;"><span class="stat-num">10</span><span class="stat-label">Destinations</span></div>
+  <div class="stat-card apple-glass reveal" style="transition-delay: 0.2s;"><span class="stat-num">6</span><span class="stat-label">Aircraft Types</span></div>
+  <div class="stat-card apple-glass reveal" style="transition-delay: 0.3s;"><span class="stat-num">1k+</span><span class="stat-label">Flights Logged</span></div>
 </div>
 
 <section id="about" class="reveal">
   <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Wing Logo" class="section-icon">
   <h2>Our <span>Standards.</span></h2>
   <p class="sub">Setting the benchmark for realism and quality in Pilot Training Flight Simulator.</p>
+  
   <div class="grid-2">
-    <div class="feature-card apple-glass"><h3>Global Prestige.</h3><p>Carefully curated international routes connecting Seoul to major destinations across the world, bringing together realism, professionalism, and the excellence of South Korean aviation.</p></div>
-    <div class="feature-card apple-glass"><h3>Flawless Precision.</h3><p>Professional, highly disciplined, and ultra-realistic flight operations designed to replicate the standards of a modern international airline. Strong operational standards from gate departure to final arrival.</p></div>
+    <div class="feature-card apple-glass">
+      <h3>Global Prestige.</h3>
+      <p>Carefully curated international routes connecting Seoul to major destinations across the world, bringing together realism, professionalism, and the excellence of South Korean aviation.</p>
+    </div>
+    <div class="feature-card apple-glass">
+      <h3>Flawless Precision.</h3>
+      <p>Professional, highly disciplined, and ultra-realistic flight operations designed to replicate the standards of a modern international airline. Strong operational standards from gate departure to final arrival.</p>
+    </div>
   </div>
 </section>
 
@@ -80,12 +86,50 @@
   <h2>Our <span>Fleet.</span></h2>
   <p class="sub">Fly our iconic Asiana liveries across our official PTFS aircraft roster.</p>
   <div class="grid-3">
-    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/26228/hl7634-asiana-airlines-airbus-a380-841_PlanespottersNet_1927063_2b3cb05c46_o.jpg')"></div><div class="fleet-content"><h3>Airbus A380-800</h3><p>Premium Ultra-Long-Haul. High-capacity flagship operations.</p></div></div>
-    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/40206/hl8522-asiana-airlines-airbus-a350-941_PlanespottersNet_1930033_bb310fe3ea_o.jpg')"></div><div class="fleet-content"><h3>Airbus A350-900</h3><p>Modern Long-Haul. Highly efficient intercontinental routes.</p></div></div>
-    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/48020/hl7755-asiana-airlines-boeing-777-28eer_PlanespottersNet_1925950_d87468447c_o.jpg')"></div><div class="fleet-content"><h3>Boeing B777-200ER</h3><p>Long-Haul Standard. Reliable transoceanic workhorse.</p></div></div>
-    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/30449/hl7792-asiana-airlines-airbus-a330-300-323_PlanespottersNet_1926955_55c7fc2180_o.jpg')"></div><div class="fleet-content"><h3>Airbus A330-300</h3><p>Versatile Mid-Haul. High-demand regional backbone.</p></div></div>
-    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/27017/hl8364-asiana-airlines-airbus-a321-251nx_PlanespottersNet_1897259_8899755984_o.jpg')"></div><div class="fleet-content"><h3>Airbus A321neo</h3><p>Next-Gen Narrowbody. Ultra-efficient regional operations.</p></div></div>
-    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/15354/hl8038-asiana-airlines-airbus-a321-200-231-wl_PlanespottersNet_1866194_5a8c78b6b1_o.jpg')"></div><div class="fleet-content"><h3>Airbus A321-200</h3><p>Classic Narrowbody. Reliable short-haul performance.</p></div></div>
+    <div class="fleet-card apple-glass">
+      <div class="fleet-img" style="background-image: url('https://cdn.plnspttrs.net/26228/hl7634-asiana-airlines-airbus-a380-841_PlanespottersNet_1927063_2b3cb05c46_o.jpg');"></div>
+      <div class="fleet-content">
+        <h3>Airbus A380-800</h3>
+        <p>Premium Ultra-Long-Haul. High-capacity flagship operations.</p>
+      </div>
+    </div>
+    <div class="fleet-card apple-glass">
+      <div class="fleet-img" style="background-image: url('https://cdn.plnspttrs.net/40206/hl8522-asiana-airlines-airbus-a350-941_PlanespottersNet_1930033_bb310fe3ea_o.jpg');"></div>
+      <div class="fleet-content">
+        <h3>Airbus A350-900</h3>
+        <p>Modern Long-Haul. Highly efficient intercontinental routes.</p>
+      </div>
+    </div>
+    <div class="fleet-card apple-glass">
+      <div class="fleet-img" style="background-image: url('https://cdn.plnspttrs.net/48020/hl7755-asiana-airlines-boeing-777-28eer_PlanespottersNet_1925950_d87468447c_o.jpg');"></div>
+      <div class="fleet-content">
+        <h3>Boeing B777-200ER</h3>
+        <p>Long-Haul Standard. Reliable transoceanic workhorse.</p>
+      </div>
+    </div>
+    <div class="fleet-card apple-glass">
+      <div class="fleet-img" style="background-image: url('https://cdn.plnspttrs.net/30449/hl7792-asiana-airlines-airbus-a330-323_PlanespottersNet_1926955_55c7fc2180_o.jpg');"></div>
+      <div class="fleet-content">
+        <h3>Airbus A330-300</h3>
+        <p>Versatile Mid-Haul. High-demand regional Backbone.</p>
+      </div>
+    </div>
+    <div class="fleet-card apple-glass">
+      <div class="fleet-img" style="background-image: url('https://cdn.plnspttrs.net/27017/hl8364-asiana-airlines-airbus-a321-251nx_PlanespottersNet_1897259_8899755984_o.jpg');"></div>
+      <div class="fleet-content">
+        <h3>Airbus A321-neo</h3>
+        <p>Next-Gen Narrowbody. Ultra-efficient regional operations.</p>
+        <div><span class="pill">Spawn A320</span></div>
+      </div>
+    </div>
+    <div class="fleet-card apple-glass">
+      <div class="fleet-img" style="background-image: url('https://cdn.plnspttrs.net/15354/hl8038-asiana-airlines-airbus-a321-200-231-wl_PlanespottersNet_1866194_5a8c78b6b1_o.jpg');"></div>
+      <div class="fleet-content">
+        <h3>Airbus A321-200</h3>
+        <p>Classic Narrowbody. Reliable short-haul performance.</p>
+        <div><span class="pill">Spawn A320</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -94,16 +138,46 @@
   <h2>PTFS <span>Network.</span></h2>
   <p class="sub">Discover our official destinations across the Pilot Training Flight Simulator map.</p>
   <div class="grid-3">
-    <div class="dest-card apple-glass"><div class="dest-card-header">Barra Airport <span>[IBAR]</span></div><div class="dest-card-desc">A unique small airfield situated on a beach, suitable for regional STOL operations.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Greater Rockford <span>[IRFD]</span></div><div class="dest-card-desc">The central, bustling international hub capable of handling massive widebody airliners.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Izolirani Int'l <span>[IZOL]</span></div><div class="dest-card-desc">A massive facility located on an isolated island, supporting all major aircraft types.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Keflavik Airport <span>[IKFL]</span></div><div class="dest-card-desc">A prominent international destination set in a snowy landscape serving global routes.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Larnaca Int'l <span>[ILAR]</span></div><div class="dest-card-desc">A major coastal hub perfectly equipped to support high-volume heavy airliner traffic.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Mellor Int'l <span>[IMLR]</span></div><div class="dest-card-desc">A vital mid-sized regional airport tailored for narrowbody and short-haul flights.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Perth Int'l <span>[IPPH]</span></div><div class="dest-card-desc">A primary international gateway capable of supporting the heaviest widebody operations.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Saint Barthélemy <span>[IBTH]</span></div><div class="dest-card-desc">A challenging mid-sized regional airport famous for its dramatic, scenic approaches.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Sauthemptona <span>[ISAU]</span></div><div class="dest-card-desc">A picturesque mid-sized destination highly utilized for regional narrowbody operations.</div></div>
-    <div class="dest-card apple-glass"><div class="dest-card-header">Tokyo Int'l <span>[ITKO]</span></div><div class="dest-card-desc">A premier, highly active international hub connecting flights across the entire PTFS globe.</div></div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Barra Airport <span>[IBAR]</span></div>
+      <div class="dest-card-desc">A unique small airfield situated on a beach, suitable for regional STOL operations.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Greater Rockford <span>[IRFD]</span></div>
+      <div class="dest-card-desc">The central, bustling international hub capable of handling massive widebody airliners.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Izolirani Int'l <span>[IZOL]</span></div>
+      <div class="dest-card-desc">A massive facility located on an isolated island, supporting all major aircraft types.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Keflavik Airport <span>[IKFL]</span></div>
+      <div class="dest-card-desc">A prominent international destination set in a snowy landscape serving global routes.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Larnaca Int'l <span>[ILAR]</span></div>
+      <div class="dest-card-desc">A major coastal hub perfectly equipped to support high-volume heavy airliner traffic.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Mellor Int'l <span>[IMLR]</span></div>
+      <div class="dest-card-desc">A vital mid-sized regional airport tailored for narrowbody and short-haul flights.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Perth Int'l <span>[IPPH]</span></div>
+      <div class="dest-card-desc">A primary international gateway capable of supporting the heaviest widebody operations.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Saint Barthélemy <span>[IBTH]</span></div>
+      <div class="dest-card-desc">A challenging mid-sized regional airport famous for its dramatic, scenic approaches.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Sauthemptona <span>[ISAU]</span></div>
+      <div class="dest-card-desc">A picturesque mid-sized destination highly utilized for regional narrowbody operations.</div>
+    </div>
+    <div class="dest-card apple-glass">
+      <div class="dest-card-header">Tokyo Int'l <span>[ITKO]</span></div>
+      <div class="dest-card-desc">A premier, highly active international hub connecting flights across the entire PTFS globe.</div>
+    </div>
   </div>
 </section>
 
@@ -111,6 +185,7 @@
   <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Wing Logo" class="section-icon">
   <h2>Flight <span>Logs.</span></h2>
   <p class="sub">Live flight operations and dispatch logs directly from our Discord server.</p>
+  
   <div class="logs-container apple-glass">
     <iframe src="https://e.widgetbot.io/channels/1506932959855251468/1507312279736029264" title="Discord Flight Logs"></iframe>
   </div>
@@ -121,13 +196,41 @@
   <h2>Our <span>Staff.</span></h2>
   <p class="sub">Meet the dedicated management and operations executive team behind Asiana Airlines PTFS.</p>
   <div class="grid-4">
-    <div class="staff-card apple-glass"><div class="staff-avatar">A</div><h3>@aetherspace_</h3><p>Founder / Chairman</p></div>
-    <div class="staff-card apple-glass"><div class="staff-avatar">B</div><h3>@boeing747sp</h3><p>Vice Chairman</p></div>
-    <div class="staff-card apple-glass"><div class="staff-avatar">V</div><h3>Vacant</h3><p>Chief Executive Officer</p></div>
-    <div class="staff-card apple-glass"><div class="staff-avatar">C</div><h3>@carlonblox</h3><p>Chief Operating Officer</p></div>
-    <div class="staff-card apple-glass"><div class="staff-avatar">T</div><h3>@totozzino_53610</h3><p>President</p></div>
-    <div class="staff-card apple-glass"><div class="staff-avatar">O</div><h3>@oppression.ly</h3><p>Vice President</p></div>
-    <div class="staff-card apple-glass"><div class="staff-avatar">N</div><h3>@nms_126avn</h3><p>Board of Directors</p></div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">A</div>
+      <h3>@aetherspace_</h3>
+      <p>Founder / Chairman</p>
+    </div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">B</div>
+      <h3>@boeing747sp</h3>
+      <p>Vice Chairman</p>
+    </div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">V</div>
+      <h3>Vacant</h3>
+      <p>Chief Executive Officer</p>
+    </div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">C</div>
+      <h3>@carlonblox</h3>
+      <p>Chief Operating Officer</p>
+    </div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">T</div>
+      <h3>@totozzino_53610</h3>
+      <p>President</p>
+    </div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">O</div>
+      <h3>@oppression.ly</h3>
+      <p>Vice President</p>
+    </div>
+    <div class="staff-card apple-glass">
+      <div class="staff-avatar">N</div>
+      <h3>@nms_126avn</h3>
+      <p>Board of Directors</p>
+    </div>
   </div>
 </section>
 
@@ -135,9 +238,12 @@
   <div class="inner reveal">
     <h2>Join the <span>Beautiful People.</span></h2>
     <p class="sub">Submit your staff recruitment application below to start your journey with Asiana Airlines.</p>
+    
     <div class="form-container apple-glass">
       <iframe data-tally-src="https://tally.so/r/gDv9AO?transparentBackground=1" title="Asiana Airlines PTFS Staff Recruitment Application"></iframe>
-      <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+      <script>
+        var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}
+      </script>
     </div>
   </div>
 </div>
@@ -145,48 +251,61 @@
 <footer>
   <div class="footer-container">
     <div class="footer-brand">
-      <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+      <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines Logo" class="footer-logo">
       <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+      
       <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+        </svg>
       </a>
     </div>
+
     <div class="footer-links">
-      <div class="footer-col"><h4>Company</h4><ul><li><a href="#staff">Our Team</a></li><li><a href="#fleet">Fleet</a></li><li><a href="#apply">Contact Us</a></li></ul></div>
-      <div class="footer-col"><h4>Fly</h4><ul><li><a href="#destinations">Search Flights</a></li><li><a href="#logs">Flight Logs</a></li></ul></div>
-      <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#staff">Our Team</a></li>
+          <li><a href="#fleet">Fleet</a></li>
+          <li><a href="#apply">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Fly</h4>
+        <ul>
+          <li><a href="#destinations">Search Flights</a></li>
+          <li><a href="#logs">Flight Logs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
     </div>
   </div>
+
   <div class="footer-bottom">
     <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
     <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
   </div>
 </footer>
 
-  <script>
-    // Hero parallax
-    const heroEl=document.getElementById('hero');
-    window.addEventListener('scroll',()=>{
-      const s=window.scrollY;
-      if(s<600){
-        heroEl.style.transform=`translateY(${s*.3}px)`;
-        heroEl.style.opacity=1-(s/500);
-      }
-    });
+<script>
+  async function loadFlightsCount(){
+    const stat = document.getElementById('stat-flights');
+    if (!stat) return;
+    try{
+      const res=await fetch('/api/flights');
+      if(!res.ok) return;
+      const data=await res.json();
+      stat.textContent = (data.flights.length || 8) + '+';
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', loadFlightsCount);
+</script>
 
-    // Load flights count into stat
-    async function loadFlightsCount(){
-      const stat = document.getElementById('stat-flights');
-      if (!stat) return;
-      try{
-        const res=await fetch('/api/flights');
-        if(!res.ok) return;
-        const data=await res.json();
-        stat.textContent = (data.flights.length || 8) + '+';
-      }catch(e){}
-    }
-    
-    document.addEventListener('DOMContentLoaded', loadFlightsCount);
-  </script>
 </body>
 </html>

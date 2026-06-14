@@ -10,8 +10,6 @@ const session = require("express-session");
 const dataManager = require('./data-manager');
 const dataService = require('./services/data-service');
 
-const ADMIN_IDS = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(",") : [];
-
 // ── DESTINATIONS ─────────────────────────────────────
 const DESTINATIONS = [
   { code: "IBAR", name: "Barra Airport" },
@@ -27,20 +25,8 @@ const DESTINATIONS = [
 ];
 
 // ── Helper functions for in-process use ────────────────
-function isAdminId(id) {
-  if (!id) return false;
-  const idStr = String(id).trim();
-  const isEnvAdmin = ADMIN_IDS.length && ADMIN_IDS.map(x => String(x).trim()).includes(idStr);
-  const isStaffAdmin = dataService.getStaff().some(s => s.id && String(s.id).trim() === idStr && s.role && s.role.toLowerCase() === 'admin');
-  return !!(isEnvAdmin || isStaffAdmin);
-}
-
-function isStaffMemberId(id) {
-  if (!id) return false;
-  const idStr = String(id).trim();
-  const isStaff = dataService.getStaff().some(s => s.id && String(s.id).trim() === idStr && (s.role && ['pilot', 'staff', 'admin'].includes(s.role.toLowerCase())));
-  return !!(isStaff || isAdminId(idStr));
-}
+const isAdminId = dataService.isAdmin;
+const isStaffMemberId = dataService.isStaff;
 
 function createFlightEntry({ id, origin, destination, departureTime, totalSeats, createdBy, aircraft, codeshare }) {
   if (!id || !origin || !destination || !departureTime) throw new Error('Missing required flight fields');

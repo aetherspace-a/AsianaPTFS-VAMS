@@ -11,80 +11,42 @@
 // ============================================================
 
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-
-// ── Configuration ────────────────────────────────────────────
-// Centralise IDs here so future changes only need one edit.
-const ANNOUNCEMENT_CHANNEL_ID = "1507312279736029264";
-const ANNOUNCEMENT_ROLE_PING  = "<@&1507385048779984906>";
-
-// Asiana Airlines brand palette
-// Primary red from their livery, deep navy for contrast, soft grey footer
-const COLOR_ASIANA_RED  = 0xC40030;  // Asiana's signature red
-const COLOR_ASIANA_NAVY = 0x0A1F44;  // Deep navy accent
-
+const dataService = require("../services/data-service");
 
 // ── Core Function (shared by slash command AND future API route) ──
-/**
- * Builds and sends a branded Asiana Airlines announcement.
- *
- * @param {import("discord.js").Client} client     - The logged-in Discord client.
- * @param {string}                      messageText - The body text of the announcement.
- * @param {string}                      authorTag   - Display name/tag of who triggered it.
- * @returns {Promise<import("discord.js").Message>} The sent message.
- *
- * Usage from an Express route:
- *   const { sendAnnouncement } = require("./commands/announce");
- *   await sendAnnouncement(client, "Flights resume at 18:00Z", "Web Dashboard");
- */
 async function sendAnnouncement(client, messageText, authorTag) {
+  const config = dataService.getConfig();
+  const channelId = config.announcementChannel || "1507312279736029264";
+  
   // Fetch the target channel from Discord's cache (or via API if not cached).
-  const channel = await client.channels.fetch(ANNOUNCEMENT_CHANNEL_ID);
+  const channel = await client.channels.fetch(channelId);
 
   if (!channel || !channel.isTextBased()) {
-    throw new Error(
-      `Announcement channel ${ANNOUNCEMENT_CHANNEL_ID} not found or is not a text channel.`
-    );
+    throw new Error(`Announcement channel ${channelId} not found or is not a text channel.`);
   }
 
   // ── Embed ───────────────────────────────────────────────────
   const embed = new EmbedBuilder()
-    // Sleek dark navy side-bar accent
-    .setColor(COLOR_ASIANA_NAVY)
-
-    // Header: airline logo wordmark feel via the title
+    .setColor(config.embedDefaults.color || 0x0A1F44)
     .setAuthor({
       name: "Asiana Airlines PTFS",
-      // Replace this URL with your airline's official logo hosted online
-      // for it to appear as a small icon next to the author name.
-      // iconURL: "hhttps://cdn.discordapp.com/attachments/1507309063363493889/1514895142576980049/Asiana_Airlines_-_Logo_2.png?ex=6a2db04b&is=6a2c5ecb&hm=2af7c96a99d239cd9a881d78e1334bc15985b82e011b4a68d83a5aed219f382f&",
+      iconURL: config.embedDefaults.thumbnail || null
     })
-
     .setTitle("📢  Official Announcement")
-
-    // The user-supplied announcement body
     .setDescription(messageText)
-
-    // Visual divider field — gives the embed a polished, structured look
     .addFields({
-      name: "\u200B",   // Zero-width space = invisible field name (acts as spacer)
-      value:
-        "─────────────────────────────────\n" +
-        "✈️  *Safe skies and smooth landings.*",
+      name: "\u200B",
+      value: "─────────────────────────────────\n✈️  *Safe skies and smooth landings.*",
     })
-
     .setFooter({
-      text: `Asiana Airlines PTFS • Automated System  │  Issued by ${authorTag}`,
-      // iconURL: "https://cdn.discordapp.com/attachments/1507309063363493889/1514895142576980049/Asiana_Airlines_-_Logo_2.png?ex=6a2db04b&is=6a2c5ecb&hm=2af7c96a99d239cd9a881d78e1334bc15985b82e011b4a68d83a5aed219f382f&",
+      text: `${config.embedDefaults.footer}  │  Issued by ${authorTag}`,
     })
-
-    // Automatically renders as Discord's localised date/time
     .setTimestamp();
 
   // ── Send ────────────────────────────────────────────────────
-  // The role ping is sent as plain `content` — embeds alone
-  // do NOT trigger role notification sounds/badges.
+  const ping = config.staffRole ? `<@&${config.staffRole}>` : "@everyone";
   return channel.send({
-    content: `${ANNOUNCEMENT_ROLE_PING}`,
+    content: `${ping}`,
     embeds: [embed],
   });
 }

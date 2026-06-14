@@ -17,7 +17,9 @@
   </div>
 
   <nav>
-    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <a class="logo" href="/">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines Logo" class="logo-img">
+    </a>
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/economy.html">Economy</a></li>
@@ -41,23 +43,25 @@
   </nav>
 
   <!-- Login Required Prompt -->
-  <div id="unauthorized" class="unauthorized-card apple-glass">
-    <h2>Asiana Economy Club</h2>
-    <p>Earn daily salaries, apply for airline roles, purchase first-class boosts, and gamble in the captain's lounge. Log in with your Discord account to begin.</p>
-    <a href="/auth/discord" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:currentColor" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-      Login with Discord
-    </a>
+  <div id="unauthorized" class="page-main reveal" style="text-align:center">
+    <div class="apple-glass" style="padding:4rem; max-width:600px; margin:0 auto">
+        <h2>Asiana Economy Club</h2>
+        <p class="small-text" style="margin:1.5rem 0 2.5rem">Earn daily salaries, apply for airline roles, purchase first-class boosts, and gamble in the captain's lounge. Log in with your Discord account to begin.</p>
+        <a href="/auth/discord" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;fill:currentColor; margin-right:0.5rem" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+          Login with Discord
+        </a>
+    </div>
   </div>
 
   <main class="page-main" id="authorized" style="display:none">
-    <div class="page-header">
+    <div class="page-header reveal">
       <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
       <h1>Airline Club Lounge</h1>
       <p>Manage your airline career, check your flight luggage backpack, shop for flight gear, and climb the global airline rich list.</p>
     </div>
 
-    <div class="dash-tabs">
+    <div class="dash-tabs reveal">
       <button class="dash-tab active" data-tab="overview">Overview</button>
       <button class="dash-tab" data-tab="shop">Item Shop</button>
       <button class="dash-tab" data-tab="inventory">My Backpack</button>
@@ -66,191 +70,137 @@
     </div>
 
     <!-- OVERVIEW TAB -->
-    <div id="tab-overview" class="dash-panel active">
-      <div class="form-grid">
-        <div class="stat-card apple-glass">
+    <div id="tab-overview" class="dash-panel apple-glass active">
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem; margin-bottom:3rem">
+        <div class="stat-card apple-glass" style="background:rgba(255,255,255,0.03)">
           <span class="stat-num" id="profile-wallet">$0</span>
           <span class="stat-label">💼 Wallet Cash</span>
         </div>
-        <div class="stat-card apple-glass">
+        <div class="stat-card apple-glass" style="background:rgba(255,255,255,0.03)">
           <span class="stat-num" id="profile-bank">$0</span>
           <span class="stat-label">🏛️ Safe Bank</span>
         </div>
-        <div class="stat-card apple-glass">
+        <div class="stat-card apple-glass" style="background:rgba(255,255,255,0.03)">
           <span class="stat-num" id="profile-bankspace">$0</span>
           <span class="stat-label">💳 Bank Space Limit</span>
         </div>
       </div>
 
-      <div class="profile-card">
-        <div class="apple-glass" style="padding:2rem;">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:2.5rem">
+        <div class="apple-glass" style="padding:2.5rem; background:rgba(255,255,255,0.03)">
           <h2 style="font-size:1.6rem;margin-bottom:1.5rem">Career Profile</h2>
-          <div class="job-info">
+          <div style="display:flex; flex-direction:column; gap:1.5rem">
             <div>
               <div class="stat-label">Current Occupation</div>
-              <div class="job-badge" id="profile-job">Unemployed</div>
+              <div style="font-size:1.4rem; font-weight:700; color:var(--red)" id="profile-job">Unemployed</div>
             </div>
             
-            <div class="xp-section">
-              <div style="display:flex;justify-content:between;align-items:center">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center; margin-bottom:0.5rem">
                 <span class="stat-label" id="profile-level-lbl">Level 1</span>
-                <span style="font-size:0.8rem;font-weight:700;margin-left:auto" id="profile-xp-lbl">0 / 100 XP</span>
+                <span style="font-size:0.85rem;font-weight:700" id="profile-xp-lbl">0 / 100 XP</span>
               </div>
-              <div class="xp-bar-bg">
-                <div class="xp-bar-fill" id="profile-xp-fill"></div>
+              <div style="width:100%;height:10px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;border:1px solid var(--glass-border)">
+                <div id="profile-xp-fill" style="height:100%;background:var(--red);width:0%;transition:width 0.5s ease"></div>
               </div>
             </div>
             
-            <div class="actions-row">
+            <div style="display:flex; gap:1rem; flex-wrap:wrap">
               <button class="btn" id="work-btn" onclick="runWork()">Go to Work</button>
-              <button class="btn btn-outline" id="daily-btn" onclick="claimDaily()">Claim Daily Rewards</button>
+              <button class="btn btn-outline" id="daily-btn" onclick="claimDaily()">Daily Rewards</button>
             </div>
-            <p id="overview-feedback" class="small-text" style="margin-top:1rem"></p>
           </div>
         </div>
 
-        <div class="apple-glass" style="padding:2rem;">
+        <div class="apple-glass" style="padding:2.5rem; background:rgba(255,255,255,0.03)">
           <h2 style="font-size:1.6rem;margin-bottom:1.5rem">Apply for Role</h2>
           <div class="form-group">
-            <label for="job-select">Select airline role to apply</label>
+            <label>Select airline role to apply</label>
             <select id="job-select" class="form-control" onchange="checkJobApplication()">
               <!-- Filled dynamically -->
             </select>
           </div>
-          <p id="job-details-lbl" class="small-text" style="margin-bottom:1.5rem">Select a job from the list to view requirements and payout metrics.</p>
-          <div class="actions-row">
+          <p id="job-details-lbl" class="small-text" style="margin-bottom:1.5rem; min-height:60px">Select a job from the list to view requirements and payout metrics.</p>
+          <div style="display:flex; gap:1rem">
             <button class="btn" id="job-apply-btn" onclick="applyJob()" disabled>Apply for Role</button>
-            <button class="btn btn-outline" id="job-resign-btn" onclick="resignJob()" style="display:none">Resign Position</button>
+            <button class="btn btn-outline" id="job-resign-btn" onclick="resignJob()" style="display:none; color:var(--red); border-color:var(--red)">Resign Position</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- ITEM SHOP TAB -->
-    <div id="tab-shop" class="dash-panel">
-      <div class="shop-grid" id="shop-grid">
+    <div id="tab-shop" class="dash-panel apple-glass">
+      <div class="grid-3" id="shop-grid">
         <!-- Filled dynamically -->
       </div>
     </div>
 
     <!-- MY BACKPACK TAB -->
-    <div id="tab-inventory" class="dash-panel">
-      <div class="apple-glass" style="padding:2rem;">
-        <h2 style="font-size:1.6rem;margin-bottom:1.5rem">My Backpack Inventory</h2>
-        <div id="inventory-mount" class="card-list">
-          <p class="small-text">Your backpack is currently empty. Visit the Item Shop to purchase flight equipment.</p>
-        </div>
+    <div id="tab-inventory" class="dash-panel apple-glass">
+      <h2 style="font-size:1.6rem;margin-bottom:1.5rem">My Backpack Inventory</h2>
+      <div id="inventory-mount" class="card-list">
+        <p class="small-text">Your backpack is currently empty. Visit the Item Shop to purchase flight equipment.</p>
       </div>
     </div>
 
     <!-- GAMBLING LOUNGE TAB -->
-    <div id="tab-gamble" class="dash-panel">
-      <div class="gamble-container">
+    <div id="tab-gamble" class="dash-panel apple-glass">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:2.5rem">
         
         <!-- Slots Machine -->
-        <div class="game-card apple-glass">
-          <h2 style="font-size:1.5rem">✈️ Flight Slots</h2>
-          <p class="small-text" style="margin-bottom:1rem">Bet wallet cash to spin. Doubles win 1.5x. Triples win up to 10x!</p>
+        <div class="apple-glass" style="padding:2.5rem; background:rgba(255,255,255,0.03); text-align:center">
+          <h2 style="font-size:1.5rem; margin-bottom:1rem">✈️ Flight Slots</h2>
+          <p class="small-text" style="margin-bottom:2rem">Bet wallet cash to spin. Doubles win 1.5x. Triples win up to 10x!</p>
           
-          <div class="slots-machine">
-            <div class="slot-window" id="slot-0">❓</div>
-            <div class="slot-window" id="slot-1">❓</div>
-            <div class="slot-window" id="slot-2">❓</div>
+          <div style="display:flex; justify-content:center; gap:1rem; margin-bottom:2rem">
+            <div class="stat-card apple-glass" style="min-width:70px; font-size:2.5rem" id="slot-0">❓</div>
+            <div class="stat-card apple-glass" style="min-width:70px; font-size:2.5rem" id="slot-1">❓</div>
+            <div class="stat-card apple-glass" style="min-width:70px; font-size:2.5rem" id="slot-2">❓</div>
           </div>
           
-          <div class="form-group">
+          <div class="form-group" style="max-width:200px; margin:0 auto 1.5rem">
             <label>Bet Amount ($)</label>
-            <input type="number" id="slots-bet" class="form-control" value="100" min="1" max="10000" />
+            <input type="number" id="slots-bet" class="form-control" value="100" min="1" />
           </div>
           <button class="btn" id="slots-btn" onclick="playSlots()" style="width:100%">Spin Slots</button>
-          <p id="slots-result" class="small-text" style="margin-top:1rem;text-align:center"></p>
+          <p id="slots-result" class="small-text" style="margin-top:1.5rem"></p>
         </div>
 
         <!-- Coinflip -->
-        <div class="game-card apple-glass">
-          <h2 style="font-size:1.5rem">🪙 Coinflip</h2>
-          <p class="small-text" style="margin-bottom:1rem">Bet on Heads or Tails. 50/50 probability. Double or nothing!</p>
+        <div class="apple-glass" style="padding:2.5rem; background:rgba(255,255,255,0.03); text-align:center">
+          <h2 style="font-size:1.5rem; margin-bottom:1rem">🪙 Coinflip</h2>
+          <p class="small-text" style="margin-bottom:2rem">Bet on Heads or Tails. 50/50 probability. Double or nothing!</p>
           
-          <div class="coin-display" id="coin-visual">HEADS</div>
+          <div id="coin-visual" style="width:100px; height:100px; border-radius:50%; background:var(--text); color:var(--bg-base); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; margin:0 auto 2rem; box-shadow:0 10px 25px rgba(0,0,0,0.3); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)">HEADS</div>
           
-          <div class="form-group">
-            <label>Choose Side</label>
-            <div class="radio-group">
-              <label class="radio-lbl"><input type="radio" name="coin-choice" value="heads" checked> Heads</label>
-              <label class="radio-lbl"><input type="radio" name="coin-choice" value="tails"> Tails</label>
-            </div>
+          <div style="display:flex; justify-content:center; gap:2rem; margin-bottom:1.5rem">
+            <label style="cursor:pointer; display:flex; align-items:center; gap:0.5rem; font-weight:600"><input type="radio" name="coin-choice" value="heads" checked> Heads</label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:0.5rem; font-weight:600"><input type="radio" name="coin-choice" value="tails"> Tails</label>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="max-width:200px; margin:0 auto 1.5rem">
             <label>Bet Amount ($)</label>
-            <input type="number" id="coin-bet" class="form-control" value="100" min="1" max="10000" />
+            <input type="number" id="coin-bet" class="form-control" value="100" min="1" />
           </div>
           <button class="btn" id="coin-btn" onclick="playCoinflip()" style="width:100%">Flip Coin</button>
-          <p id="coin-result" class="small-text" style="margin-top:1rem;text-align:center"></p>
+          <p id="coin-result" class="small-text" style="margin-top:1.5rem"></p>
         </div>
-
-        <!-- Roulette Wheel -->
-        <div class="game-card apple-glass" style="grid-column: span 2">
-          <h2 style="font-size:1.5rem">🎡 Captain's Roulette</h2>
-          <p class="small-text" style="margin-bottom:1.5rem">Bet color (Red/Black pays 2x, Green pays 35x) or specific number (0-36 pays 35x).</p>
-          
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:2rem;align-items:center">
-            <div>
-              <div class="roulette-wheel" id="roulette-wheel">
-                <div class="roulette-ball"></div>
-                <div class="roulette-center" id="roulette-num-display">0</div>
-              </div>
-            </div>
-            
-            <div>
-              <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-                <div class="form-group">
-                  <label>Bet Type</label>
-                  <select id="roulette-bet-type" class="form-control" onchange="adjustRouletteInput()">
-                    <option value="color">Bet Color</option>
-                    <option value="number">Bet Specific Number</option>
-                  </select>
-                </div>
-                <div class="form-group" id="roulette-color-group">
-                  <label>Color</label>
-                  <select id="roulette-color-val" class="form-control">
-                    <option value="red">🔴 Red (2x)</option>
-                    <option value="black">⚫ Black (2x)</option>
-                    <option value="green">🟢 Green (35x)</option>
-                  </select>
-                </div>
-                <div class="form-group" id="roulette-number-group" style="display:none">
-                  <label>Number (0-36)</label>
-                  <input type="number" id="roulette-number-val" class="form-control" min="0" max="36" value="7" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Bet Amount ($)</label>
-                <input type="number" id="roulette-bet" class="form-control" value="100" min="1" max="10000" />
-              </div>
-              <button class="btn" id="roulette-btn" onclick="playRoulette()" style="width:100%">Spin Roulette Wheel</button>
-            </div>
-          </div>
-          <p id="roulette-result" class="small-text" style="margin-top:1.5rem;text-align:center"></p>
-        </div>
-
       </div>
     </div>
 
     <!-- LEADERBOARD TAB -->
-    <div id="tab-leaderboard" class="dash-panel">
-      <div class="apple-glass" style="padding:2rem;overflow-x:auto;">
-        <h2 style="font-size:1.6rem;margin-bottom:1rem">Global Wealth Ranking</h2>
-        <table class="lb-table">
+    <div id="tab-leaderboard" class="dash-panel apple-glass">
+      <h2 style="font-size:1.6rem;margin-bottom:1.5rem">Global Wealth Ranking</h2>
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; text-align:left">
           <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Username</th>
-              <th>Occupation</th>
-              <th>Level</th>
-              <th>Wallet Cash</th>
-              <th>Bank Balance</th>
-              <th>Net Wealth</th>
+            <tr style="border-bottom:1px solid var(--glass-border)">
+              <th style="padding:1rem">Rank</th>
+              <th style="padding:1rem">Username</th>
+              <th style="padding:1rem">Occupation</th>
+              <th style="padding:1rem">Level</th>
+              <th style="padding:1rem">Net Wealth</th>
             </tr>
           </thead>
           <tbody id="leaderboard-mount">
@@ -262,23 +212,45 @@
 
   </main>
 
-  <div id="toast" class="toast"></div>
-
   <footer>
     <div class="footer-container">
       <div class="footer-brand">
-        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines Logo" class="footer-logo">
         <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+        
         <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+            <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+          </svg>
         </a>
       </div>
+
       <div class="footer-links">
-        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Team</a></li><li><a href="#">Fleet</a></li><li><a href="#">Contact Us</a></li></ul></div>
-        <div class="footer-col"><h4>Fly</h4><ul><li><a href="#">Search Flights</a></li><li><a href="#">Flight Logs</a></li></ul></div>
-        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/#staff">Our Team</a></li>
+            <li><a href="/#fleet">Fleet</a></li>
+            <li><a href="/#apply">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Fly</h4>
+          <ul>
+            <li><a href="/flights.html">Search Flights</a></li>
+            <li><a href="/#logs">Flight Logs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
       </div>
     </div>
+
     <div class="footer-bottom">
       <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
       <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
@@ -286,47 +258,34 @@
   </footer>
 
   <script>
-    // Active User Profile State
     let profileData = null;
     let jobList = {};
     let shopItemList = {};
-    let hasVipDiscount = false;
 
-    // Tab switcher
     document.querySelectorAll('.dash-tab').forEach(tab=>{
       tab.addEventListener('click',()=>{
         document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
         document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
         tab.classList.add('active');
         document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
-        
-        // Refresh specific data
         if(tab.dataset.tab==='leaderboard') loadLeaderboard();
         if(tab.dataset.tab==='shop') loadShop();
         if(tab.dataset.tab==='inventory') updateInventoryUI();
       });
     });
 
-    // Page Load Auth Checking
     async function initEconomyAuth(){
-      try {
-        const res = await fetch('/api/user');
-        const data = await res.json();
-        if(res.ok && data.user) {
-          document.getElementById('unauthorized').style.display = 'none';
-          document.getElementById('authorized').style.display = 'block';
-          await loadProfile();
-        } else {
-          document.getElementById('unauthorized').style.display = 'block';
-          document.getElementById('authorized').style.display = 'none';
-        }
-      } catch(e) {
+      const user = await initNavAuth();
+      if(user) {
+        document.getElementById('unauthorized').style.display = 'none';
+        document.getElementById('authorized').style.display = 'block';
+        await loadProfile();
+      } else {
         document.getElementById('unauthorized').style.display = 'block';
         document.getElementById('authorized').style.display = 'none';
       }
     }
 
-    // Load User Profile details
     async function loadProfile() {
       try {
         const res = await fetch('/api/economy/profile');
@@ -336,300 +295,156 @@
         jobList = data.jobs;
         shopItemList = data.shopItems;
 
-        // Render Overview balances
         document.getElementById('profile-wallet').textContent = `$${profileData.wallet.toLocaleString()}`;
         document.getElementById('profile-bank').textContent = `$${profileData.bank.toLocaleString()}`;
         document.getElementById('profile-bankspace').textContent = `$${profileData.bankSpace.toLocaleString()}`;
         
-        // Render Job Info
         const jobDetails = jobList[profileData.job];
         document.getElementById('profile-job').textContent = jobDetails ? jobDetails.name : 'Unemployed';
-        
-        // Level info
         document.getElementById('profile-level-lbl').textContent = `Level ${profileData.level}`;
         const targetXp = profileData.level * 100;
         document.getElementById('profile-xp-lbl').textContent = `${profileData.xp} / ${targetXp} XP`;
-        
         const fillPct = Math.min((profileData.xp / targetXp) * 100, 100);
         document.getElementById('profile-xp-fill').style.width = `${fillPct}%`;
 
-        // Render Cooldown indicators (buttons disable/text updates)
         updateCooldownsUI();
-
-        // Render Jobs Dropdown
         renderJobsSelect();
         updateInventoryUI();
-      } catch(e) {
-        console.error('Failed to load profile', e);
-      }
+      } catch(e) {}
     }
 
     function updateCooldownsUI() {
       if (!profileData) return;
       const now = Date.now();
-      
-      // Daily cooldown check (24 hours)
       const dailyTimeLeft = 24 * 60 * 60 * 1000 - (now - (profileData.lastDaily || 0));
       const dailyBtn = document.getElementById('daily-btn');
       if (dailyTimeLeft > 0) {
         dailyBtn.disabled = true;
         const hours = Math.floor(dailyTimeLeft / (60 * 60 * 1000));
-        const mins = Math.floor((dailyTimeLeft % (60 * 60 * 1000)) / (60 * 1000));
-        dailyBtn.textContent = `Daily in ${hours}h ${mins}m`;
+        dailyBtn.textContent = `Daily in ${hours}h`;
       } else {
         dailyBtn.disabled = false;
-        dailyBtn.textContent = 'Claim Daily Rewards';
+        dailyBtn.textContent = 'Claim Daily';
       }
 
-      // Work cooldown check (30 minutes)
       const workTimeLeft = 30 * 60 * 1000 - (now - (profileData.cooldowns?.work || 0));
       const workBtn = document.getElementById('work-btn');
       if (!profileData.job) {
         workBtn.disabled = true;
-        workBtn.textContent = 'Get a Job First';
+        workBtn.textContent = 'No Job';
       } else if (workTimeLeft > 0) {
         workBtn.disabled = true;
-        const mins = Math.floor(workTimeLeft / (60 * 1000));
-        const secs = Math.floor((workTimeLeft % (60 * 1000)) / 1000);
-        workBtn.textContent = `Work in ${mins}m ${secs}s`;
+        workBtn.textContent = `Wait ${Math.floor(workTimeLeft/60000)}m`;
       } else {
         workBtn.disabled = false;
         workBtn.textContent = 'Go to Work';
       }
     }
+    setInterval(updateCooldownsUI, 10000);
 
-    // Interval to count down cooldowns dynamically
-    setInterval(updateCooldownsUI, 1000);
-
-    // Claim Daily
     async function claimDaily() {
-      const btn = document.getElementById('daily-btn');
-      btn.disabled = true;
       try {
         const res = await fetch('/api/economy/daily', { method: 'POST' });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          await loadProfile();
-        } else {
-          showToast(`⚠️ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Failed to submit claim request.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`⚠️ ${data.error}`);
+      } catch(e) {}
     }
 
-    // Go to work
     async function runWork() {
-      const btn = document.getElementById('work-btn');
-      btn.disabled = true;
       try {
         const res = await fetch('/api/economy/work', { method: 'POST' });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          await loadProfile();
-        } else {
-          showToast(`⚠️ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Failed to run work shift.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`⚠️ ${data.error}`);
+      } catch(e) {}
     }
 
-    // Populate Jobs select
     function renderJobsSelect() {
       const select = document.getElementById('job-select');
       if (!select) return;
-      const curJob = profileData.job;
-      
-      let html = '<option value="">Choose an airline role…</option>';
+      let html = '<option value="">Choose a role…</option>';
       for (const [key, job] of Object.entries(jobList)) {
-        const selectedStr = curJob === key ? 'selected' : '';
-        html += `<option value="${key}" ${selectedStr}>${job.name} (Requires Level ${job.minLevel})</option>`;
+        html += `<option value="${key}" ${profileData.job === key ? 'selected' : ''}>${job.name}</option>`;
       }
       select.innerHTML = html;
       checkJobApplication();
     }
 
     function checkJobApplication() {
-      const select = document.getElementById('job-select');
-      if (!select) return;
-      const jobId = select.value;
+      const jobId = document.getElementById('job-select').value;
       const details = document.getElementById('job-details-lbl');
       const applyBtn = document.getElementById('job-apply-btn');
       const resignBtn = document.getElementById('job-resign-btn');
-      
-      // Resign button visible if currently employed
-      if (profileData && profileData.job) {
-        resignBtn.style.display = 'inline-block';
-      } else {
-        resignBtn.style.display = 'none';
-      }
-
-      if (!jobId) {
-        details.innerHTML = 'Select a job from the list to view requirements and payout metrics.';
-        applyBtn.disabled = true;
-        return;
-      }
-
+      resignBtn.style.display = profileData?.job ? 'inline-block' : 'none';
+      if (!jobId) { details.textContent = 'Select a job to view metrics.'; applyBtn.disabled = true; return; }
       const job = jobList[jobId];
       const requirementsMet = profileData.level >= job.minLevel;
-      const isAlreadyJob = profileData.job === jobId;
-
-      let labelText = `<strong>${job.name}</strong><br/>
-                       💵 Salary range: $${job.payoutMin} - $${job.payoutMax} per shift<br/>
-                       ⚠️ Safety Failure rate: ${Math.floor(job.failChance * 100)}%<br/>
-                       🔐 Level Requirement: Level ${job.minLevel} ${requirementsMet ? '✅' : '❌'}`;
-      
-      details.innerHTML = labelText;
-      applyBtn.disabled = isAlreadyJob || !requirementsMet;
-      if (isAlreadyJob) {
-        applyBtn.textContent = 'Currently Employed';
-      } else {
-        applyBtn.textContent = 'Apply for Role';
-      }
+      details.innerHTML = `${job.name}: $${job.payoutMin}-$${job.payoutMax} salary. Req: Level ${job.minLevel}`;
+      applyBtn.disabled = profileData.job === jobId || !requirementsMet;
     }
 
     async function applyJob() {
-      const select = document.getElementById('job-select');
-      const jobId = select.value;
-      if (!jobId) return;
-
+      const jobId = document.getElementById('job-select').value;
       try {
-        const res = await fetch('/api/economy/job', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'apply', jobId })
-        });
+        const res = await fetch('/api/economy/job', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'apply', jobId }) });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          await loadProfile();
-        } else {
-          showToast(`❌ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Application submission failed.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`❌ ${data.error}`);
+      } catch(e) {}
     }
 
     async function resignJob() {
-      if (!confirm('Are you sure you want to resign from your position? You will earn no money until you apply for a new role.')) return;
+      if (!confirm('Resign from your position?')) return;
       try {
-        const res = await fetch('/api/economy/job', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'resign' })
-        });
+        const res = await fetch('/api/economy/job', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'resign' }) });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          await loadProfile();
-        } else {
-          showToast(`❌ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Resignation failed.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`❌ ${data.error}`);
+      } catch(e) {}
     }
 
-    // --- Shop ---
     async function loadShop() {
       try {
         const res = await fetch('/api/economy/shop');
         const data = await res.json();
         if(!res.ok) return;
-
-        hasVipDiscount = data.hasVipDiscount;
-        const items = data.items;
         const grid = document.getElementById('shop-grid');
-        
-        grid.innerHTML = Object.entries(items).map(([id, item]) => {
-          const actualPrice = hasVipDiscount ? Math.floor(item.price * 0.9) : item.price;
-          return `
-            <div class="item-card apple-glass">
-              <div>
-                <div class="item-header">
-                  <span class="item-emoji">${item.emoji}</span>
-                  <div>
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">
-                      $${actualPrice}
-                      ${hasVipDiscount ? `<span class="item-discount">(10% VIP Discount)</span>` : ''}
-                    </div>
-                  </div>
-                </div>
-                <div class="item-desc">${item.description}</div>
-              </div>
-              <div class="actions-row" style="align-items:center;">
-                <input type="number" id="qty-${id}" class="form-control" value="1" min="1" style="width:70px; min-height:40px; padding:0.5rem; border-radius:12px; margin-bottom:0;" />
-                <button class="btn btn-outline" onclick="buyItem('${id}')" style="padding:0.7rem 1.2rem; font-size:0.9rem;">Buy</button>
-              </div>
-            </div>
-          `;
-        }).join('');
-      } catch(e) {
-        console.error('Failed to load shop', e);
-      }
+        grid.innerHTML = Object.entries(data.items).map(([id, item]) => `
+          <div class="apple-glass" style="padding:2rem; background:rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:1rem">
+            <div style="font-size:2.5rem">${item.emoji}</div>
+            <h3 style="font-size:1.2rem">${item.name}</h3>
+            <p class="small-text">${item.description}</p>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--red)">$${data.hasVipDiscount ? Math.floor(item.price * 0.9) : item.price}</div>
+            <button class="btn" onclick="buyItem('${id}')">Buy</button>
+          </div>
+        `).join('');
+      } catch(e) {}
     }
 
     async function buyItem(itemId) {
-      const qtyInput = document.getElementById(`qty-${itemId}`);
-      const qty = parseInt(qtyInput.value, 10);
-      if (isNaN(qty) || qty <= 0) {
-        showToast('⚠️ Please enter a valid quantity.');
-        return;
-      }
-
       try {
-        const res = await fetch('/api/economy/buy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ itemId, quantity: qty })
-        });
+        const res = await fetch('/api/economy/buy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ itemId, quantity: 1 }) });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          qtyInput.value = 1;
-          await loadProfile();
-        } else {
-          showToast(`❌ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Shop request failed.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`❌ ${data.error}`);
+      } catch(e) {}
     }
 
-    // --- Inventory / Backpack ---
     function updateInventoryUI() {
       if (!profileData) return;
       const mount = document.getElementById('inventory-mount');
-      const inv = profileData.inventory || {};
-      
-      const entries = Object.entries(inv);
-      if (entries.length === 0) {
-        mount.innerHTML = '<p class="small-text">Your backpack is currently empty. Visit the Item Shop to purchase flight equipment.</p>';
-        return;
-      }
-
+      const entries = Object.entries(profileData.inventory || {});
+      if (entries.length === 0) { mount.innerHTML = '<p class="small-text">Backpack is empty.</p>'; return; }
       mount.innerHTML = entries.map(([id, qty]) => {
         const item = shopItemList[id];
         if (!item) return '';
-        const useBtnHtml = item.usable 
-          ? `<button class="btn" onclick="useItem('${id}')" style="padding:0.6rem 1.2rem; font-size:0.85rem;">Use Item</button>` 
-          : `<span class="pill" style="font-size:0.75rem; padding:0.4rem 0.8rem">Passive</span>`;
-          
         return `
-          <div class="card-row apple-glass">
-            <div>
-              <span style="font-size:1.5rem; margin-right:0.75rem;">${item.emoji}</span>
-              <strong>${item.name}</strong> x${qty}
-              <div class="small-text">${item.description}</div>
-            </div>
-            <div style="display:flex; gap:0.5rem; align-items:center">
-              ${useBtnHtml}
-              <button class="btn btn-outline" onclick="sellItem('${id}')" style="padding:0.6rem 1.2rem; font-size:0.85rem; color:var(--red);">Sell ($${item.sellPrice})</button>
+          <div class="card-row apple-glass" style="background:rgba(255,255,255,0.03)">
+            <div><strong>${item.emoji} ${item.name}</strong> x${qty}</div>
+            <div style="display:flex; gap:1rem">
+              ${item.usable ? `<button class="btn" style="padding:0.5rem 1rem; font-size:0.8rem" onclick="useItem('${id}')">Use</button>` : ''}
+              <button class="btn btn-outline" style="padding:0.5rem 1rem; font-size:0.8rem; color:var(--red)" onclick="sellItem('${id}')">Sell</button>
             </div>
           </div>
         `;
@@ -638,291 +453,70 @@
 
     async function useItem(itemId) {
       try {
-        const res = await fetch('/api/economy/use', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ itemId })
-        });
+        const res = await fetch('/api/economy/use', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ itemId }) });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          await loadProfile();
-        } else {
-          showToast(`❌ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Consume request failed.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`❌ ${data.error}`);
+      } catch(e) {}
     }
 
     async function sellItem(itemId) {
-      const count = prompt('How many would you like to sell?', '1');
-      if (!count) return;
-      const qty = parseInt(count, 10);
-      if (isNaN(qty) || qty <= 0) {
-        showToast('⚠️ Invalid quantity.');
-        return;
-      }
-
       try {
-        const res = await fetch('/api/economy/sell', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ itemId, quantity: qty })
-        });
+        const res = await fetch('/api/economy/sell', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ itemId, quantity: 1 }) });
         const data = await res.json();
-        if (res.ok) {
-          showToast(data.message.replace(/\*\*/g, ''));
-          await loadProfile();
-        } else {
-          showToast(`❌ ${data.error}`);
-        }
-      } catch(e) {
-        showToast('❌ Sell request failed.');
-      }
+        if (res.ok) { showToast(data.message.replace(/\*\*/g, '')); await loadProfile(); }
+        else showToast(`❌ ${data.error}`);
+      } catch(e) {}
     }
 
-    // --- Gambling Lounge ---
-
-    // A. SLOTS
     async function playSlots() {
-      const betInput = document.getElementById('slots-bet');
-      const bet = parseInt(betInput.value, 10);
-      if (isNaN(bet) || bet <= 0) {
-        showToast('⚠️ Please enter a valid bet amount.');
-        return;
-      }
-
-      const btn = document.getElementById('slots-btn');
-      const resultLbl = document.getElementById('slots-result');
-      btn.disabled = true;
-      resultLbl.textContent = 'Spinning... 🎰';
-
-      // Slot animations
-      const slotsWindows = [
-        document.getElementById('slot-0'),
-        document.getElementById('slot-1'),
-        document.getElementById('slot-2')
-      ];
-      
-      const symbols = ['✈️', '🚁', '🚀', '💎', '👑'];
-      let animInterval = setInterval(() => {
-        slotsWindows.forEach(win => {
-          win.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        });
-      }, 80);
-
-      try {
-        const res = await fetch('/api/economy/gamble', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'slots', betAmount: bet })
-        });
-        const data = await res.json();
-        
-        clearInterval(animInterval);
-        btn.disabled = false;
-
-        if (res.ok) {
-          // Render final rolls
-          slotsWindows[0].textContent = data.rolls[0];
-          slotsWindows[1].textContent = data.rolls[1];
-          slotsWindows[2].textContent = data.rolls[2];
-          
-          resultLbl.innerHTML = data.message.replace(/\*\*/g, '').replace(/\n/g, '<br/>');
-          await loadProfile();
-        } else {
-          resultLbl.textContent = `❌ Error: ${data.error}`;
-          showToast(`❌ ${data.error}`);
-        }
-      } catch(e) {
-        clearInterval(animInterval);
-        btn.disabled = false;
-        resultLbl.textContent = '❌ Request failed.';
-      }
+      const bet = parseInt(document.getElementById('slots-bet').value, 10);
+      const res = await fetch('/api/economy/gamble', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'slots', betAmount: bet }) });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('slot-0').textContent = data.rolls[0];
+        document.getElementById('slot-1').textContent = data.rolls[1];
+        document.getElementById('slot-2').textContent = data.rolls[2];
+        document.getElementById('slots-result').textContent = data.message.replace(/\*\*/g, '');
+        await loadProfile();
+      } else showToast(data.error);
     }
 
-    // B. COINFLIP
     async function playCoinflip() {
-      const betInput = document.getElementById('coin-bet');
-      const bet = parseInt(betInput.value, 10);
-      if (isNaN(bet) || bet <= 0) {
-        showToast('⚠️ Please enter a valid bet amount.');
-        return;
-      }
-
-      const radios = document.getElementsByName('coin-choice');
-      let choice = 'heads';
-      for (const radio of radios) {
-        if (radio.checked) choice = radio.value;
-      }
-
-      const btn = document.getElementById('coin-btn');
-      const visual = document.getElementById('coin-visual');
-      const resultLbl = document.getElementById('coin-result');
-      
-      btn.disabled = true;
-      resultLbl.textContent = 'Flipping coin... 🪙';
-      visual.classList.add('coin-spin-anim');
-
-      try {
-        const res = await fetch('/api/economy/gamble', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'coinflip', betAmount: bet, choice })
-        });
-        const data = await res.json();
-        
-        setTimeout(async () => {
-          visual.classList.remove('coin-spin-anim');
-          btn.disabled = false;
-
-          if (res.ok) {
+      const bet = parseInt(document.getElementById('coin-bet').value, 10);
+      const choice = document.querySelector('input[name="coin-choice"]:checked').value;
+      const res = await fetch('/api/economy/gamble', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'coinflip', betAmount: bet, choice }) });
+      const data = await res.json();
+      if (res.ok) {
+        const visual = document.getElementById('coin-visual');
+        visual.style.transform = 'scale(0.8) rotateY(180deg)';
+        setTimeout(() => {
             visual.textContent = data.rolled.toUpperCase();
-            if (data.rolled === 'heads') {
-              visual.classList.remove('tails');
-            } else {
-              visual.classList.add('tails');
-            }
-            resultLbl.innerHTML = data.message.replace(/\*\*/g, '');
-            await loadProfile();
-          } else {
-            resultLbl.textContent = `❌ Error: ${data.error}`;
-            showToast(`❌ ${data.error}`);
-          }
-        }, 1000); // 1 sec spin delay
-
-      } catch(e) {
-        visual.classList.remove('coin-spin-anim');
-        btn.disabled = false;
-        resultLbl.textContent = '❌ Request failed.';
-      }
+            visual.style.transform = 'scale(1) rotateY(0deg)';
+            document.getElementById('coin-result').textContent = data.message.replace(/\*\*/g, '');
+        }, 600);
+        await loadProfile();
+      } else showToast(data.error);
     }
 
-    // C. ROULETTE
-    function adjustRouletteInput() {
-      const type = document.getElementById('roulette-bet-type').value;
-      document.getElementById('roulette-color-group').style.display = type === 'color' ? 'block' : 'none';
-      document.getElementById('roulette-number-group').style.display = type === 'number' ? 'block' : 'none';
-    }
-
-    async function playRoulette() {
-      const betInput = document.getElementById('roulette-bet');
-      const bet = parseInt(betInput.value, 10);
-      if (isNaN(bet) || bet <= 0) {
-        showToast('⚠️ Please enter a valid bet amount.');
-        return;
-      }
-
-      const betType = document.getElementById('roulette-bet-type').value;
-      let choice = '';
-      if (betType === 'color') {
-        choice = document.getElementById('roulette-color-val').value;
-      } else {
-        const numVal = parseInt(document.getElementById('roulette-number-val').value, 10);
-        if (isNaN(numVal) || numVal < 0 || numVal > 36) {
-          showToast('⚠️ Number must be between 0 and 36.');
-          return;
-        }
-        choice = numVal;
-      }
-
-      const btn = document.getElementById('roulette-btn');
-      const wheel = document.getElementById('roulette-wheel');
-      const resultLbl = document.getElementById('roulette-result');
-      const centerDisplay = document.getElementById('roulette-num-display');
-
-      btn.disabled = true;
-      resultLbl.textContent = 'Spinning roulette wheel... 🎡';
-      
-      // Random rotation
-      const spins = 3 + Math.floor(Math.random() * 3);
-      const degree = spins * 360 + Math.floor(Math.random() * 360);
-      wheel.style.transform = `rotate(${degree}deg)`;
-
-      try {
-        const res = await fetch('/api/economy/gamble', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'roulette', betAmount: bet, choice })
-        });
-        const data = await res.json();
-
-        setTimeout(async () => {
-          btn.disabled = false;
-          wheel.style.transform = 'none';
-
-          if (res.ok) {
-            centerDisplay.textContent = data.rolledNum;
-            if (data.rolledColor === 'red') {
-              centerDisplay.style.background = '#ff3b30';
-              centerDisplay.style.color = '#fff';
-            } else if (data.rolledColor === 'black') {
-              centerDisplay.style.background = '#1d1d1f';
-              centerDisplay.style.color = '#fff';
-            } else {
-              centerDisplay.style.background = '#34c759';
-              centerDisplay.style.color = '#000';
-            }
-
-            resultLbl.innerHTML = data.message.replace(/\*\*/g, '');
-            await loadProfile();
-          } else {
-            resultLbl.textContent = `❌ Error: ${data.error}`;
-            showToast(`❌ ${data.error}`);
-          }
-        }, 3000); // 3 sec spin duration
-
-      } catch(e) {
-        btn.disabled = false;
-        wheel.style.transform = 'none';
-        resultLbl.textContent = '❌ Request failed.';
-      }
-    }
-
-    // --- Leaderboard ---
     async function loadLeaderboard() {
       const mount = document.getElementById('leaderboard-mount');
       try {
         const res = await fetch('/api/economy/leaderboard');
         const data = await res.json();
-        if (!res.ok) {
-          mount.innerHTML = '<tr><td colspan="7" class="small-text">Failed to load leaderboard.</td></tr>';
-          return;
-        }
-
-        const lb = data.leaderboard;
-        if (lb.length === 0) {
-          mount.innerHTML = '<tr><td colspan="7" class="small-text">No players logged in the bank yet.</td></tr>';
-          return;
-        }
-
-        mount.innerHTML = lb.map((user, idx) => {
-          const rank = idx + 1;
-          let rankClass = '';
-          if (rank === 1) rankClass = 'rank-col rank-1';
-          else if (rank === 2) rankClass = 'rank-col rank-2';
-          else if (rank === 3) rankClass = 'rank-col rank-3';
-          else rankClass = 'rank-col';
-
-          return `
-            <tr>
-              <td class="${rankClass}">#${rank}</td>
-              <td style="font-weight:700;">${user.username}</td>
-              <td>${user.jobName}</td>
-              <td style="font-weight:600;">Lvl ${user.level}</td>
-              <td>$${user.wallet.toLocaleString()}</td>
-              <td>$${user.bank.toLocaleString()}</td>
-              <td style="font-weight:700; color:var(--red);">$${user.netWorth.toLocaleString()}</td>
-            </tr>
-          `;
-        }).join('');
-      } catch(e) {
-        mount.innerHTML = '<tr><td colspan="7" class="small-text">Network error loading ranking details.</td></tr>';
-      }
+        if (!res.ok) return;
+        mount.innerHTML = data.leaderboard.map((u, i) => `
+          <tr style="border-bottom:1px solid var(--glass-border)">
+            <td style="padding:1rem">#${i+1}</td>
+            <td style="padding:1rem; font-weight:700">${u.username}</td>
+            <td style="padding:1rem">${u.jobName}</td>
+            <td style="padding:1rem">Lvl ${u.level}</td>
+            <td style="padding:1rem; color:var(--red); font-weight:700">$${u.netWorth.toLocaleString()}</td>
+          </tr>
+        `).join('');
+      } catch(e) {}
     }
 
-    // Start Page logic
     document.addEventListener('DOMContentLoaded', initEconomyAuth);
   </script>
 </body>
