@@ -44,7 +44,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
     // They can take up to 1 hour to propagate — use guild commands for
     // instant updates during development (see the commented line below).
     const data = await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID, "1506932959855251468node deploy-commands.js"),
+      Routes.applicationGuildCommands(process.env.CLIENT_ID, "1506932959855251468"),
       { body: commands }
     );
 

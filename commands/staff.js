@@ -1,103 +1,68 @@
-// ============================================================
-//  commands/staff.js  –  Manage pilots and staff access
-// ============================================================
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { supabase } = require("../services/supabase");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("staff")
-    .setDescription("Manage pilot and staff access to the website")
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .addSubcommand(sub =>
-      sub
-        .setName("add")
-        .setDescription("Add a user as pilot or staff")
-        .addUserOption(opt => opt.setName("user").setDescription("Discord user").setRequired(true))
-        .addStringOption(opt =>
-          opt
-            .setName("role")
-            .setDescription("Role: pilot or staff")
-            .setRequired(true)
-            .addChoices(
-              { name: "Pilot", value: "pilot" },
-              { name: "Staff", value: "staff" }
-            )
-        )
-    )
-    .addSubcommand(sub =>
-      sub
-        .setName("remove")
-        .setDescription("Remove a user's staff/pilot access")
-        .addUserOption(opt => opt.setName("user").setDescription("Discord user").setRequired(true))
-    )
-    .addSubcommand(sub =>
-      sub
-        .setName("list")
-        .setDescription("List all pilots and staff members")
+    .setDescription("Fetch staff profile details from Supabase.")
+    .addUserOption((option) =>
+      option
+        .setName("user")
+        .setDescription("Select a Discord user to check")
+        .setRequired(true)
     ),
 
   async execute(interaction) {
-    const subcommand = interaction.options.getSubcommand();
-    const { addStaff, removeStaff, getStaff } = require("../auth-routes");
+    await interaction.deferReply();
 
-    if (subcommand === "add") {
-      const user = interaction.options.getUser("user");
-      const role = interaction.options.getString("role");
+    const targetUser = interaction.options.getUser("user");
+    const discordId = targetUser.id;
 
-      try {
-        await addStaff({
-          id: user.id,
-          username: user.username,
-          role,
-        });
+    try {
+      const { data: staffMember, error } = await supabase
+        .from("staff")
+        .select("*")
+        .eq("discord_id", discordId)
+        .maybeSingle();
 
-        return interaction.reply({
-          content: `✅ Added **${user.username}** as **${role}** to website access.`,
-          ephemeral: true,
-        });
-      } catch (err) {
-        return interaction.reply({
-          content: `❌ Error: ${err.message}`,
-          ephemeral: true,
-        });
-      }
-    }
-
-    if (subcommand === "remove") {
-      const user = interaction.options.getUser("user");
-
-      try {
-        await removeStaff(user.id);
-
-        return interaction.reply({
-          content: `✅ Removed **${user.username}** from staff access.`,
-          ephemeral: true,
-        });
-      } catch (err) {
-        return interaction.reply({
-          content: `❌ Error: ${err.message}`,
-          ephemeral: true,
-        });
-      }
-    }
-
-    if (subcommand === "list") {
-      const staffList = getStaff();
-
-      if (!staffList || staffList.length === 0) {
-        return interaction.reply({
-          content: "📋 No staff or pilots configured yet.",
-          ephemeral: true,
+      if (error) {
+        console.error("Supabase staff fetch error:", error);
+        return interaction.editReply({
+          content: `❌ Error querying the database: ${error.message}`,
         });
       }
 
-      const list = staffList
-        .map(s => `• **${s.username}** (${s.role.toUpperCase()})`)
-        .join("\n");
+      if (!staffMember) {
+        return interaction.editReply({
+          content: `⚠️ No staff profile found for **${targetUser.tag}** (ID: \`${discordId}\`).`,
+        });
+      }
 
-      return interaction.reply({
-        content: `📋 **Current Staff & Pilots:**\n${list}`,
-        ephemeral: true,
+      const embed = new EmbedBuilder()
+        .setTitle(`📋 Staff Profile — ${staffMember.display_name || staffMember.username}`)
+        .setColor(0x00b0f4)
+        .setThumbnail(targetUser.displayAvatarURL({ dynamic: true, size: 256 }))
+        .addFields(
+          { name: "Discord Account", value: `<@${staffMember.discord_id}>`, inline: true },
+          { name: "Username", value: `@${staffMember.username}`, inline: true },
+          { name: "Role", value: staffMember.role || "N/A", inline: true },
+          { name: "Rank", value: staffMember.rank || "N/A", inline: true },
+          { name: "Department", value: staffMember.department || "N/A", inline: true },
+          { name: "Status", value: staffMember.status || "N/A", inline: true },
+          {
+            name: "Joined Date",
+            value: staffMember.joined_date ? new Date(staffMember.joined_date).toLocaleDateString() : "N/A",
+            inline: false,
+          }
+        )
+        .setTimestamp()
+        .setFooter({ text: "Asiana Airlines PTFS Staff Directory" });
+
+      return interaction.editReply({ embeds: [embed] });
+    } catch (err) {
+      console.error("Staff command error:", err);
+      return interaction.editReply({
+        content: `❌ Unexpected error: ${err.message || err}`,
       });
     }
   },
