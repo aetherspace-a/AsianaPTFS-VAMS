@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/aetherspace-a/aar-vams#readme",
   "dependencies": {
+    "axios": "^1.17.0",
     "discord.js": "^14.26.4",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
   }
 }

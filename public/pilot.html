@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+  <title>Pilot Dashboard — Asiana PTFS</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .page-main{max-width:1100px;margin:0 auto;padding:7rem 2rem 4rem;position:relative;z-index:1}
+    .hero-copy h1{font-size:3rem;margin-bottom:.6rem;line-height:1.05}
+    .hero-copy p{color:var(--text-muted);font-size:1rem;line-height:1.7;margin-bottom:1.5rem}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+    .dash-tabs{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem}
+    .dash-panel{display:none}
+    .dash-panel.active{display:block}
+    .panel-grid{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:1.5rem;margin-top:1.5rem}
+    .panel-grid.single{grid-template-columns:1fr}
+    .form-group{margin-bottom:1rem}
+    .form-group label{display:block;margin-bottom:.5rem;font-size:.9rem;color:var(--text-muted);font-weight:600}
+    .form-control{width:100%;min-height:50px;padding:1rem 1.1rem;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:1rem;outline:none}
+    .seat-grid{display:grid;grid-template-columns:repeat(4,minmax(60px,1fr));gap:.75rem}
+    .seat-cell{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s ease}
+    .seat-cell.selected{background:var(--text);color:var(--bg-base)}
+    .seat-cell.taken{opacity:.35;cursor:not-allowed}
+    .book-panel{margin-top:1rem}
+    .feedback{color:var(--text-muted);margin-top:1rem;font-size:.95rem}
+    @media(max-width:900px){.panel-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+  <div class="apple-ambient">
+    <div class="mesh-blob mesh-1"></div>
+    <div class="mesh-blob mesh-2"></div>
+    <div class="mesh-blob mesh-3"></div>
+  </div>
+
+  <nav>
+    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/flights.html">Flights</a></li>
+      <li><a href="/pilot.html">Pilot</a></li>
+      <li><a href="/admin.html">Admin</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
+      <a href="/auth/discord" class="discord-login-btn" id="login-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        Login with Discord
+      </a>
+      <div class="nav-user" id="nav-user">
+        <img class="nav-avatar" id="nav-avatar" src="" alt="Avatar">
+        <span class="nav-username" id="nav-username"></span>
+        <button class="nav-logout" onclick="window.location.href='/auth/logout'">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <div class="hero-copy">
+      <p class="sub">Pilot dashboard</p>
+      <h1>Captain’s console</h1>
+      <p>Choose flights, reserve seats, and review your booking history with the same premium visual system as the main site.</p>
+      <div class="hero-actions">
+        <a href="/flights.html" class="btn btn-outline">Flight Listings</a>
+        <a href="/admin.html" class="btn btn-outline">Admin Console</a>
+      </div>
+    </div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab active" data-tab="overview">Overview</button>
+      <button class="dash-tab" data-tab="book">Book</button>
+      <button class="dash-tab" data-tab="flights">My Flights</button>
+    </div>
+
+    <div id="tab-overview" class="dash-panel active apple-glass" style="padding:2rem;">
+      <div class="panel-grid single">
+        <div class="dash-stat apple-glass"><span class="dash-stat-num" id="pilot-count">0</span><span class="dash-stat-label">Flights Booked</span></div>
+        <div class="dash-stat apple-glass"><span class="dash-stat-num" id="pilot-next">—</span><span class="dash-stat-label">Next Departure</span></div>
+      </div>
+      <p class="feedback">Your pilot activity is visible once you sign in and book a flight.</p>
+    </div>
+
+    <div id="tab-book" class="dash-panel apple-glass" style="padding:2rem;">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start;">
+        <div>
+          <div class="form-group"><label for="flight-select">Pick a flight</label><select id="flight-select" class="form-control"><option>Loading…</option></select></div>
+          <div class="form-group"><button id="refresh-seats" class="btn btn-outline">Refresh Seats</button></div>
+          <div class="form-group"><button id="book-btn" class="btn">Reserve Seat</button></div>
+          <p class="feedback" id="pilot-feedback">Select a flight to view its available seats.</p>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Seat Map</h3>
+          <div id="seat-map" class="apple-glass" style="padding:1rem;min-height:320px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-flights" class="dash-panel apple-glass" style="padding:2rem;">
+      <h2 style="margin-top:0">Your Bookings</h2>
+      <div id="pilot-flights" class="flights-list">Loading…</div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+        <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+        <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        </a>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Team</a></li><li><a href="#">Fleet</a></li><li><a href="#">Contact Us</a></li></ul></div>
+        <div class="footer-col"><h4>Fly</h4><ul><li><a href="#">Search Flights</a></li><li><a href="#">Flight Logs</a></li></ul></div>
+        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
+      <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
+    </div>
+  </footer>
+
+  <script>
+    let selectedSeat = null;
+    async function initAuth(){
+      try{
+        const res=await fetch('/api/user');
+        const data=await res.json();
+        if(!res.ok || !data.user){ window.location.href='/'; return; }
+        const u=data.user;
+        document.getElementById('login-btn').style.display='none';
+        const nu=document.getElementById('nav-user');
+        nu.classList.add('visible');
+        document.getElementById('nav-avatar').src=u.avatar;
+        document.getElementById('nav-username').textContent=u.username;
+        // Check staff access
+        const staffRes=await fetch('/api/check-staff');
+        const staffData=await staffRes.json();
+        if(!staffData.isStaff){ window.location.href='/'; return; }
+      }catch(e){ window.location.href='/'; }
+    }
+
+    function activateTab(name){
+      document.querySelectorAll('.dash-tab').forEach(tab=>tab.classList.toggle('active', tab.dataset.tab===name));
+      document.querySelectorAll('.dash-panel').forEach(panel=>panel.classList.toggle('active', panel.id===`tab-${name}`));
+    }
+    document.querySelectorAll('.dash-tab').forEach(tab=>tab.addEventListener('click',()=>activateTab(tab.dataset.tab)));
+
+    async function loadMasterFlights(){
+      try{
+        const res=await fetch('/api/flights');
+        if(!res.ok) return;
+        const js=await res.json();
+        const sel=document.getElementById('flight-select');
+        sel.innerHTML = '<option value="">Choose a flight…</option>' + js.flights.map(f=>`<option value="${f.id}">${f.id} — ${f.origin} → ${f.destination} (${new Date(f.departureTime).toLocaleString()})</option>`).join('');
+        sel.addEventListener('change', ()=> loadFlightSeats(sel.value));
+      }catch(e){ console.error('loadMasterFlights', e); }
+    }
+
+    async function loadMyBookings(){
+      const mount = document.getElementById('pilot-flights');
+      try{
+        const res=await fetch('/api/mybookings');
+        if(!res.ok){ mount.textContent='Sign in to view bookings.'; return; }
+        const js=await res.json();
+        document.getElementById('pilot-count').textContent = js.bookings.length;
+        if(!js.bookings.length){ mount.textContent='No bookings yet.'; return; }
+        mount.innerHTML = js.bookings.map(b=>`<div class="flight-row apple-glass"><div><strong>${b.flightNumber}</strong><div class="flight-dest">${b.destName} • Seat ${b.seat||'N/A'}</div></div><div class="flight-time">${new Date(b.bookedAt).toLocaleString()}</div></div>`).join('');
+        const next = js.bookings.sort((a,b)=>new Date(a.bookedAt)-new Date(b.bookedAt))[0];
+        document.getElementById('pilot-next').textContent = next ? new Date(next.bookedAt).toLocaleString() : '—';
+      }catch(e){ mount.textContent='Could not load bookings.'; }
+    }
+
+    function renderSeatMap(takenSeats=[]){
+      const mount = document.getElementById('seat-map');
+      mount.innerHTML = '';
+      const rows = 8; const cols = ['A','B','C','D'];
+      for(let r=1;r<=rows;r++){
+        const row = document.createElement('div');
+        row.style.display='grid'; row.style.gridTemplateColumns='repeat(4,minmax(60px,1fr))'; row.style.gap='10px'; row.style.marginBottom='10px';
+        cols.forEach(c=>{
+          const seatId = `${r}${c}`;
+          const btn = document.createElement('button');
+          btn.type='button';
+          btn.className='seat-cell';
+          btn.textContent=seatId;
+          if(takenSeats.includes(seatId)){
+            btn.classList.add('taken'); btn.disabled=true;
+          } else {
+            btn.addEventListener('click', ()=>{
+              document.querySelectorAll('.seat-cell').forEach(el=>el.classList.remove('selected'));
+              btn.classList.add('selected'); selectedSeat = seatId;
+            });
+          }
+          row.appendChild(btn);
+        });
+        mount.appendChild(row);
+      }
+    }
+
+    async function loadFlightSeats(flightId){
+      if(!flightId) return;
+      try{
+        const res=await fetch(`/api/flight/${encodeURIComponent(flightId)}`);
+        if(!res.ok){ document.getElementById('pilot-feedback').textContent='Could not load flight seats.'; return; }
+        const js=await res.json();
+        renderSeatMap(js.flight.bookedSeats || []);
+        document.getElementById('pilot-feedback').textContent = `Available seats loaded for ${js.flight.id}.`;
+      }catch(e){ document.getElementById('pilot-feedback').textContent='Seat map load error.'; }
+    }
+
+    document.getElementById('refresh-seats').addEventListener('click', ()=>{
+      const flightId=document.getElementById('flight-select').value;
+      if(flightId) loadFlightSeats(flightId);
+    });
+
+    document.getElementById('book-btn').addEventListener('click', async ()=>{
+      const flightId=document.getElementById('flight-select').value;
+      if(!flightId){ alert('Select a flight first.'); return; }
+      if(!selectedSeat){ alert('Select a seat first.'); return; }
+      try{
+        const res=await fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flightId,seatId:selectedSeat})});
+        const js=await res.json();
+        if(!res.ok){ alert(js.error||'Booking failed'); loadFlightSeats(flightId); return; }
+        alert(`Booked ${js.booking.flightNumber} seat ${js.booking.seat}`);
+        await loadMyBookings();
+        await loadFlightSeats(flightId);
+      }catch(e){ alert('Network error.'); }
+    });
+
+    async function initPage(){
+      initAuth();
+      await Promise.all([loadMasterFlights(), loadMyBookings()]);
+    }
+    initPage();
+  </script>
+
+  <script>
+    function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light')}
+    const revealObs=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('active')}),{threshold:.05,rootMargin:'0px 0px -50px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+  </script>
+</body>
+</html>

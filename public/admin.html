@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <title>Admin Dashboard — Asiana PTFS</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .page-main{max-width:1200px;margin:0 auto;padding:7rem 2rem 4rem;position:relative;z-index:1}
+    .hero-panel{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start}
+    .hero-copy h1{font-size:3rem;margin-bottom:.6rem;line-height:1.05}
+    .hero-copy p{color:var(--text-muted);font-size:1rem;line-height:1.75;margin-bottom:1.5rem}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2rem}
+    .panel-grid{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+    .form-control{width:100%;min-height:50px;padding:1rem 1.1rem;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:1rem;outline:none}
+    .section-header{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;margin-bottom:1rem}
+    .section-header h2{margin:0;font-size:1.8rem}
+    .panel-body{display:grid;gap:1rem}
+    .card-list{display:grid;gap:1rem}
+    .card-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:1.25rem;border-radius:24px}
+    .pill{display:inline-block;padding:.35rem .85rem;border-radius:999px;background:rgba(255,255,255,.08);color:var(--text-muted);font-size:.82rem}
+    .data-note{color:var(--text-muted);font-size:.92rem;line-height:1.5}
+    .small-text{font-size:.9rem;color:var(--text-muted)}
+    @media(max-width:900px){.hero-panel{grid-template-columns:1fr}.panel-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+  <div class="apple-ambient">
+    <div class="mesh-blob mesh-1"></div>
+    <div class="mesh-blob mesh-2"></div>
+    <div class="mesh-blob mesh-3"></div>
+  </div>
+
+  <nav>
+    <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/flights.html">Flights</a></li>
+      <li><a href="/pilot.html">Pilot</a></li>
+      <li><a href="/admin.html">Admin</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
+      <a href="/auth/discord" class="discord-login-btn" id="login-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        Login with Discord
+      </a>
+      <div class="nav-user" id="nav-user">
+        <img class="nav-avatar" id="nav-avatar" src="" alt="Avatar">
+        <span class="nav-username" id="nav-username"></span>
+        <button class="nav-logout" onclick="window.location.href='/auth/logout'">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <div class="hero-panel">
+      <div class="hero-copy">
+        <p class="sub">Admin operations</p>
+        <h1>Flight control & staffing</h1>
+        <p>Manage flights, review bookings, and update roster access in a polished administrator experience.</p>
+        <div class="hero-actions">
+          <a href="/flights.html" class="btn btn-outline">Flight Listings</a>
+          <a href="/pilot.html" class="btn btn-outline">Pilot Dashboard</a>
+        </div>
+      </div>
+      <div class="apple-glass" style="padding:1.75rem;">
+        <div style="display:flex;gap:1rem;align-items:center">
+          <div style="width:56px;height:56px;border-radius:18px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text)">A</div>
+          <div>
+            <div style="font-size:.9rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.35rem">Administrator</div>
+            <div style="font-size:1.3rem;font-weight:700">Secure access</div>
+          </div>
+        </div>
+        <p class="data-note" style="margin-top:1.2rem">Only verified staff members can create or delete flights. Use ADMIN_IDS in .env to restrict high-level actions.</p>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card apple-glass"><span class="stat-num" id="stat-flights">0</span><span class="stat-label">Scheduled Flights</span></div>
+      <div class="stat-card apple-glass"><span class="stat-num" id="stat-staff">0</span><span class="stat-label">Staff Members</span></div>
+      <div class="stat-card apple-glass"><span class="stat-num" id="stat-bookings">0</span><span class="stat-label">Total Bookings</span></div>
+    </div>
+
+    <section class="apple-glass" style="margin-top:2rem;padding:2rem;">
+      <div class="section-header">
+        <h2>Create a new flight</h2>
+        <span class="pill">Staff only</span>
+      </div>
+      <div class="form-grid">
+        <input id="flight-id" class="form-control" placeholder="Flight ID (e.g. OZ300)" />
+        <input id="flight-origin" class="form-control" placeholder="Origin (e.g. ICN)" />
+        <input id="flight-dest" class="form-control" placeholder="Destination (e.g. LAX)" />
+        <input id="flight-time" class="form-control" type="datetime-local" />
+        <input id="flight-seats" class="form-control" type="number" min="1" placeholder="Total seats (optional)" />
+        <button id="create-flight" class="btn" style="width:100%;max-width:260px">Create Flight</button>
+      </div>
+      <p class="data-note" style="margin-top:1rem">Departure time is stored in UTC and must be scheduled for a future date.</p>
+    </section>
+
+    <div class="panel-grid">
+      <section class="apple-glass" style="padding:2rem;">
+        <div class="section-header">
+          <h2>Flight schedule</h2>
+          <button id="reload-flights" class="btn btn-outline">Refresh</button>
+        </div>
+        <div id="flights-list" class="card-list">Loading flights…</div>
+      </section>
+      <section class="apple-glass" style="padding:2rem;">
+        <div class="section-header">
+          <h2>Staff roster</h2>
+          <button id="reload-staff" class="btn btn-outline">Refresh</button>
+        </div>
+        <div id="staff-list" class="card-list">Loading staff…</div>
+      </section>
+    </div>
+
+    <section class="apple-glass" style="margin-top:2rem;padding:2rem;">
+      <div class="section-header"><h2>Recent bookings</h2></div>
+      <div id="booking-list" class="card-list">Loading bookings…</div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png" alt="Asiana Airlines" class="footer-logo">
+        <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+        <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        </a>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Team</a></li><li><a href="#">Fleet</a></li><li><a href="#">Contact Us</a></li></ul></div>
+        <div class="footer-col"><h4>Fly</h4><ul><li><a href="#">Search Flights</a></li><li><a href="#">Flight Logs</a></li></ul></div>
+        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
+      <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
+    </div>
+  </footer>
+
+  <script>
+    async function initAuth(){
+      try{
+        const res=await fetch('/api/user');
+        const data=await res.json();
+        if(!res.ok || !data.user){ window.location.href='/'; return; }
+        const u=data.user;
+        document.getElementById('login-btn').style.display='none';
+        const nu=document.getElementById('nav-user');
+        nu.classList.add('visible');
+        document.getElementById('nav-avatar').src=u.avatar;
+        document.getElementById('nav-username').textContent=u.username;
+        // Check admin access
+        const adminRes=await fetch('/api/check-admin');
+        const adminData=await adminRes.json();
+        if(!adminData.isAdmin){ window.location.href='/'; return; }
+      }catch(e){ window.location.href='/'; }
+    }
+
+    async function loadStats(){
+      const flightsRes = await fetch('/api/flights');
+      const staffRes = await fetch('/api/staff');
+      const bookRes = await fetch('/api/bookings');
+      const flights = flightsRes.ok ? (await flightsRes.json()).flights : [];
+      const staff = staffRes.ok ? (await staffRes.json()).staff : [];
+      const bookings = bookRes.ok ? (await bookRes.json()).bookings : [];
+      document.getElementById('stat-flights').textContent = flights.length;
+      document.getElementById('stat-staff').textContent = staff.length;
+      document.getElementById('stat-bookings').textContent = bookings.length;
+    }
+
+    async function loadFlights(){
+      const mount = document.getElementById('flights-list');
+      try{
+        const res = await fetch('/api/flights');
+        if(!res.ok){ mount.textContent='Unable to load flights.'; return; }
+        const js = await res.json();
+        if(!js.flights.length){ mount.textContent='No scheduled flights.'; return; }
+        mount.innerHTML = js.flights.map(f => `
+          <div class="card-row apple-glass">
+            <div>
+              <div style="font-weight:700">${f.id} <span class="pill">${f.origin} → ${f.destination}</span></div>
+              <div class="small-text">${new Date(f.departureTime).toLocaleString()} UTC • ${f.bookedSeats?.length||0}/${f.totalSeats} seats booked</div>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+              <button class="btn btn-outline delete-flight" data-id="${f.id}">Delete</button>
+            </div>
+          </div>
+        `).join('');
+        document.querySelectorAll('.delete-flight').forEach(btn=>{
+          btn.addEventListener('click', async () => {
+            const flightId = btn.dataset.id;
+            if(!confirm(`Delete flight ${flightId}? This will remove it from the schedule.`)) return;
+            const res = await fetch(`/api/flights/${encodeURIComponent(flightId)}`, { method: 'DELETE' });
+            if(res.ok){ loadFlights(); loadStats(); }
+            else { const js = await res.json(); alert(js.error||'Delete failed'); }
+          });
+        });
+      }catch(e){ mount.textContent='Load error'; }
+    }
+
+    async function loadStaff(){
+      const mount = document.getElementById('staff-list');
+      try{
+        const res = await fetch('/api/staff');
+        if(!res.ok){ mount.textContent='Unable to load staff.'; return; }
+        const js = await res.json();
+        if(!js.staff.length){ mount.textContent='No staff configured.'; return; }
+        mount.innerHTML = js.staff.map(s => `
+          <div class="card-row apple-glass">
+            <div>
+              <div style="font-weight:700">${s.username}</div>
+              <div class="small-text">${s.role}</div>
+            </div>
+            <button class="btn btn-outline remove-staff" data-id="${s.id}">Remove</button>
+          </div>
+        `).join('');
+        document.querySelectorAll('.remove-staff').forEach(btn=>{
+          btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            if(!confirm('Remove this staff member?')) return;
+            const res = await fetch(`/api/staff/${encodeURIComponent(id)}`, { method: 'DELETE' });
+            if(res.ok){ loadStaff(); loadStats(); }
+            else { const js = await res.json(); alert(js.error||'Delete failed'); }
+          });
+        });
+      }catch(e){ mount.textContent='Load error'; }
+    }
+
+    async function loadBookings(){
+      const mount = document.getElementById('booking-list');
+      try{
+        const res = await fetch('/api/bookings');
+        if(!res.ok){ mount.textContent='Unable to load bookings.'; return; }
+        const js = await res.json();
+        if(!js.bookings.length){ mount.textContent='No bookings were found.'; return; }
+        mount.innerHTML = js.bookings.slice(0, 8).map(b => `
+          <div class="card-row apple-glass">
+            <div>
+              <div style="font-weight:700">${b.flightNumber}</div>
+              <div class="small-text">${b.destName} • Seat ${b.seat || 'N/A'} • ${b.username}</div>
+            </div>
+            <span class="pill">${new Date(b.bookedAt).toLocaleString()}</span>
+          </div>
+        `).join('');
+      }catch(e){ mount.textContent='Load error'; }
+    }
+
+    document.getElementById('reload-flights').addEventListener('click', loadFlights);
+    document.getElementById('reload-staff').addEventListener('click', loadStaff);
+
+    document.getElementById('create-flight').addEventListener('click', async () => {
+      const id = document.getElementById('flight-id').value.trim();
+      const origin = document.getElementById('flight-origin').value.trim();
+      const destination = document.getElementById('flight-dest').value.trim();
+      const flightTimeValue = document.getElementById('flight-time').value.trim();
+      const seatValue = document.getElementById('flight-seats').value.trim();
+      const totalSeats = seatValue ? parseInt(seatValue, 10) : undefined;
+      if(!id||!origin||!destination||!flightTimeValue){ alert('Please complete all required fields.'); return; }
+      if(seatValue && (Number.isNaN(totalSeats) || totalSeats < 1)){ alert('Total seats must be a positive number.'); return; }
+      const departureTimeUtc = flightTimeValue.endsWith('Z') ? flightTimeValue : `${flightTimeValue}Z`;
+      const departureDate = new Date(departureTimeUtc);
+      if(Number.isNaN(departureDate.getTime())){ alert('Invalid departure time.'); return; }
+      if(departureDate.getTime() <= Date.now()){ alert('Departure must be in the future.'); return; }
+      const confirmCopy = `Create flight:
+${id} ${origin} → ${destination}
+Departure (UTC): ${departureDate.toISOString()}
+Seats: ${totalSeats || 60}`;
+      if(!confirm(confirmCopy)) return;
+      try{
+        const res = await fetch('/api/flights',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,origin,destination,departureTime:departureDate.toISOString(),totalSeats})});
+        if(res.status===201){ alert('Flight created'); document.getElementById('flight-id').value=''; document.getElementById('flight-origin').value=''; document.getElementById('flight-dest').value=''; document.getElementById('flight-time').value=''; document.getElementById('flight-seats').value=''; loadFlights(); loadStats(); }
+        else{ const js=await res.json(); alert(js.error||'Create failed'); }
+      }catch(e){ alert('Request failed'); }
+    });
+
+    async function initPage(){
+      initAuth();
+      await Promise.all([loadStats(), loadFlights(), loadStaff(), loadBookings()]);
+    }
+    initPage();
+  </script>
+
+  <script>
+    function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light')}
+    const revealObs=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('active')}),{threshold:.05,rootMargin:'0px 0px -50px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+  </script>
+</body>
+</html>

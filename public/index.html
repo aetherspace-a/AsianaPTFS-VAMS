@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <title>Asiana Airlines PTFS | Beautiful People</title>
+  <meta name="description" content="Experience the pinnacle of PTFS aviation. Rooted in South Korean excellence, Asiana Airlines delivers uncompromising realism, strict safety standards, and our signature 'Golden Grand Slam' service.">
+  <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&">
+  <style>
+    :root[data-theme="light"] {
+      --bg-base:#f5f5f7; --mesh-1:rgba(255,59,48,.2); --mesh-2:rgba(255,149,0,.2); --mesh-3:rgba(0,122,255,.15);
+      --glass-bg:rgba(255,255,255,.55); --glass-border:rgba(255,255,255,.8); --glass-highlight:rgba(255,255,255,1);
+      --glass-shadow:0 12px 48px rgba(0,0,0,.06); --text:#1d1d1f; --text-muted:#86868b; --red:#ff3b30; --nav-bg:rgba(255,255,255,.75);
+    }
+    :root[data-theme="dark"] {
+      --bg-base:#000; --mesh-1:rgba(255,59,48,.25); --mesh-2:rgba(153,0,51,.35); --mesh-3:rgba(20,20,35,.5);
+      --glass-bg:rgba(30,30,32,.45); --glass-border:rgba(255,255,255,.12); --glass-highlight:rgba(255,255,255,.15);
+      --glass-shadow:0 24px 64px rgba(0,0,0,.6); --text:#f5f5f7; --text-muted:#a1a1a6; --red:#ff453a; --nav-bg:rgba(20,20,22,.65);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-base);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",sans-serif;transition:background .8s cubic-bezier(.22,1,.36,1),color .8s ease;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-.015em}
+    .noise-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    /* Ambient */
+    .apple-ambient{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;overflow:hidden;background:var(--bg-base);transition:background .8s ease}
+    .mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:breathe 24s infinite alternate cubic-bezier(.4,0,.2,1)}
+    .mesh-1{width:80vw;height:80vw;background:var(--mesh-1);top:-20%;left:-20%;animation-duration:25s}
+    .mesh-2{width:70vw;height:70vw;background:var(--mesh-2);bottom:-10%;right:-10%;animation-direction:alternate-reverse;animation-duration:22s}
+    .mesh-3{width:90vw;height:90vw;background:var(--mesh-3);top:20%;left:10%;animation-duration:30s;mix-blend-mode:screen}
+    @keyframes breathe{0%{transform:scale(1) translate(0,0);opacity:.7}50%{transform:scale(1.15) translate(4%,4%);opacity:1}100%{transform:scale(.95) translate(-4%,-4%);opacity:.7}}
+    /* Glass */
+    .apple-glass{background:var(--glass-bg);backdrop-filter:blur(60px) saturate(220%);-webkit-backdrop-filter:blur(60px) saturate(220%);box-shadow:inset 0 1px 0 0 var(--glass-highlight),var(--glass-shadow);border:1px solid var(--glass-border);border-radius:32px;transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+    .apple-glass::before{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(to right,transparent,rgba(255,255,255,.08),transparent);transform:skewX(-20deg);transition:.7s;z-index:1;pointer-events:none}
+    .apple-glass:hover{transform:scale(1.02) translateY(-4px);box-shadow:inset 0 1px 0 0 var(--glass-highlight),0 30px 60px rgba(0,0,0,.4)}
+    .apple-glass:hover::before{left:150%}
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(50px) scale(.96);transition:opacity 1.2s cubic-bezier(.22,1,.36,1),transform 1.2s cubic-bezier(.22,1,.36,1);will-change:transform,opacity}
+    .reveal.active{opacity:1;transform:translateY(0) scale(1)}
+    /* Nav */
+    nav{display:flex;align-items:center;justify-content:space-between;padding:.8rem 3rem;position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(50px) saturate(200%);-webkit-backdrop-filter:blur(50px) saturate(200%);border-bottom:1px solid var(--glass-border);animation:navFade 1s cubic-bezier(.22,1,.36,1) forwards;opacity:0;transform:translateY(-20px)}
+    @keyframes navFade{to{opacity:1;transform:translateY(0)}}
+    .logo img{height:26px;width:auto;transition:filter .4s ease}
+    :root[data-theme="dark"] .logo img,:root[data-theme="dark"] .hero-logo-img{filter:brightness(0) invert(1)}
+    nav ul{list-style:none;display:flex;gap:2.5rem}
+    nav ul a{text-decoration:none;color:var(--text);font-size:.85rem;font-weight:500;letter-spacing:.01em;transition:opacity .3s;opacity:.8}
+    nav ul a:hover{opacity:1;color:var(--red)}
+    .nav-right{display:flex;align-items:center;gap:.75rem}
+    .theme-btn{background:rgba(120,120,128,.16);border:none;color:var(--text);padding:.5rem 1rem;cursor:pointer;font-size:.85rem;font-weight:600;border-radius:40px;transition:background .3s,transform .3s;font-family:inherit}
+    .theme-btn:hover{background:rgba(120,120,128,.3);transform:scale(1.05)}
+    .discord-login-btn{display:inline-flex;align-items:center;gap:.5rem;background:#5865F2;color:#fff;border:none;padding:.45rem 1.1rem;border-radius:40px;font-size:.82rem;font-weight:600;cursor:pointer;text-decoration:none;font-family:inherit;transition:background .3s,transform .3s}
+    .discord-login-btn:hover{background:#4752c4;transform:scale(1.04)}
+    .discord-login-btn svg{width:16px;height:16px;fill:currentColor;flex-shrink:0}
+    .nav-user{display:none;align-items:center;gap:.6rem}
+    .nav-user.visible{display:flex}
+    .nav-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--glass-border);object-fit:cover}
+    .nav-username{font-size:.82rem;font-weight:600;color:var(--text)}
+    .nav-logout{background:rgba(120,120,128,.16);border:none;color:var(--text-muted);padding:.35rem .75rem;border-radius:40px;font-size:.75rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background .3s}
+    .nav-logout:hover{background:rgba(255,69,58,.2);color:var(--red)}
+    /* Hero */
+    #hero{text-align:center;padding:13rem 2rem 10rem;position:relative;will-change:transform,opacity}
+    .hero-logo-img{height:70px;margin-bottom:2rem;animation:fadeInDown 1.4s cubic-bezier(.22,1,.36,1)}
+    #hero h1{font-size:5.8rem;margin-bottom:.5rem;font-weight:800;letter-spacing:-.05em;line-height:1.05;background:linear-gradient(270deg,var(--text),var(--text-muted),var(--text));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:fadeInUp 1.2s cubic-bezier(.22,1,.36,1) .1s backwards,textShine 8s linear infinite}
+    @keyframes textShine{to{background-position:200% center}}
+    #hero h3{font-size:1.2rem;color:var(--text-muted);margin-top:1rem;margin-bottom:2.5rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;animation:fadeInUp 1.2s cubic-bezier(.22,1,.36,1) .3s backwards}
+    #hero p{color:var(--text-muted);font-size:1.25rem;max-width:680px;margin:0 auto 3.5rem;line-height:1.5;font-weight:500;animation:fadeInUp 1.2s cubic-bezier(.22,1,.36,1) .5s backwards}
+    .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeInUp 1.2s cubic-bezier(.22,1,.36,1) .7s backwards}
+    .btn{display:inline-block;padding:1.1rem 2.8rem;background:var(--text);color:var(--bg-base)!important;text-decoration:none;font-size:1.05rem;font-weight:600;border-radius:999px;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;-webkit-text-fill-color:var(--bg-base);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+    .btn:hover{transform:scale(1.05) translateY(-2px);box-shadow:0 16px 32px rgba(0,0,0,.25)}
+    .btn-outline{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);color:var(--text)!important;box-shadow:inset 0 1px 0 0 var(--glass-highlight);-webkit-text-fill-color:var(--text)}
+    .btn-outline:hover{background:rgba(120,120,128,.2)}
+    /* Stats */
+    .stats{display:flex;justify-content:center;flex-wrap:wrap;gap:1.5rem;max-width:1050px;margin:0 auto 4rem;padding:0 2rem}
+    .stat-card{flex:1;min-width:160px;text-align:center;padding:2.5rem 1.5rem;border-radius:32px}
+    .stat-num{display:block;font-size:3.5rem;font-weight:700;color:var(--text);margin-bottom:.2rem;letter-spacing:-.04em}
+    .stat-label{font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+    /* Sections */
+    section{padding:8rem 2rem;max-width:1250px;margin:0 auto}
+    .section-icon{height:44px;width:auto;object-fit:contain;margin-bottom:1.5rem;display:block;filter:drop-shadow(0 4px 12px rgba(0,0,0,.2))}
+    h2{font-size:3.5rem;margin-bottom:.5rem;color:var(--text);font-weight:800;letter-spacing:-.04em}
+    h2 span{color:var(--red)}
+    .sub{color:var(--text-muted);margin-bottom:4rem;font-size:1.25rem;line-height:1.5;font-weight:500;max-width:700px}
+    .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:2.5rem}
+    .grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2.5rem}
+    .grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2rem}
+    .feature-card{padding:3.5rem}
+    .feature-card h3{font-size:1.8rem;margin-bottom:1rem;font-weight:700;letter-spacing:-.02em}
+    .feature-card p{color:var(--text-muted);font-size:1.1rem;line-height:1.6;font-weight:400}
+    .dest-card{padding:2.5rem;display:flex;flex-direction:column;gap:1.2rem}
+    .dest-card-header{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+    .dest-card span{background:var(--text);color:var(--bg-base);padding:.4rem 1rem;border-radius:20px;font-size:.8rem;font-weight:700}
+    .dest-card-desc{font-size:1.05rem;color:var(--text-muted);line-height:1.5;font-weight:500}
+    .fleet-card{padding:0}
+    .fleet-img{width:100%;height:240px;background-size:cover;background-position:center;border-bottom:1px solid var(--glass-border);transition:transform .8s cubic-bezier(.22,1,.36,1)}
+    .fleet-card:hover .fleet-img{transform:scale(1.08)}
+    .fleet-content{padding:2.5rem;z-index:2;position:relative}
+    .fleet-content h3{margin-bottom:.5rem;font-size:1.6rem;font-weight:700;letter-spacing:-.03em}
+    .fleet-content p{font-size:1.05rem;color:var(--text-muted);line-height:1.5;margin-bottom:1.5rem}
+    .staff-card{padding:3rem 1.5rem;text-align:center}
+    .staff-avatar{width:90px;height:90px;border-radius:50%;background:var(--text);color:var(--bg-base);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;margin:0 auto 1.5rem;box-shadow:0 12px 32px rgba(0,0,0,.2);border:2px solid var(--glass-border)}
+    .staff-card h3{font-size:1.2rem;font-weight:700;margin-bottom:.4rem;letter-spacing:-.01em}
+    .staff-card p{font-size:.85rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+    .logs-container{width:100%;height:750px;padding:0;border-radius:36px;overflow:hidden}
+    .logs-container iframe{width:100%;height:100%;border:none;display:block;border-radius:36px}
+    #apply{padding-bottom:12rem}
+    #apply .inner{display:flex;flex-direction:column;align-items:center;width:100%}
+    .form-container{width:100%;max-width:900px;margin-top:4rem;padding:.5rem;border-radius:36px}
+    .form-container iframe{width:100%!important;min-height:850px!important;height:100%;border:none;display:block;border-radius:32px}
+    /* Dashboard */
+    #dashboard{display:none;padding:4rem 2rem 8rem}
+    #dashboard.logged-in{display:block}
+    .dash-tabs{display:flex;gap:.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
+    .dash-tab{padding:.6rem 1.4rem;border-radius:999px;border:1px solid var(--glass-border);background:transparent;color:var(--text-muted);font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s cubic-bezier(.22,1,.36,1)}
+    .dash-tab:hover{color:var(--text);background:rgba(120,120,128,.15)}
+    .dash-tab.active{background:var(--text);color:var(--bg-base);border-color:var(--text)}
+    .dash-panel{display:none}
+    .dash-panel.active{display:block}
+    .dash-welcome{display:flex;align-items:center;gap:1.5rem;margin-bottom:2.5rem}
+    .dash-avatar{width:72px;height:72px;border-radius:50%;border:2px solid var(--glass-border);object-fit:cover}
+    .dash-welcome-text h3{font-size:1.8rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.2rem}
+    .dash-welcome-text p{color:var(--text-muted);font-size:.95rem;font-weight:500}
+    .dash-overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem}
+    .dash-stat{padding:2rem 1.5rem;border-radius:24px;text-align:center}
+    .dash-stat-num{display:block;font-size:2.4rem;font-weight:700;letter-spacing:-.04em;margin-bottom:.2rem}
+    .dash-stat-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:600;color:var(--text-muted)}
+    .book-form{max-width:520px}
+    .form-group{margin-bottom:1.5rem}
+    .form-label{display:block;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:.6rem}
+    .form-select{width:100%;padding:.9rem 1.2rem;background:rgba(120,120,128,.1);border:1px solid var(--glass-border);border-radius:14px;color:var(--text);font-size:.95rem;font-family:inherit;transition:border-color .3s,background .3s;outline:none;-webkit-appearance:none;appearance:none}
+    .form-select:focus{border-color:var(--red);background:rgba(120,120,128,.18)}
+    .form-select option{background:#1e1e20;color:#f5f5f7}
+    .book-btn{display:inline-block;padding:.9rem 2.4rem;background:var(--red);color:#fff;border:none;border-radius:999px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit;transition:transform .3s cubic-bezier(.22,1,.36,1),background .3s}
+    .book-btn:hover{transform:scale(1.04) translateY(-1px);background:#cc2a21}
+    .book-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--glass-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--glass-border);border-radius:999px;padding:.75rem 1.75rem;font-size:.9rem;font-weight:600;z-index:9998;transition:transform .5s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .flights-list{display:flex;flex-direction:column;gap:1rem}
+    .flight-row{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.75rem;border-radius:20px;gap:1rem;flex-wrap:wrap}
+    .flight-num{font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
+    .flight-dest{color:var(--text-muted);font-size:.9rem;font-weight:500}
+    .flight-status{font-size:.75rem;font-weight:700;padding:.35rem .9rem;border-radius:999px;background:rgba(52,199,89,.18);color:#34c759;text-transform:uppercase;letter-spacing:.1em}
+    .flight-time{font-size:.8rem;color:var(--text-muted);font-weight:500}
+    .flights-empty{color:var(--text-muted);font-size:1rem;text-align:center;padding:3rem 0;font-weight:500}
+    /* Footer */
+    footer{background:var(--nav-bg);backdrop-filter:blur(60px) saturate(220%);-webkit-backdrop-filter:blur(60px) saturate(220%);border-top:1px solid var(--glass-border);padding:6rem 2rem 3rem;font-size:.95rem}
+    .footer-container{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:3rem;margin-bottom:5rem}
+    .footer-brand{flex:1;min-width:250px;max-width:350px}
+    .footer-logo{height:32px;margin-bottom:1.5rem}
+    :root[data-theme="dark"] .footer-logo{filter:brightness(0) invert(1)}
+    .footer-brand p{color:var(--text-muted);line-height:1.6;margin-bottom:2rem;font-weight:500}
+    .discord-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(120,120,128,.16);border-radius:50%;color:var(--text);transition:all .4s cubic-bezier(.22,1,.36,1);text-decoration:none}
+    .discord-btn:hover{background:var(--text);color:var(--bg-base);transform:scale(1.1)}
+    .discord-btn svg{width:20px;height:20px;fill:currentColor}
+    .footer-links{display:flex;flex-wrap:wrap;gap:5rem}
+    .footer-col h4{color:var(--text);font-size:1rem;font-weight:600;margin-bottom:1.2rem}
+    .footer-col ul{list-style:none}
+    .footer-col ul li{margin-bottom:.8rem}
+    .footer-col ul li a{color:var(--text-muted);text-decoration:none;transition:color .3s ease;font-weight:500}
+    .footer-col ul li a:hover{color:var(--text)}
+    .footer-bottom{max-width:1200px;margin:0 auto;padding-top:2rem;border-top:1px solid var(--glass-border);display:flex;justify-content:space-between;flex-wrap:wrap;color:var(--text-muted);font-size:.85rem;font-weight:500}
+    /* Responsive */
+    @media(max-width:1024px){#hero h1{font-size:5rem}}
+    @media(max-width:768px){nav ul{display:none}#hero{padding:9rem 1.5rem}#hero h1{font-size:3.8rem}h2{font-size:2.8rem}section{padding:6rem 1.5rem}.grid-2,.grid-3{grid-template-columns:1fr}.footer-links{gap:2rem;flex-direction:column}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeInDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+    @media(prefers-reduced-motion:reduce){.reveal{transition:none;opacity:1;transform:none}.mesh-blob{animation:none}}
+  </style>
+</head>
+<body>
+
+<div class="noise-overlay"></div>
+<div class="apple-ambient">
+  <div class="mesh-blob mesh-1"></div>
+  <div class="mesh-blob mesh-2"></div>
+  <div class="mesh-blob mesh-3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#fleet">Fleet</a></li>
+    <li><a href="#destinations">Network</a></li>
+    <li><a href="#logs">Flight Logs</a></li>
+    <li><a href="#staff">Staff</a></li>
+    <li><a href="/pilot.html" id="nav-dashboard-link" style="display:none">My Dashboard</a></li>
+    <li><a href="/flights.html">Flights</a></li>
+    <li><a href="/admin.html">Admin</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
+    <a href="/auth/discord" class="discord-login-btn" id="login-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      Login with Discord
+    </a>
+    <div class="nav-user" id="nav-user">
+      <img src="" alt="Avatar" class="nav-avatar" id="nav-avatar">
+      <span class="nav-username" id="nav-username"></span>
+      <button class="nav-logout" onclick="window.location.href='/auth/logout'">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines" class="hero-logo-img">
+  <h1>"Beautiful People"</h1>
+  <h3>ASIANA AIRLINES • 아시아나항공</h3>
+  <p>Experience the pinnacle of PTFS aviation. Rooted in South Korean excellence, Asiana Airlines delivers uncompromising realism, strict safety standards, and our signature "Golden Grand Slam" service.</p>
+  <div class="hero-actions">
+    <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="btn">Join Server</a>
+    <a href="#apply" class="btn btn-outline">Apply to Staff</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-card apple-glass reveal"><span id="stat-flights" class="stat-num">8+</span><span class="stat-label">Scheduled Flights</span></div>
+  <div class="stat-card apple-glass reveal" style="transition-delay:.1s"><span class="stat-num">10</span><span class="stat-label">Destinations</span></div>
+  <div class="stat-card apple-glass reveal" style="transition-delay:.2s"><span class="stat-num">6</span><span class="stat-label">Aircraft Types</span></div>
+  <div class="stat-card apple-glass reveal" style="transition-delay:.3s"><span class="stat-num">1k+</span><span class="stat-label">Flights Logged</span></div>
+</div>
+
+<!-- Dashboard moved to /pilot.html -->
+
+<!-- ABOUT -->
+<section id="about" class="reveal">
+  <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&" alt="Wing Logo" class="section-icon">
+  <h2>Our <span>Standards.</span></h2>
+  <p class="sub">Setting the benchmark for realism and quality in Pilot Training Flight Simulator.</p>
+  <div class="grid-2">
+    <div class="feature-card apple-glass"><h3>Global Prestige.</h3><p>Carefully curated international routes connecting Seoul to major destinations across the world, bringing together realism, professionalism, and the excellence of South Korean aviation.</p></div>
+    <div class="feature-card apple-glass"><h3>Flawless Precision.</h3><p>Professional, highly disciplined, and ultra-realistic flight operations designed to replicate the standards of a modern international airline. Strong operational standards from gate departure to final arrival.</p></div>
+  </div>
+</section>
+
+<!-- FLEET -->
+<section id="fleet" class="reveal">
+  <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&" alt="Wing Logo" class="section-icon">
+  <h2>Our <span>Fleet.</span></h2>
+  <p class="sub">Fly our iconic Asiana liveries across our official PTFS aircraft roster.</p>
+  <div class="grid-3">
+    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/26228/hl7634-asiana-airlines-airbus-a380-841_PlanespottersNet_1927063_2b3cb05c46_o.jpg')"></div><div class="fleet-content"><h3>Airbus A380-800</h3><p>Premium Ultra-Long-Haul. High-capacity flagship operations.</p></div></div>
+    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/40206/hl8522-asiana-airlines-airbus-a350-941_PlanespottersNet_1930033_bb310fe3ea_o.jpg')"></div><div class="fleet-content"><h3>Airbus A350-900</h3><p>Modern Long-Haul. Highly efficient intercontinental routes.</p></div></div>
+    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/48020/hl7755-asiana-airlines-boeing-777-28eer_PlanespottersNet_1925950_d87468447c_o.jpg')"></div><div class="fleet-content"><h3>Boeing B777-200ER</h3><p>Long-Haul Standard. Reliable transoceanic workhorse.</p></div></div>
+    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/30449/hl7792-asiana-airlines-airbus-a330-323_PlanespottersNet_1926955_55c7fc2180_o.jpg')"></div><div class="fleet-content"><h3>Airbus A330-300</h3><p>Versatile Mid-Haul. High-demand regional flights.</p></div></div>
+    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/27017/hl8364-asiana-airlines-airbus-a321-251nx_PlanespottersNet_1897259_8899755984_o.jpg')"></div><div class="fleet-content"><h3>Airbus A321-neo</h3><p>Next-Gen Narrowbody.</p><div><span style="background:var(--text);color:var(--bg-base);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:700">Spawn A320</span></div></div></div>
+    <div class="fleet-card apple-glass"><div class="fleet-img" style="background-image:url('https://cdn.plnspttrs.net/15354/hl8038-asiana-airlines-airbus-a321-231-wl_PlanespottersNet_1866194_5a8c78b6b1_o.jpg')"></div><div class="fleet-content"><h3>Airbus A321-200</h3><p>Classic Narrowbody.</p><div><span style="background:var(--text);color:var(--bg-base);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:700">Spawn A320</span></div></div></div>
+  </div>
+</section>
+
+<!-- DESTINATIONS -->
+<section id="destinations" class="reveal">
+  <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&" alt="Wing Logo" class="section-icon">
+  <h2>PTFS <span>Network.</span></h2>
+  <p class="sub">Discover our official destinations across the Pilot Training Flight Simulator map.</p>
+  <div class="grid-3">
+    <div class="dest-card apple-glass"><div class="dest-card-header">Barra Airport <span>[IBAR]</span></div><div class="dest-card-desc">A unique small airfield situated on a beach, suitable for regional STOL operations.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Greater Rockford <span>[IRFD]</span></div><div class="dest-card-desc">The central, bustling international hub capable of handling massive widebody airliners.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Izolirani Int'l <span>[IZOL]</span></div><div class="dest-card-desc">A massive facility located on an isolated island, supporting all major aircraft types.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Keflavik Airport <span>[IKFL]</span></div><div class="dest-card-desc">A prominent international destination set in a snowy landscape serving global routes.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Larnaca Int'l <span>[ILAR]</span></div><div class="dest-card-desc">A major coastal hub perfectly equipped to support high-volume heavy airliner traffic.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Mellor Int'l <span>[IMLR]</span></div><div class="dest-card-desc">A vital mid-sized regional airport tailored for narrowbody and short-haul flights.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Perth Int'l <span>[IPPH]</span></div><div class="dest-card-desc">A primary international gateway capable of supporting the heaviest widebody operations.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Saint Barthélemy <span>[IBTH]</span></div><div class="dest-card-desc">A challenging mid-sized regional airport famous for its dramatic, scenic approaches.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Sauthemptona <span>[ISAU]</span></div><div class="dest-card-desc">A picturesque mid-sized destination highly utilized for regional narrowbody operations.</div></div>
+    <div class="dest-card apple-glass"><div class="dest-card-header">Tokyo Int'l <span>[ITKO]</span></div><div class="dest-card-desc">A premier, highly active international hub connecting flights across the entire PTFS globe.</div></div>
+  </div>
+</section>
+
+<!-- LOGS -->
+<section id="logs" class="reveal">
+  <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&" alt="Wing Logo" class="section-icon">
+  <h2>Flight <span>Logs.</span></h2>
+  <p class="sub">Live flight operations and dispatch logs directly from our Discord server.</p>
+  <div class="logs-container apple-glass">
+    <iframe src="https://e.widgetbot.io/channels/1506932959855251468/1507312279736029264" title="Discord Flight Logs"></iframe>
+  </div>
+</section>
+
+<!-- STAFF -->
+<section id="staff" class="reveal">
+  <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&" alt="Wing Logo" class="section-icon">
+  <h2>Our <span>Staff.</span></h2>
+  <p class="sub">Meet the dedicated management and operations executive team behind Asiana Airlines PTFS.</p>
+  <div class="grid-4">
+    <div class="staff-card apple-glass"><div class="staff-avatar">A</div><h3>@aetherspace_</h3><p>Founder / Chairman</p></div>
+    <div class="staff-card apple-glass"><div class="staff-avatar">B</div><h3>@boeing747sp</h3><p>Vice Chairman</p></div>
+    <div class="staff-card apple-glass"><div class="staff-avatar">V</div><h3>Vacant</h3><p>Chief Executive Officer</p></div>
+    <div class="staff-card apple-glass"><div class="staff-avatar">C</div><h3>@carlonblox</h3><p>Chief Operating Officer</p></div>
+    <div class="staff-card apple-glass"><div class="staff-avatar">T</div><h3>@totozzino_53610</h3><p>President</p></div>
+    <div class="staff-card apple-glass"><div class="staff-avatar">O</div><h3>@oppression.ly</h3><p>Vice President</p></div>
+    <div class="staff-card apple-glass"><div class="staff-avatar">N</div><h3>@nms_126avn</h3><p>Board of Directors</p></div>
+  </div>
+</section>
+
+<!-- APPLY -->
+<div id="apply">
+  <div class="inner reveal">
+    <h2>Join the <span>Beautiful People.</span></h2>
+    <p class="sub">Submit your staff recruitment application below to start your journey with Asiana Airlines.</p>
+    <div class="form-container apple-glass">
+      <iframe data-tally-src="https://tally.so/r/gDv9AO?transparentBackground=1" title="Asiana Airlines PTFS Staff Recruitment Application"></iframe>
+      <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <img src="https://cdn.discordapp.com/attachments/1507235764126093453/1510130338637025300/020560.KS_1.png?ex=6a1bb1f9&is=6a1a6079&hm=a436cd265aa493101ba1312e162cfdee39aa14844de01273e8a85b518c07cbe0&" alt="Asiana Airlines" class="footer-logo">
+      <p>Experience premium virtual aviation with Asiana Airlines. Fly with us across South Korea and beyond.</p>
+      <a href="https://discord.gg/WsPMFdJsWp" target="_blank" class="discord-btn" aria-label="Join our Discord">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      </a>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="#staff">Our Team</a></li><li><a href="#fleet">Fleet</a></li><li><a href="#apply">Contact Us</a></li></ul></div>
+      <div class="footer-col"><h4>Fly</h4><ul><li><a href="#destinations">Search Flights</a></li><li><a href="#logs">Flight Logs</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Asiana Airlines PTFS - Founded by Aether. All rights reserved.</p>
+    <p>Virtual airline — not affiliated with the real Asiana Airlines.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Theme
+  function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light')}
+
+  // Scroll reveal
+  const revealObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('active')}),{threshold:.05,rootMargin:"0px 0px -50px 0px"});
+  document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+  // Hero parallax
+  const heroEl=document.getElementById('hero');
+  window.addEventListener('scroll',()=>{const s=window.scrollY;if(s<600){heroEl.style.transform=`translateY(${s*.3}px)`;heroEl.style.opacity=1-(s/500);}});
+
+  // Tabs
+  document.querySelectorAll('.dash-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='flights')loadFlights();
+    });
+  });
+
+  // Toast
+  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+  // Auth check on page load
+  async function initAuth(){
+    try{
+      const res=await fetch('/api/user');
+      const data=await res.json();
+      if(res.ok&&data.user){
+        const u=data.user;
+        document.getElementById('login-btn').style.display='none';
+        const nu=document.getElementById('nav-user');nu.classList.add('visible');
+        document.getElementById('nav-avatar').src=u.avatar;
+        document.getElementById('nav-username').textContent=u.username;
+        const nd = document.getElementById('nav-dashboard-link');
+        if(nd){ nd.style.display='inline'; nd.href='/pilot.html'; }
+      }
+    }catch(e){/* 401 = logged out, that's fine */}
+  }
+
+  // Load destinations into select
+  async function loadDestinations(){
+    try{
+      const res=await fetch('/api/destinations');
+      const data=await res.json();
+      const sel=document.getElementById('dest-select');
+      sel.innerHTML='<option value="">Choose a destination…</option>'+data.destinations.map(d=>`<option value="${d.code}">${d.name} (${d.code})</option>`).join('');
+    }catch(e){console.error('loadDestinations failed',e);}
+  }
+
+  // Load flights list
+  async function loadFlights(){
+    const list = document.getElementById('flights-list');
+    const stat = document.getElementById('stat-flights');
+    // If neither flights container nor stat exist on this page, nothing to do
+    if (!list && !stat) return;
+    try{
+      const res=await fetch('/api/flights');
+      if(!res.ok){ if(list) list.innerHTML='<p class="flights-empty">Sign in to see your flights.</p>'; return; }
+      const data=await res.json();
+      if (stat) stat.textContent = data.flights.length;
+      if(!data.flights.length){ if(list) list.innerHTML='<p class="flights-empty">No scheduled flights.</p>'; return; }
+      if(list) list.innerHTML = data.flights.map(f=>`
+        <div class="flight-row apple-glass">
+          <div><div class="flight-num">${f.id}</div><div class="flight-dest">${f.origin} → ${f.destination}</div></div>
+          <div class="flight-time">${new Date(f.departureTime).toLocaleString()}</div>
+        </div>`).join('');
+    }catch(e){ if(list) list.innerHTML='<p class="flights-empty">Could not load flights.</p>'; }
+  }
+
+  // Book a flight
+  async function bookFlight(){
+    const dest=document.getElementById('dest-select').value;
+    if(!dest){showToast('⚠️ Please select a destination first.');return;}
+    const btn=document.getElementById('book-btn');
+    btn.disabled=true;btn.textContent='Booking…';
+    try{
+      const res=await fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({destination:dest})});
+      const data=await res.json();
+      if(res.ok){
+        showToast(`✅ ${data.booking.flightNumber} to ${data.booking.destName} confirmed!`);
+        document.getElementById('dest-select').value='';
+        await loadFlights();
+      }else{showToast(`❌ ${data.error||'Booking failed. Please try again.'}`);}
+    }catch(e){showToast('❌ Network error. Please try again.');}
+    finally{btn.disabled=false;btn.textContent='Confirm Booking';}
+  }
+
+  initAuth();
+</script>
+</body>
+</html>
