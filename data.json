@@ -30,14 +30,9 @@
   ],
   "staff": [
     {
-      "id": "111111",
-      "username": "StaffAdmin",
+      "id": "YOUR_DISCORD_USER_ID",
+      "username": "your_discord_username",
       "role": "admin"
-    },
-    {
-      "id": "222222",
-      "username": "TestPilot",
-      "role": "pilot"
     }
   ],
   "flightBookings": []
