@@ -31,7 +31,7 @@ function registerAdminRoutes(app, client) {
 
     // Send Rich Embed
     router.post('/send-embed', isAdmin, express.json(), async (req, res) => {
-        const { channelId, embed, content } = req.body;
+        const { channelId, embed, content, components, embeds } = req.body;
         
         if (!channelId) return res.status(400).json({ error: 'Channel ID is required' });
 
@@ -41,42 +41,62 @@ function registerAdminRoutes(app, client) {
                 return res.status(400).json({ error: 'Invalid or non-text channel' });
             }
 
-            const discordEmbed = new EmbedBuilder()
-                .setTitle(embed.title || null)
-                .setDescription(embed.description || null)
-                .setURL(embed.url || null)
-                .setColor(embed.color || dataService.getConfig().embedDefaults.color)
-                .setTimestamp(embed.timestamp ? new Date() : null);
+            const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+            const messagePayload = { content: content || null, embeds: [], components: [] };
 
-            if (embed.author?.name) {
-                discordEmbed.setAuthor({ 
-                    name: embed.author.name, 
-                    iconURL: embed.author.icon_url || null, 
-                    url: embed.author.url || null 
+            // Handle legacy single 'embed' object
+            if (embed && !embeds) {
+                const discordEmbed = new EmbedBuilder()
+                    .setTitle(embed.title || null)
+                    .setDescription(embed.description || null)
+                    .setURL(embed.url || null)
+                    .setColor(embed.color || dataService.getConfig().embedDefaults.color)
+                    .setTimestamp(embed.timestamp ? new Date() : null);
+
+                if (embed.author?.name) discordEmbed.setAuthor({ name: embed.author.name, iconURL: embed.author.icon_url || null });
+                if (embed.footer?.text) discordEmbed.setFooter({ text: embed.footer.text, iconURL: embed.footer.icon_url || null });
+                if (embed.thumbnail?.url) discordEmbed.setThumbnail(embed.thumbnail.url);
+                if (embed.image?.url) discordEmbed.setImage(embed.image.url);
+                if (Array.isArray(embed.fields)) {
+                    embed.fields.forEach(f => { if (f.name && f.value) discordEmbed.addFields({ name: f.name, value: f.value, inline: !!f.inline }); });
+                }
+                messagePayload.embeds.push(discordEmbed);
+            }
+
+            // Handle multiple 'embeds'
+            if (Array.isArray(embeds)) {
+                embeds.forEach(e => {
+                    const de = new EmbedBuilder()
+                        .setTitle(e.title || null)
+                        .setDescription(e.description || null)
+                        .setColor(e.color || dataService.getConfig().embedDefaults.color);
+                    if (e.image?.url) de.setImage(e.image.url);
+                    if (e.footer?.text) de.setFooter({ text: e.footer.text });
+                    messagePayload.embeds.push(de);
                 });
             }
 
-            if (embed.footer?.text) {
-                discordEmbed.setFooter({ 
-                    text: embed.footer.text, 
-                    iconURL: embed.footer.icon_url || null 
+            // Handle buttons
+            if (Array.isArray(components)) {
+                const row = new ActionRowBuilder();
+                components.forEach(c => {
+                    if (c.type === 2) { // Button
+                        const btn = new ButtonBuilder()
+                            .setLabel(c.label)
+                            .setStyle(c.style || ButtonStyle.Link)
+                            .setURL(c.url || null);
+                        if (c.emoji) btn.setEmoji(c.emoji);
+                        row.addComponents(btn);
+                    }
                 });
+                if (row.components.length) messagePayload.components.push(row);
             }
 
-            if (embed.thumbnail?.url) discordEmbed.setThumbnail(embed.thumbnail.url);
-            if (embed.image?.url) discordEmbed.setImage(embed.image.url);
-
-            if (Array.isArray(embed.fields)) {
-                embed.fields.forEach(f => {
-                    if (f.name && f.value) discordEmbed.addFields({ name: f.name, value: f.value, inline: !!f.inline });
-                });
-            }
-
-            await channel.send({ content: content || null, embeds: [discordEmbed] });
-            res.json({ success: true, message: 'Embed sent successfully' });
+            await channel.send(messagePayload);
+            res.json({ success: true, message: 'Rich message dispatched' });
         } catch (err) {
             console.error('[admin-routes] send-embed error:', err);
-            res.status(500).json({ error: 'Failed to send embed: ' + err.message });
+            res.status(500).json({ error: 'Failed to send: ' + err.message });
         }
     });
 

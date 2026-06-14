@@ -195,6 +195,7 @@
                 <div style="display:flex; gap:0.5rem">
                     <select class="form-control" style="padding:0.4rem; font-size:0.8rem; flex:1" onchange="updateOpsStatus('${f.id}', this.value)">
                         <option value="Scheduled" ${f.status === 'Scheduled' ? 'selected' : ''}>Scheduled</option>
+                        <option value="Server Opened" ${f.status === 'Server Opened' ? 'selected' : ''}>Server Opened</option>
                         <option value="Boarding" ${f.status === 'Boarding' ? 'selected' : ''}>Boarding</option>
                         <option value="Departed" ${f.status === 'Departed' ? 'selected' : ''}>Departed</option>
                         <option value="Arrived" ${f.status === 'Arrived' ? 'selected' : ''}>Arrived</option>

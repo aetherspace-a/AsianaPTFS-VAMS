@@ -72,6 +72,7 @@
                 <h3 style="margin-bottom:1rem">Select Template</h3>
                 <select id="temp-select" class="form-control" onchange="loadSelectedTemplate()">
                     <option value="new">🆕 New Flight</option>
+                    <option value="open">✈️ Server Opened</option>
                     <option value="boarding">🛫 Boarding</option>
                     <option value="departed">☁️ Departed</option>
                     <option value="arrived">🛬 Arrived</option>
@@ -109,6 +110,7 @@
                 <label>Announcement Template</label>
                 <select id="disp-template" class="form-control">
                     <option value="new">🆕 New Flight Scheduled</option>
+                    <option value="open">✈️ Server Opened / Check-in</option>
                     <option value="boarding">🛫 Now Boarding</option>
                     <option value="departed">☁️ Flight Departed</option>
                     <option value="arrived">🛬 Flight Arrived</option>
@@ -430,6 +432,7 @@
         // Map template key to status
         const statusMap = {
             'new': 'Scheduled',
+            'open': 'Server Opened',
             'boarding': 'Boarding',
             'departed': 'Departed',
             'arrived': 'Arrived',
@@ -437,7 +440,7 @@
         };
         const newStatus = statusMap[templateKey];
 
-        const body = {
+        let body = {
             channelId,
             embed: {
                 title: data.title,
@@ -449,18 +452,50 @@
             }
         };
 
+        // Special case for 'Server Opened' complex payload
+        if (templateKey === 'open') {
+            const temp = botConfig.templates.open;
+            body = {
+                channelId,
+                embeds: [
+                    {
+                        color: parseInt(temp.color.replace('#',''), 16),
+                        image: { url: temp.image }
+                    },
+                    {
+                        title: data.title,
+                        description: data.description,
+                        color: parseInt(temp.color.replace('#',''), 16)
+                    }
+                ],
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                style: 5,
+                                label: temp.buttonLabel,
+                                emoji: { id: "1507382269256401006", name: "transexitsign" },
+                                url: temp.buttonUrl
+                            }
+                        ]
+                    }
+                ]
+            };
+        }
+
         try {
             const res = await fetch('/api/admin/send-embed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if(res.ok) {
                 showToast('🚀 Dispatch Successful');
-                // Also update flight status in backend
                 if (newStatus) {
                     await fetch(`/api/flights/${encodeURIComponent(flightId)}/status`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ status: newStatus })
                     });
-                    loadDispatchFlights(); // Refresh list
+                    loadDispatchFlights();
                 }
             } else showToast('❌ Dispatch Failed');
         } catch(e) { showToast('❌ Network error'); }

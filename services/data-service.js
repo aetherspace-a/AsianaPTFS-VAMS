@@ -55,7 +55,15 @@ let botConfig = {
     },
     delayed: {
         title: '⚠️ Flight Delayed: {id}',
-        description: 'Flight **{id}** to **{destination}** has been delayed due to operational requirements. We apologize for the inconvenience.'
+        description: 'Flight **{id}** to **${destination}** has been delayed due to operational requirements. We apologize for the inconvenience.'
+    },
+    open: {
+        title: '✈️ Server Opened: {id}',
+        description: '## 🛫 Server Opened\n\n> Please proceed to the gate assigned by the VAMS System. If you booked through our website, you may also check in using /checkin [booking_ref], replacing [booking_ref] with the booking reference found on your ticket.\n> \n> If you did not book through the website, please proceed to the check-in counters at your departure airport.\n> \n> Thank you for choosing Asiana Airlines PTFS. We wish you a pleasant flight.',
+        image: 'https://cdn.discordapp.com/attachments/1507766955250155561/1514603195995783218/Untitled_design_2.png?ex=6a2bf7a5&is=6a2aa625&hm=7fafd9d9484c3f7826742c48eff7614c95e2979c0f63de33759ac95c2b9bc29c&',
+        color: '#E74C3C',
+        buttonLabel: 'Join Server by pressing this link.',
+        buttonUrl: 'https://roblox.com/discover#/rg-join/20321167/b99790d0-c722-473d-ab24-80b5032d517d'
     }
   },
   embedDefaults: {
