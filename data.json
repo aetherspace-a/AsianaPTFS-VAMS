@@ -7,7 +7,8 @@
       "departureTime": "2026-06-20T20:00:00Z",
       "totalSeats": 60,
       "bookedSeats": [],
-      "createdBy": null
+      "createdBy": null,
+      "status": "Departed"
     },
     {
       "id": "OZ210",
@@ -50,5 +51,10 @@
       "role": "pilot"
     }
   ],
-  "flightBookings": []
+  "flightBookings": [],
+  "finance": {
+    "totalRevenue": 125400,
+    "totalMiles": 842000,
+    "lastUpdated": "2026-06-14T14:20:16.404Z"
+  }
 }

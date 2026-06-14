@@ -1,8 +1,7 @@
 // ============================================================
 //  auth-routes.js  –  Discord OAuth2 + API Routes
 //
-//  Import and call registerOAuthRoutes(app) in index.js
-//  BEFORE app.use(express.static(...)) and app.listen().
+//  Import and call registerOAuthRoutes(app, client) in index.js
 // ============================================================
 
 require("dotenv").config();
@@ -27,7 +26,7 @@ const DESTINATIONS = [
   { code: "ITKO", name: "Tokyo Int'l" },
 ];
 
-// ── Helper functions for in-process use (Discord commands can call these) ─
+// ── Helper functions for in-process use ────────────────
 function isAdminId(id) {
   if (!id) return false;
   const idStr = String(id).trim();
@@ -43,7 +42,7 @@ function isStaffMemberId(id) {
   return !!(isStaff || isAdminId(idStr));
 }
 
-function createFlightEntry({ id, origin, destination, departureTime, totalSeats, createdBy }) {
+function createFlightEntry({ id, origin, destination, departureTime, totalSeats, createdBy, aircraft, codeshare }) {
   if (!id || !origin || !destination || !departureTime) throw new Error('Missing required flight fields');
   if (dataService.getFlightById(id)) throw new Error('Flight id exists');
 
@@ -60,6 +59,9 @@ function createFlightEntry({ id, origin, destination, departureTime, totalSeats,
     bookedSeats: [],
     createdBy: createdBy || null,
     createdAt: new Date().toISOString(),
+    status: 'Scheduled',
+    aircraft: aircraft || null,
+    codeshare: codeshare || null,
   };
   dataService.addFlight(flight);
   return flight;
@@ -67,21 +69,144 @@ function createFlightEntry({ id, origin, destination, departureTime, totalSeats,
 
 function registerOAuthRoutes(app, client) {
 
-  // ── API: Finance Stats ─────────────────────────────────────
+  // ── Session ───────────────────────────────────────────────
+  app.use(session({
+    secret: process.env.SESSION_SECRET || "asiana-ptfs-secret-change-me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, 
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  }));
+
+  app.use(require("express").json());
+
+  // ── Auth Middleware ───────────────────────────────────────
+  function requireAuth(req, res, next) {
+    if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
+    next();
+  }
+
+  function requireAdmin(req, res, next) {
+    if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
+    if (!isAdminId(req.session.user.id)) return res.status(403).json({ error: "Admin only" });
+    next();
+  }
+
+  function requireStaff(req, res, next) {
+    if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
+    if (!isStaffMemberId(req.session.user.id)) return res.status(403).json({ error: "Staff only" });
+    next();
+  }
+
+  // ── Auth Routes ───────────────────────────────────────────
+  app.get("/auth/discord", (req, res) => {
+    const params = new URLSearchParams({
+      client_id:     process.env.DISCORD_CLIENT_ID,
+      redirect_uri:  process.env.DISCORD_REDIRECT_URI,
+      response_type: "code",
+      scope:         "identify",
+    });
+    res.redirect(`https://discord.com/oauth2/authorize?${params}`);
+  });
+
+  app.get("/auth/discord/callback", async (req, res) => {
+    const { code } = req.query;
+    if (!code) return res.redirect("/?error=no_code");
+
+    try {
+      const tokenRes = await axios.post(
+        "https://discord.com/api/oauth2/token",
+        new URLSearchParams({
+          client_id:     process.env.DISCORD_CLIENT_ID,
+          client_secret: process.env.DISCORD_CLIENT_SECRET,
+          grant_type:    "authorization_code",
+          code,
+          redirect_uri:  process.env.DISCORD_REDIRECT_URI,
+        }),
+        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      );
+
+      const { access_token } = tokenRes.data;
+      const userRes = await axios.get("https://discord.com/api/users/@me", {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+
+      const { id, username, avatar, discriminator } = userRes.data;
+
+      req.session.user = {
+        id,
+        username,
+        discriminator,
+        avatar: avatar
+          ? `https://cdn.discordapp.com/avatars/${id}/${avatar}.png?size=128`
+          : `https://cdn.discordapp.com/embed/avatars/${Number(discriminator) % 5}.png`,
+      };
+
+      res.redirect("/pilot.html");
+    } catch (err) {
+      console.error("[OAuth] Callback error:", err.response?.data || err.message);
+      res.redirect("/?error=oauth_failed");
+    }
+  });
+
+  app.get("/auth/logout", (req, res) => {
+    req.session.destroy(() => res.redirect("/"));
+  });
+
+  // ── API Routes ────────────────────────────────────────────
+  app.get("/api/user", (req, res) => {
+    if (!req.session.user) return res.status(401).json({ user: null });
+    res.json({ user: req.session.user });
+  });
+
+  app.get("/api/check-admin", (req, res) => {
+    if (!req.session.user) return res.status(401).json({ isAdmin: false });
+    res.json({ isAdmin: isAdminId(req.session.user.id) });
+  });
+
+  app.get("/api/check-staff", (req, res) => {
+    if (!req.session.user) return res.status(401).json({ isStaff: false });
+    res.json({ isStaff: isStaffMemberId(req.session.user.id) });
+  });
+
+  app.get("/api/destinations", (req, res) => {
+    res.json({ destinations: DESTINATIONS });
+  });
+
   app.get("/api/finance", (req, res) => {
     res.json(dataService.getFinance());
   });
 
-  // ── API: Fleet Data ────────────────────────────────────────
   app.get("/api/fleet", (req, res) => {
     res.json({ fleet: dataService.getFleet() });
   });
 
-  // ── API: book a flight ────────────────────────────────────
+  app.get("/api/flights", (req, res) => {
+    const userId = req.session?.user?.id;
+    const flights = dataService.getFlights();
+    if (userId && isAdminId(userId)) return res.json({ flights });
+    const visible = flights.filter(f => !!f.createdBy);
+    res.json({ flights: visible });
+  });
+
+  app.get('/api/flight/:id', (req, res) => {
+    const f = dataService.getFlightById(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Flight not found' });
+    const userId = req.session?.user?.id;
+    if (!f.createdBy && (!userId || !isAdminId(userId))) return res.status(404).json({ error: 'Flight not found' });
+    res.json({ flight: f });
+  });
+
+  app.get('/api/mybookings', requireAuth, (req, res) => {
+    const my = dataService.getBookings().filter(f => f.userId === req.session.user.id);
+    res.json({ bookings: my });
+  });
+
   app.post("/api/book", requireAuth, (req, res) => {
     const { flightId, seatId, passengerName, robloxUsername, discordId, destination } = req.body;
 
-    // Option A: booking against master flight schedule
     if (flightId || seatId) {
       if (!flightId) return res.status(400).json({ error: 'flightId is required' });
       if (!seatId) return res.status(400).json({ error: 'seatId is required' });
@@ -89,12 +214,10 @@ function registerOAuthRoutes(app, client) {
       const flight = dataService.getFlightById(flightId);
       if (!flight) return res.status(400).json({ error: 'Unknown flightId' });
 
-      // Check seat occupancy
       if (flight.bookedSeats.includes(seatId)) {
         return res.status(409).json({ error: 'Seat already taken' });
       }
 
-      // Reserve seat
       flight.bookedSeats.push(seatId);
 
       const booking = {
@@ -114,17 +237,13 @@ function registerOAuthRoutes(app, client) {
       };
 
       dataService.addBooking(booking);
-      
-      // Add revenue and miles
-      dataService.addRevenue(250); // $250 per booking
-      dataService.addMiles(1200);   // 1200 miles per booking
+      dataService.addRevenue(250);
+      dataService.addMiles(1200);
 
       console.log(`✈️  New booking: ${flight.id} seat ${seatId} by @${booking.username}`);
-
       return res.status(201).json({ booking });
     }
 
-    // Option B: legacy booking by destination (keeps backward compatibility)
     if (destination) {
       const dest = DESTINATIONS.find(d => d.code === destination);
       if (!dest) return res.status(400).json({ error: 'Unknown destination code' });
@@ -151,32 +270,15 @@ function registerOAuthRoutes(app, client) {
     return res.status(400).json({ error: 'flightId/seatId or destination required' });
   });
 
-  // ── API: list all bookings (admin only) ───────────────────
   app.get('/api/bookings', requireAuth, requireAdmin, (req, res) => {
     res.json({ bookings: dataService.getBookings() });
   });
 
-  // ── Admin guard ─────────────────────────────────────────
-  function requireAdmin(req, res, next) {
-    if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
-    if (!isAdminId(req.session.user.id)) return res.status(403).json({ error: "Admin only" });
-    next();
-  }
-
-  // ── Staff guard ─────────────────────────────────────────
-  function requireStaff(req, res, next) {
-    if (!req.session.user) return res.status(401).json({ error: "Not authenticated" });
-    if (!isStaffMemberId(req.session.user.id)) return res.status(403).json({ error: "Staff only" });
-    next();
-  }
-
-  // ── Create flight (staff-only) ──────────────────────────
   app.post('/api/flights', requireAuth, requireStaff, async (req, res) => {
     try {
       const flight = createFlightEntry({ ...req.body, createdBy: req.session.user.id });
       console.log(`🆕 Flight created by ${req.session.user.username}: ${flight.id} → ${flight.destination}`);
 
-      // Auto-announce to Discord
       try {
         const { sendAnnouncement } = require("./commands/announce");
         const msg = `✈️ **New Flight Scheduled**\n\n**Flight:** ${flight.id}\n**Route:** ${flight.origin} → ${flight.destination}\n**Departure:** ${new Date(flight.departureTime).toUTCString()}\n**Aircraft:** ${flight.aircraft || 'TBA'}${flight.codeshare ? `\n**Codeshare:** ${flight.codeshare}` : ''}`;
@@ -191,7 +293,6 @@ function registerOAuthRoutes(app, client) {
     }
   });
 
-  // ── Update flight status (staff-only) ──────────────────
   app.patch('/api/flights/:id/status', requireAuth, requireStaff, async (req, res) => {
     const { status } = req.body;
     if (!status) return res.status(400).json({ error: 'Status is required' });
@@ -201,7 +302,6 @@ function registerOAuthRoutes(app, client) {
 
     console.log(`🔄 Flight ${flight.id} status updated to ${status} by ${req.session.user.username}`);
 
-    // Auto-announce status change
     try {
       const { sendAnnouncement } = require("./commands/announce");
       let statusEmoji = "ℹ️";
@@ -218,13 +318,11 @@ function registerOAuthRoutes(app, client) {
     res.json({ flight });
   });
 
-  // ── Delete flight (staff-only) ──────────────────────────
   app.delete('/api/flights/:id', requireAuth, requireStaff, (req, res) => {
     const flight = dataService.getFlightById(req.params.id);
     if (!flight) return res.status(404).json({ error: 'Flight not found' });
 
     dataService.removeFlight(req.params.id);
-    // Cleanup bookings for this flight
     const beforeCount = dataService.getBookings().length;
     dataService._internal.flightBookings = dataService.getBookings().filter(b => b.flightNumber !== flight.id);
     const removedBookings = beforeCount - dataService.getBookings().length;
@@ -233,15 +331,11 @@ function registerOAuthRoutes(app, client) {
     console.log(`🗑️ Flight deleted by ${req.session.user.username}: ${flight.id} (${removedBookings} related booking(s) removed)`);
     res.json({ ok: true });
   });
-  // ── API: list staff ─────────────────────────────────────
+
   app.get('/api/staff', (req, res) => {
     res.json({ staff: dataService.getStaff() });
   });
 
-  // ── Export helpers for in-process usage (discord commands)
-  // Note: exported later via module.exports
-
-  // ── API: add staff (admin only) ──────────────────────────
   app.post('/api/staff', requireAuth, requireAdmin, (req, res) => {
     const { id, username, role } = req.body;
     if (!id || !username || !role) return res.status(400).json({ error: 'id, username and role are required' });
@@ -253,7 +347,6 @@ function registerOAuthRoutes(app, client) {
     res.status(201).json({ staff: entry });
   });
 
-  // ── API: remove staff (admin only) ───────────────────────
   app.delete('/api/staff/:id', requireAuth, requireAdmin, (req, res) => {
     const removed = dataService.removeStaff(req.params.id);
     if (!removed) return res.status(404).json({ error: 'Not found' });
@@ -262,11 +355,10 @@ function registerOAuthRoutes(app, client) {
   });
 
   console.log("🔐 Discord OAuth2 routes registered.");
-  }
+}
 
-  module.exports = {
+module.exports = {
   registerOAuthRoutes,
-  // Staff management helpers for Discord commands
   addStaff: async ({ id, username, role }) => {
     const exists = dataService.getStaffById(id);
     if (exists) throw new Error("User already has staff access");
@@ -280,9 +372,8 @@ function registerOAuthRoutes(app, client) {
     return removed;
   },
   getStaff: () => dataService.getStaff(),
-  // helpers for in-process usage
   createFlight: createFlightEntry,
   isStaff: isStaffMemberId,
   isAdmin: isAdminId,
   _internal: dataService._internal,
-  };
+};
