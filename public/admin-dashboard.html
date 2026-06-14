@@ -420,10 +420,22 @@
 
     async function quickDispatch(){
         const data = getDispatchTemplateData();
+        const flightId = document.getElementById('disp-flight-select').value;
+        const templateKey = document.getElementById('disp-template').value;
         if(!data) return showToast('⚠️ Select a flight first');
         
         const channelId = document.getElementById('conf-ann-chan').value;
         if(!channelId) return showToast('⚠️ Announcement channel ID is not configured');
+
+        // Map template key to status
+        const statusMap = {
+            'new': 'Scheduled',
+            'boarding': 'Boarding',
+            'departed': 'Departed',
+            'arrived': 'Arrived',
+            'delayed': 'Delayed'
+        };
+        const newStatus = statusMap[templateKey];
 
         const body = {
             channelId,
@@ -437,9 +449,21 @@
             }
         };
 
-        const res = await fetch('/api/admin/send-embed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-        if(res.ok) showToast('🚀 Dispatch Successful');
-        else showToast('❌ Dispatch Failed');
+        try {
+            const res = await fetch('/api/admin/send-embed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            if(res.ok) {
+                showToast('🚀 Dispatch Successful');
+                // Also update flight status in backend
+                if (newStatus) {
+                    await fetch(`/api/flights/${encodeURIComponent(flightId)}/status`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: newStatus })
+                    });
+                    loadDispatchFlights(); // Refresh list
+                }
+            } else showToast('❌ Dispatch Failed');
+        } catch(e) { showToast('❌ Network error'); }
     }
 
     async function saveConfig(){

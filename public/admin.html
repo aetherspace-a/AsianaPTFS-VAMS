@@ -120,14 +120,39 @@
       const res = await fetch('/api/flights');
       const js = await res.json();
       mount.innerHTML = js.flights.map(f => `
-        <div class="card-row apple-glass" style="background:rgba(255,255,255,0.03)">
-          <div>
-            <div style="font-weight:700">${f.id} (${f.origin}→${f.destination})</div>
-            <div class="small-text">${f.status}</div>
+        <div class="card-row apple-glass" style="background:rgba(255,255,255,0.03); flex-direction:column; align-items:stretch; gap:1rem">
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <div>
+              <div style="font-weight:700">${f.id} (${f.origin}→${f.destination})</div>
+              <div class="small-text">${f.aircraft} • ${new Date(f.departureTime).toLocaleString()}</div>
+            </div>
+            <div class="pill" id="status-pill-${f.id}">${f.status}</div>
           </div>
-          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem; color:var(--red)" onclick="deleteFlight('${f.id}')">Delete</button>
+          <div style="display:flex; gap:0.5rem">
+            <select class="form-control" style="padding:0.4rem; font-size:0.8rem; flex:1" onchange="updateStatus('${f.id}', this.value)">
+                <option value="Scheduled" ${f.status === 'Scheduled' ? 'selected' : ''}>Scheduled</option>
+                <option value="Boarding" ${f.status === 'Boarding' ? 'selected' : ''}>Boarding</option>
+                <option value="Departed" ${f.status === 'Departed' ? 'selected' : ''}>Departed</option>
+                <option value="Arrived" ${f.status === 'Arrived' ? 'selected' : ''}>Arrived</option>
+                <option value="Delayed" ${f.status === 'Delayed' ? 'selected' : ''}>Delayed</option>
+                <option value="Cancelled" ${f.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+            <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem; color:var(--red)" onclick="deleteFlight('${f.id}')">Delete</button>
+          </div>
         </div>
       `).join('');
+    }
+
+    async function updateStatus(id, status){
+        const res = await fetch(`/api/flights/${encodeURIComponent(id)}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        if(res.ok) {
+            showToast(`✅ Status updated to ${status}`);
+            document.getElementById(`status-pill-${id}`).textContent = status;
+        } else showToast('❌ Update failed');
     }
 
     async function loadStaff(){
