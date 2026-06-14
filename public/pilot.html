@@ -6,30 +6,28 @@
   <title>Pilot Dashboard — Asiana PTFS</title>
   <link rel="stylesheet" href="/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="/app.js" defer></script>
   <style>
-    .page-main{max-width:1100px;margin:0 auto;padding:7rem 2rem 4rem;position:relative;z-index:1}
-    .hero-copy h1{font-size:3rem;margin-bottom:.6rem;line-height:1.05}
-    .hero-copy p{color:var(--text-muted);font-size:1rem;line-height:1.7;margin-bottom:1.5rem}
-    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
-    .dash-tabs{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem}
-    .dash-tab{display:inline-flex;align-items:center;gap:0.5rem;}
-    .dash-tab .material-symbols-outlined{font-size:1.2rem;}
-    .dash-panel{display:none}
-    .dash-panel.active{display:block;animation:slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;}
-    .panel-grid{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:1.5rem;margin-top:1.5rem}
-    .panel-grid.single{grid-template-columns:1fr}
-    .form-group{margin-bottom:1rem}
-    .form-group label{display:block;margin-bottom:.5rem;font-size:.9rem;color:var(--text-muted);font-weight:600}
-    .form-control{width:100%;min-height:50px;padding:1rem 1.1rem;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:1rem;outline:none}
     .seat-grid{display:grid;grid-template-columns:repeat(4,minmax(60px,1fr));gap:.75rem}
-    .seat-cell{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600;font-size:0.9rem;background:rgba(255,255,255,0.03);transition:all 0.25s cubic-bezier(0.22, 1, 0.36, 1)}
-    .seat-cell:hover:not(.taken):not(.selected){background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);transform:scale(1.05)}
+    .seat-cell{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600;font-size:0.9rem;background:rgba(255,255,255,0.03);transition:all 0.25s cubic-bezier(0.22, 1, 0.36, 1);color:var(--text)}
+    .seat-cell:hover:not(.taken):not(.selected){background:rgba(120,120,128,0.1);border-color:rgba(120,120,128,0.3);transform:scale(1.05)}
     .seat-cell.selected{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;box-shadow:0 0 12px rgba(255,69,58,0.4);transform:scale(1.03)}
-    .seat-cell.taken{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.05);cursor:not-allowed;opacity:0.35}
+    .seat-cell.taken{background:rgba(120,120,128,0.05);color:var(--text-muted);border-color:rgba(120,120,128,0.05);cursor:not-allowed;opacity:0.35}
+    
+    .dash-tabs{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem;margin-bottom:2rem}
+    .dash-tab{display:inline-flex;align-items:center;gap:0.5rem;padding:.6rem 1.4rem;border-radius:999px;border:1px solid var(--glass-border);background:transparent;color:var(--text-muted);font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s}
+    .dash-tab:hover{color:var(--text);background:rgba(120,120,128,0.15)}
+    .dash-tab.active{background:var(--text);color:var(--bg-base);border-color:var(--text)}
+    .dash-tab .material-symbols-outlined{font-size:1.2rem;}
+
+    .dash-panel{display:none}
+    .dash-panel.active{display:block;animation:fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;}
+    
+    .panel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:1.5rem}
+    
     .dash-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;padding:2.5rem 1.5rem;position:relative;}
     .dash-stat .card-icon{font-size:2rem;color:var(--red);opacity:0.8;margin-bottom:0.3rem;}
-    .book-panel{margin-top:1rem}
-    .feedback{color:var(--text-muted);margin-top:1rem;font-size:.95rem}
+    
     @media(max-width:900px){.panel-grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -55,7 +53,7 @@
       <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
       <a href="/auth/discord" class="discord-login-btn" id="login-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-        Login with Discord
+        Login
       </a>
       <div class="nav-user" id="nav-user">
         <img class="nav-avatar" id="nav-avatar" src="" alt="Avatar">
@@ -66,11 +64,11 @@
   </nav>
 
   <main class="page-main">
-    <div class="hero-copy">
+    <div class="page-header" style="text-align:left">
       <p class="sub">ASIANA AIRLINES • 아시아나항공</p>
       <h1>Captain’s console</h1>
       <p>Choose flights, reserve seats, and review your booking history with the same premium visual system as the main site.</p>
-      <div class="hero-actions">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
         <a href="/flights.html" class="btn btn-outline">
           <span class="material-symbols-outlined">format_list_bulleted</span> Flight Listings
         </a>
@@ -88,36 +86,36 @@
 
     <div id="tab-overview" class="dash-panel active apple-glass" style="padding:2rem;">
       <div class="panel-grid">
-        <div class="dash-stat apple-glass animate-slide-up delay-100">
+        <div class="dash-stat apple-glass">
           <span class="material-symbols-outlined card-icon">book_online</span>
-          <span class="dash-stat-num" id="pilot-count">0</span>
-          <span class="dash-stat-label">Flights Booked</span>
+          <span class="stat-num" id="pilot-count">0</span>
+          <span class="stat-label">Flights Booked</span>
         </div>
-        <div class="dash-stat apple-glass animate-slide-up delay-200">
+        <div class="dash-stat apple-glass">
           <span class="material-symbols-outlined card-icon">schedule</span>
-          <span class="dash-stat-num" id="pilot-next">—</span>
-          <span class="dash-stat-label">Next Departure</span>
+          <span class="stat-num" id="pilot-next" style="font-size:1.5rem">—</span>
+          <span class="stat-label">Next Departure</span>
         </div>
       </div>
-      <p class="feedback" style="text-align: center; margin-top: 1.5rem;">Your pilot activity is visible once you sign in and book a flight.</p>
+      <p class="small-text" style="text-align: center; margin-top: 1.5rem;">Your pilot activity is visible once you sign in and book a flight.</p>
     </div>
 
     <div id="tab-book" class="dash-panel apple-glass" style="padding:2rem;">
-      <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:2rem;align-items:start;">
         <div>
           <div class="form-group">
             <label for="flight-select">Pick a flight</label>
             <select id="flight-select" class="form-control"><option>Loading…</option></select>
           </div>
           <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-            <button id="refresh-seats" class="btn btn-outline">
+            <button id="refresh-seats" class="btn btn-outline" style="padding:0.8rem 1.2rem; font-size:0.9rem">
               <span class="material-symbols-outlined">refresh</span> Refresh Seats
             </button>
-            <button id="book-btn" class="btn">
+            <button id="book-btn" class="btn" style="padding:0.8rem 1.2rem; font-size:0.9rem">
               <span class="material-symbols-outlined">airline_seat_recline_normal</span> Reserve Seat
             </button>
           </div>
-          <p class="feedback" id="pilot-feedback">Select a flight to view its available seats.</p>
+          <p class="small-text" id="pilot-feedback" style="margin-top:1rem">Select a flight to view its available seats.</p>
         </div>
         <div>
           <h3 style="margin-top:0; display:flex; align-items:center; gap:0.5rem;"><span class="material-symbols-outlined">map</span> Seat Map</h3>
@@ -128,7 +126,7 @@
 
     <div id="tab-flights" class="dash-panel apple-glass" style="padding:2rem;">
       <h2 style="margin-top:0; display:flex; align-items:center; gap:0.5rem;"><span class="material-symbols-outlined">history</span> Your Bookings</h2>
-      <div id="pilot-flights" class="flights-list" style="margin-top:1.2rem;">Loading…</div>
+      <div id="pilot-flights" class="card-list" style="margin-top:1.2rem;">Loading…</div>
     </div>
   </main>
 
@@ -155,22 +153,23 @@
 
   <script>
     let selectedSeat = null;
-    async function initAuth(){
-      try{
-        const res=await fetch('/api/user');
-        const data=await res.json();
-        if(!res.ok || !data.user){ window.location.href='/unauthorized.html'; return; }
-        const u=data.user;
-        document.getElementById('login-btn').style.display='none';
-        const nu=document.getElementById('nav-user');
-        nu.classList.add('visible');
-        document.getElementById('nav-avatar').src=u.avatar;
-        document.getElementById('nav-username').textContent=u.username;
-        // Check staff access
+    let allFlights = [];
+
+    async function initPilotPage(){
+      const user = await initNavAuth();
+      if(!user){ window.location.href='/unauthorized.html'; return; }
+      
+      // Check staff access
+      try {
         const staffRes=await fetch('/api/check-staff');
         const staffData=await staffRes.json();
         if(!staffData.isStaff){ window.location.href='/unauthorized.html'; return; }
-      }catch(e){ window.location.href='/unauthorized.html'; }
+      } catch(e) {
+        window.location.href='/unauthorized.html';
+        return;
+      }
+
+      await Promise.all([loadMasterFlights(), loadMyBookings()]);
     }
 
     function activateTab(name){
@@ -184,8 +183,9 @@
         const res=await fetch('/api/flights');
         if(!res.ok) return;
         const js=await res.json();
+        allFlights = js.flights || [];
         const sel=document.getElementById('flight-select');
-        sel.innerHTML = '<option value="">Choose a flight…</option>' + js.flights.map(f=>`<option value="${f.id}">${f.id} — ${f.origin} → ${f.destination} (${new Date(f.departureTime).toLocaleString()})</option>`).join('');
+        sel.innerHTML = '<option value="">Choose a flight…</option>' + allFlights.map(f=>`<option value="${f.id}">${f.id} — ${f.origin} → ${f.destination} (${new Date(f.departureTime).toLocaleString()})</option>`).join('');
         sel.addEventListener('change', ()=> loadFlightSeats(sel.value));
       }catch(e){ console.error('loadMasterFlights', e); }
     }
@@ -197,21 +197,24 @@
         if(!res.ok){ mount.textContent='Sign in to view bookings.'; return; }
         const js=await res.json();
         document.getElementById('pilot-count').textContent = js.bookings.length;
-        if(!js.bookings.length){ mount.textContent='No bookings yet.'; return; }
-        mount.innerHTML = js.bookings.map(b=>`<div class="flight-row apple-glass"><div><strong>${b.flightNumber}</strong><div class="flight-dest">${b.destName} • Seat ${b.seat||'N/A'}</div></div><div class="flight-time">${new Date(b.bookedAt).toLocaleString()}</div></div>`).join('');
+        if(!js.bookings.length){ mount.innerHTML='<p class="small-text">No bookings yet.</p>'; return; }
+        mount.innerHTML = js.bookings.map(b=>`<div class="card-row apple-glass"><div><strong>${b.flightNumber}</strong><div class="small-text">${b.destName} • Seat ${b.seat||'N/A'}</div></div><div class="small-text">${new Date(b.bookedAt).toLocaleString()}</div></div>`).join('');
         const next = js.bookings.sort((a,b)=>new Date(a.bookedAt)-new Date(b.bookedAt))[0];
         document.getElementById('pilot-next').textContent = next ? new Date(next.bookedAt).toLocaleString() : '—';
       }catch(e){ mount.textContent='Could not load bookings.'; }
     }
 
-    function renderSeatMap(takenSeats=[]){
+    function renderSeatMap(totalSeats=60, takenSeats=[]){
       const mount = document.getElementById('seat-map');
       mount.innerHTML = '';
-      const rows = 8; const cols = ['A','B','C','D'];
-      for(let r=1;r<=rows;r++){
-        const row = document.createElement('div');
-        row.style.display='grid'; row.style.gridTemplateColumns='repeat(4,minmax(60px,1fr))'; row.style.gap='10px'; row.style.marginBottom='10px';
-        cols.forEach(c=>{
+      const rows = Math.ceil(totalSeats / 4);
+      const cols = ['A', 'B', 'C', 'D'];
+      
+      const grid = document.createElement('div');
+      grid.className = 'seat-grid';
+      
+      for(let r=1; r<=rows; r++){
+        cols.forEach(c => {
           const seatId = `${r}${c}`;
           const btn = document.createElement('button');
           btn.type='button';
@@ -225,19 +228,23 @@
               btn.classList.add('selected'); selectedSeat = seatId;
             });
           }
-          row.appendChild(btn);
+          grid.appendChild(btn);
         });
-        mount.appendChild(row);
       }
+      mount.appendChild(grid);
     }
 
     async function loadFlightSeats(flightId){
-      if(!flightId) return;
+      if(!flightId) {
+          document.getElementById('seat-map').innerHTML = '';
+          return;
+      }
+      const flight = allFlights.find(f => f.id === flightId);
       try{
         const res=await fetch(`/api/flight/${encodeURIComponent(flightId)}`);
         if(!res.ok){ document.getElementById('pilot-feedback').textContent='Could not load flight seats.'; return; }
         const js=await res.json();
-        renderSeatMap(js.flight.bookedSeats || []);
+        renderSeatMap(flight ? flight.totalSeats : 60, js.flight.bookedSeats || []);
         document.getElementById('pilot-feedback').textContent = `Available seats loaded for ${js.flight.id}.`;
       }catch(e){ document.getElementById('pilot-feedback').textContent='Seat map load error.'; }
     }
@@ -249,29 +256,19 @@
 
     document.getElementById('book-btn').addEventListener('click', async ()=>{
       const flightId=document.getElementById('flight-select').value;
-      if(!flightId){ alert('Select a flight first.'); return; }
-      if(!selectedSeat){ alert('Select a seat first.'); return; }
+      if(!flightId){ showToast('⚠️ Select a flight first.'); return; }
+      if(!selectedSeat){ showToast('⚠️ Select a seat first.'); return; }
       try{
         const res=await fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flightId,seatId:selectedSeat})});
         const js=await res.json();
-        if(!res.ok){ alert(js.error||'Booking failed'); loadFlightSeats(flightId); return; }
-        alert(`Booked ${js.booking.flightNumber} seat ${js.booking.seat}`);
+        if(!res.ok){ showToast(`❌ ${js.error||'Booking failed'}`); loadFlightSeats(flightId); return; }
+        showToast(`✅ Booked ${js.booking.flightNumber} seat ${js.booking.seat}`);
         await loadMyBookings();
         await loadFlightSeats(flightId);
-      }catch(e){ alert('Network error.'); }
+      }catch(e){ showToast('❌ Network error.'); }
     });
 
-    async function initPage(){
-      initAuth();
-      await Promise.all([loadMasterFlights(), loadMyBookings()]);
-    }
-    initPage();
-  </script>
-
-  <script>
-    function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light')}
-    const revealObs=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('active')}),{threshold:.05,rootMargin:'0px 0px -50px 0px'});
-    document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+    document.addEventListener('DOMContentLoaded', initPilotPage);
   </script>
 </body>
 </html>

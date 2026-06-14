@@ -5,79 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
   <title>Flight Listings — Asiana PTFS</title>
   <link rel="stylesheet" href="/style.css">
-  <style>
-    .page-main{max-width:1400px;margin:0 auto;padding:7rem 2rem 4rem;position:relative;z-index:1}
-    .page-header{margin-bottom:3rem}
-    .page-header h1{font-size:2.8rem;font-weight:800;margin-bottom:.5rem;letter-spacing:-.03em}
-    .page-header p{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
-
-    .view-toggle{display:flex;gap:1rem;margin-bottom:2rem}
-    .toggle-btn{padding:.6rem 1.4rem;border-radius:999px;border:1px solid var(--glass-border);background:transparent;color:var(--text-muted);font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s}
-    .toggle-btn:hover{color:var(--text);background:rgba(120,120,128,.15)}
-    .toggle-btn.active{background:var(--text);color:var(--bg-base);border-color:var(--text)}
-
-    .flights-view{display:none}
-    .flights-view.active{display:block}
-
-    .search-bar{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
-    .search-input{flex:1;min-width:200px;padding:.9rem 1.2rem;background:rgba(120,120,128,.1);border:1px solid var(--glass-border);border-radius:14px;color:var(--text);font-size:.95rem;font-family:inherit;outline:none}
-    .search-input:focus{border-color:var(--red);background:rgba(120,120,128,.18)}
-
-    .flights-grid{display:grid;gap:1.25rem}
-    .flight-card{padding:2rem;border-radius:28px;display:grid;grid-template-columns:auto 1fr auto;gap:2rem;align-items:center;cursor:pointer;transition:all .3s}
-    .flight-card:hover{transform:translateY(-2px)}
-    .flight-left{display:flex;flex-direction:column;gap:.5rem}
-    .flight-num{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:var(--red)}
-    .flight-status{display:inline-block;padding:.35rem .85rem;border-radius:999px;background:rgba(52,199,89,.18);color:#34c759;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;width:fit-content}
-    .flight-center{display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:center}
-    .flight-location{text-align:center}
-    .flight-code{font-size:2rem;font-weight:700;letter-spacing:-.03em;line-height:1}
-    .flight-name{font-size:.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;margin-top:.3rem}
-    .flight-arrow{font-size:1.5rem;color:var(--text-muted)}
-    .flight-right{display:flex;flex-direction:column;gap:.5rem;text-align:right}
-    .flight-time{font-size:1.1rem;font-weight:600}
-    .flight-date{font-size:.85rem;color:var(--text-muted)}
-    .flight-seats{font-size:.9rem;color:var(--text-muted);margin-top:.5rem}
-
-    .booking-view{padding:2rem;border-radius:28px}
-    .booking-content{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2rem}
-    .booking-left{display:flex;flex-direction:column;gap:1.5rem}
-    .booking-section h3{font-size:1.3rem;font-weight:700;margin-bottom:1rem}
-    .booking-section{padding:1.5rem;border-radius:20px;background:rgba(120,120,128,.08)}
-    .form-group{display:flex;flex-direction:column;gap:.5rem}
-    .form-label{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)}
-    .form-input,.form-select{padding:.9rem 1.2rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:14px;color:var(--text);font-size:.95rem;font-family:inherit;outline:none}
-    .form-input:focus,.form-select:focus{border-color:var(--red);background:rgba(120,120,128,.18)}
-    .form-select{-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23f5f5f7%22 stroke-width=%222%22%3e%3cpath d=%22M6 9l6 6 6-6%22%3e%3c/path%3e%3c/svg%3e');background-repeat:no-repeat;background-position:right 1rem center;background-size:1.2rem;padding-right:3rem}
-    .form-select option{background:#1e1e20;color:#f5f5f7}
-
-    .booking-right{display:flex;flex-direction:column;gap:1.5rem}
-    .seat-map{padding:1.5rem;border-radius:20px;background:rgba(120,120,128,.08);max-height:500px;overflow-y:auto}
-    .seat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
-    .seat-btn{aspect-ratio:1;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(120,120,128,.08);color:var(--text-muted);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
-    .seat-btn:hover:not(.occupied){background:rgba(120,120,128,.15);color:var(--text)}
-    .seat-btn.selected{background:var(--red);color:#fff;border-color:var(--red)}
-    .seat-btn.occupied{opacity:.3;cursor:not-allowed}
-
-    .book-panel{display:flex;flex-direction:column;gap:1rem;padding:1.5rem;border-radius:20px;background:rgba(120,120,128,.08)}
-    .book-btn{padding:1rem 2rem;background:var(--red);color:#fff;border:none;border-radius:999px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s}
-    .book-btn:hover{transform:scale(1.04) translateY(-1px);background:#cc2a21}
-    .book-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-    .empty-msg{text-align:center;padding:3rem 2rem;color:var(--text-muted);font-size:1rem}
-
-    @media(max-width:1000px){
-      .flights-grid{grid-template-columns:1fr}
-      .flight-card{grid-template-columns:1fr;gap:1.5rem}
-      .flight-center{grid-template-columns:1fr}
-      .booking-content{grid-template-columns:1fr}
-    }
-    @media(max-width:768px){
-      .page-header h1{font-size:2rem}
-      .page-main{padding:5rem 1.5rem 2rem}
-      .flight-code{font-size:1.5rem}
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="/app.js" defer></script>
 </head>
 <body>
   <div class="noise-overlay"></div>
@@ -91,16 +20,17 @@
     <a class="logo" href="/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Asiana_Airlines-Logo_New.svg" alt="Asiana Airlines"></a>
     <ul>
       <li><a href="/">Home</a></li>
+      <li><a href="/economy.html">Economy</a></li>
       <li><a href="/flights.html">Flights</a></li>
       <li><a href="/pilot.html">Pilot</a></li>
-      <li><a href="/economy.html">Economy</a></li>
+      <li><a href="/finance.html">Finance</a></li>
       <li><a href="/admin.html">Admin</a></li>
     </ul>
     <div class="nav-right">
       <button class="theme-btn" onclick="toggleTheme()">Appearance</button>
       <a href="/auth/discord" class="discord-login-btn" id="login-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.2,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-        Login with Discord
+        Login
       </a>
       <div class="nav-user" id="nav-user">
         <img class="nav-avatar" id="nav-avatar" src="" alt="Avatar">
@@ -129,18 +59,21 @@
         <select id="filter-status" class="search-input" style="flex:0.5;min-width:140px">
           <option value="">All Status</option>
           <option value="Scheduled">Scheduled</option>
-          <option value="Boarded">Boarded</option>
-          <option value="Landed">Landed</option>
+          <option value="Boarding">Boarding</option>
+          <option value="Departed">Departed</option>
+          <option value="Arrived">Arrived</option>
+          <option value="Delayed">Delayed</option>
+          <option value="Cancelled">Cancelled</option>
         </select>
       </div>
-      <div id="flights-list" class="flights-grid"></div>
+      <div id="flights-list" class="card-list"></div>
     </div>
 
     <!-- Book a Flight View -->
-    <div id="view-book" class="flights-view apple-glass">
+    <div id="view-book" class="flights-view apple-glass" style="padding: 2rem; border-radius: 32px;">
       <h2 style="font-size:1.8rem;margin-bottom:1rem">Book a Flight</h2>
       <div id="booking-placeholder" class="empty-msg">
-        <p>Select a flight from the "Browse Flights" tab or select a flight below to book a seat.</p>
+        <p>Select a flight from the "Network Search" tab to book a seat.</p>
       </div>
       <div id="booking-content" style="display:none">
         <div class="booking-content">
@@ -151,7 +84,7 @@
                 <div style="font-size:2rem;font-weight:700;color:var(--red)" id="book-flight-id">—</div>
                 <div>
                   <div style="font-size:1rem;font-weight:600" id="book-flight-route">—</div>
-                  <div style="font-size:.85rem;color:var(--text-muted)" id="book-flight-time">—</div>
+                  <div class="small-text" id="book-flight-time">—</div>
                 </div>
               </div>
             </div>
@@ -159,26 +92,26 @@
             <div class="booking-section">
               <h3>Passenger Details</h3>
               <div class="form-group">
-                <label class="form-label">Passenger Name</label>
-                <input type="text" id="pass-name" class="form-input" placeholder="Your name">
+                <label class="stat-label">Passenger Name</label>
+                <input type="text" id="pass-name" class="form-control" placeholder="Your name">
               </div>
               <div class="form-group">
-                <label class="form-label">Roblox Username</label>
-                <input type="text" id="pass-roblox" class="form-input" placeholder="Your Roblox username">
+                <label class="stat-label">Roblox Username</label>
+                <input type="text" id="pass-roblox" class="form-control" placeholder="Your Roblox username">
               </div>
               <div class="form-group">
-                <label class="form-label">Discord ID (Optional)</label>
-                <input type="text" id="pass-discord" class="form-input" placeholder="e.g. 123456789012345">
+                <label class="stat-label">Discord ID (Optional)</label>
+                <input type="text" id="pass-discord" class="form-control" placeholder="e.g. 123456789012345">
               </div>
             </div>
 
             <div class="book-panel">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <div>
-                  <div style="font-size:.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.25rem">Selected Seat</div>
+                  <div class="stat-label" style="margin-bottom:.25rem">Selected Seat</div>
                   <div style="font-size:1.4rem;font-weight:700" id="selected-seat">Not selected</div>
                 </div>
-                <button id="book-submit" class="book-btn" style="width:auto;padding:.8rem 1.5rem">Book Seat</button>
+                <button id="book-submit" class="btn" style="padding:.8rem 1.5rem">Book Seat</button>
               </div>
             </div>
           </div>
@@ -224,26 +157,10 @@
     let currentBookingFlight = null;
     let selectedSeat = null;
 
-    function showToast(msg, duration=3500){
-      const toast=document.getElementById('toast');
-      toast.textContent=msg;
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'), duration);
-    }
-
-    async function initAuth(){
-      try{
-        const res=await fetch('/api/user');
-        const data=await res.json();
-        if(!res.ok || !data.user){ window.location.href='/'; return; }
-        const u=data.user;
-        document.getElementById('login-btn').style.display='none';
-        const nu=document.getElementById('nav-user');
-        nu.classList.add('visible');
-        document.getElementById('nav-avatar').src=u.avatar;
-        document.getElementById('nav-username').textContent=u.username;
-        await loadFlights();
-      }catch(e){ window.location.href='/'; }
+    async function initFlightsPageAuth(){
+      const user = await initNavAuth();
+      if(!user){ window.location.href='/'; return; }
+      await loadFlights();
     }
 
     async function loadFlights(){
@@ -264,28 +181,21 @@
         const bookedCount=f.bookedSeats?.length||0;
         const availableSeats=(f.totalSeats||60)-bookedCount;
         
-        let statusClass = 'status-scheduled';
-        if(f.status === 'Boarding') statusClass = 'status-boarding';
-        if(f.status === 'Departed') statusClass = 'status-departed';
-        if(f.status === 'Arrived') statusClass = 'status-arrived';
-        if(f.status === 'Delayed') statusClass = 'status-delayed';
-        if(f.status === 'Cancelled') statusClass = 'status-cancelled';
-
         return `
           <div class="flight-card apple-glass" onclick="selectForBooking('${f.id}')">
             <div class="flight-left">
               <div class="flight-num">${f.id}</div>
-              <div class="flight-status ${statusClass}">${f.status || 'Scheduled'}</div>
+              <div class="flight-status">${f.status || 'Scheduled'}</div>
             </div>
             <div class="flight-center">
               <div class="flight-location">
                 <div class="flight-code">${f.origin}</div>
-                <div class="flight-name">Seoul (ICN)</div>
+                <div class="flight-name">Origin</div>
               </div>
               <div class="flight-arrow">✈</div>
               <div class="flight-location">
                 <div class="flight-code">${f.destination}</div>
-                <div class="flight-name">${f.destination}</div>
+                <div class="flight-name">Destination</div>
               </div>
             </div>
             <div class="flight-right">
@@ -335,24 +245,31 @@
       const booked=new Set(f.bookedSeats||[]);
       const grid=document.getElementById('seat-grid');
       grid.innerHTML='';
-      for(let i=1;i<=totalSeats;i++){
-        const btn=document.createElement('button');
-        btn.className='seat-btn';
-        btn.textContent=i;
-        btn.type='button';
-        if(booked.has(i)){
-          btn.classList.add('occupied');
-          btn.disabled=true;
-        }else{
-          btn.addEventListener('click',()=>selectSeat(i));
-        }
-        if(selectedSeat===i) btn.classList.add('selected');
-        grid.appendChild(btn);
+      
+      const rows = Math.ceil(totalSeats / 4);
+      const cols = ['A', 'B', 'C', 'D'];
+      
+      for(let r=1; r<=rows; r++){
+        cols.forEach(c => {
+          const seatId = `${r}${c}`;
+          const btn=document.createElement('button');
+          btn.className='seat-btn';
+          btn.textContent=seatId;
+          btn.type='button';
+          if(booked.has(seatId)){
+            btn.classList.add('occupied');
+            btn.disabled=true;
+          }else{
+            btn.addEventListener('click',()=>selectSeat(seatId));
+          }
+          if(selectedSeat===seatId) btn.classList.add('selected');
+          grid.appendChild(btn);
+        });
       }
     }
 
-    function selectSeat(seatNum){
-      selectedSeat=selectedSeat===seatNum?null:seatNum;
+    function selectSeat(seatId){
+      selectedSeat=selectedSeat===seatId?null:seatId;
       document.getElementById('selected-seat').textContent=selectedSeat?`Seat ${selectedSeat}`:'Not selected';
       renderSeatMap();
     }
@@ -371,7 +288,6 @@
           body:JSON.stringify({flightId:currentBookingFlight.id,seatId:selectedSeat,passengerName:name,robloxUsername:roblox,discordId:discord||null})
         });
         if(res.status===201){
-          alert('Booking confirmed! Enjoy your flight.');
           showToast('✅ Booking confirmed! Enjoy your flight.');
           document.getElementById('pass-name').value='';
           document.getElementById('pass-roblox').value='';
@@ -395,14 +311,13 @@
       const status=document.getElementById('filter-status').value;
       const filtered=allFlights.filter(f=>{
         const matchSearch=!search||f.id.toLowerCase().includes(search)||f.destination.toLowerCase().includes(search)||f.origin.toLowerCase().includes(search);
-        return matchSearch;
+        const matchStatus=!status||f.status===status;
+        return matchSearch && matchStatus;
       });
       renderFlights(filtered);
     }
 
-    function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light')}
-
-    initAuth();
+    document.addEventListener('DOMContentLoaded', initFlightsPageAuth);
   </script>
 </body>
 </html>
