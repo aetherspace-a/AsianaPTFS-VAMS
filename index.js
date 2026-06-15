@@ -23,6 +23,7 @@ const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const { registerOAuthRoutes } = require("./auth-routes");
 const { registerEconomyRoutes } = require("./economy-routes");
 const { registerAdminRoutes } = require("./admin-routes");
+const dataService = require("./services/data-service");
 
 // ── Discord Client ────────────────────────────────────────────
 const client = new Client({
@@ -164,6 +165,19 @@ const PORT = 3000;
 registerOAuthRoutes(app, client);
 registerEconomyRoutes(app);
 registerAdminRoutes(app, client);
+
+// ── Static File Protection ────────────────────────────────────
+app.get(["/admin.html", "/admin-dashboard.html"], (req, res, next) => {
+  if (!req.session.user) return res.redirect(`/auth/discord?returnTo=${req.path}`);
+  if (!dataService.isAdmin(req.session.user.id)) return res.redirect("/unauthorized.html");
+  next();
+});
+
+app.get(["/pilot.html", "/finance.html"], (req, res, next) => {
+  if (!req.session.user) return res.redirect(`/auth/discord?returnTo=${req.path}`);
+  if (!dataService.isStaff(req.session.user.id)) return res.redirect("/unauthorized.html");
+  next();
+});
 
 // Serve everything in public/ — index.html, style.css, etc.
 app.use(express.static("public"));

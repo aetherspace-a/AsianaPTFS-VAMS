@@ -88,6 +88,15 @@ function registerOAuthRoutes(app, client) {
 
   // ── Auth Routes ───────────────────────────────────────────
   app.get("/auth/discord", (req, res) => {
+    // If already logged in, just go to pilot or returnTo
+    if (req.session.user) {
+      return res.redirect(req.query.returnTo || "/pilot.html");
+    }
+
+    if (req.query.returnTo) {
+      req.session.returnTo = req.query.returnTo;
+    }
+
     const params = new URLSearchParams({
       client_id:     process.env.DISCORD_CLIENT_ID,
       redirect_uri:  process.env.DISCORD_REDIRECT_URI,
@@ -121,16 +130,28 @@ function registerOAuthRoutes(app, client) {
 
       const { id, username, avatar, discriminator } = userRes.data;
 
+      // Handle new Discord username system (discriminator "0")
+      let avatarUrl;
+      if (avatar) {
+        avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.png?size=128`;
+      } else {
+        // For new system, default avatar depends on User ID. For old system, on discriminator.
+        const defaultAvatarNum = (discriminator === "0" || !discriminator) 
+          ? Number(BigInt(id) >> 22n) % 6 
+          : Number(discriminator) % 5;
+        avatarUrl = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNum}.png`;
+      }
+
       req.session.user = {
         id,
         username,
         discriminator,
-        avatar: avatar
-          ? `https://cdn.discordapp.com/avatars/${id}/${avatar}.png?size=128`
-          : `https://cdn.discordapp.com/embed/avatars/${Number(discriminator) % 5}.png`,
+        avatar: avatarUrl,
       };
 
-      res.redirect("/pilot.html");
+      const returnTo = req.session.returnTo || "/pilot.html";
+      delete req.session.returnTo;
+      res.redirect(returnTo);
     } catch (err) {
       console.error("[OAuth] Callback error:", err.response?.data || err.message);
       res.redirect("/?error=oauth_failed");
