@@ -1,25 +1,15 @@
 // ============================================================
-//  index.js  –  Asiana Airlines PTFS | Main Entry Point
+//  index.js – Asiana Airlines PTFS | Main Entry Point
 //  Discord Bot + Express Web Server + OAuth2
-//
-//  SETUP:
-//    npm install discord.js express dotenv express-session axios
-//
-//  .env required keys:
-//    TOKEN=
-//    CLIENT_ID=
-//    DISCORD_CLIENT_ID=
-//    DISCORD_CLIENT_SECRET=
-//    DISCORD_REDIRECT_URI=http://localhost:3000/auth/discord/callback
-//    SESSION_SECRET=any_long_random_string
 // ============================================================
 
 require("dotenv").config();
 
-const fs      = require("fs");
-const path    = require("path");
+const fs    = require("fs");
+const path  = require("path");
 const express = require("express");
-const { Client, GatewayIntentBits, Collection } = require("discord.js");
+const session = require("express-session");
+const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
 const { registerOAuthRoutes } = require("./auth-routes");
 const { registerEconomyRoutes } = require("./economy-routes");
 const { registerAdminRoutes } = require("./admin-routes");
@@ -50,11 +40,16 @@ for (const file of commandFiles) {
 client.once("ready", () => {
   console.log(`\n🚀 Logged in as ${client.user.tag}`);
   console.log(`✈️  Asiana Airlines PTFS Bot is airborne!\n`);
+
+  // Custom Presence Status
+  client.user.setPresence({
+    activities: [{ name: '/ping • AsianaVAMS', type: ActivityType.Watching }],
+    status: 'online',
+  });
 });
 
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
-    const dataService = require('./services/data-service');
     const config = dataService.getConfig();
 
     if (interaction.customId.startsWith('open_ticket_')) {
@@ -113,7 +108,6 @@ client.on("interactionCreate", async (interaction) => {
       if (ticket) {
         dataService.updateTicket(ticket.id, { status: 'claimed', claimedBy: interaction.user.id, claimedByName: interaction.user.username });
         await interaction.reply({ content: `🙋‍♂️ This ticket has been claimed by <@${interaction.user.id}>.`, ephemeral: false });
-        // Disable claim button
         const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId('close_ticket').setLabel('Close').setStyle(ButtonStyle.Danger),
@@ -125,7 +119,6 @@ client.on("interactionCreate", async (interaction) => {
     }
 
     if (interaction.customId === 'close_ticket') {
-      const dataService = require('./services/data-service');
       const ticket = dataService.getTickets().find(t => t.id === interaction.channelId);
       if (ticket) {
         dataService.updateTicket(ticket.id, { status: 'closed', closedAt: new Date().toISOString() });
@@ -161,7 +154,15 @@ client.on("interactionCreate", async (interaction) => {
 const app  = express();
 const PORT = 3000;
 
-// Register OAuth2 + API routes (must come before static middleware)
+// Middleware for sessions
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fallback_secret',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(express.json());
+
+// Register OAuth2 + API routes
 registerOAuthRoutes(app, client);
 registerEconomyRoutes(app);
 registerAdminRoutes(app, client);
@@ -179,7 +180,6 @@ app.get(["/pilot.html", "/finance.html"], (req, res, next) => {
   next();
 });
 
-// Serve everything in public/ — index.html, style.css, etc.
 app.use(express.static("public"));
 
 app.listen(PORT, () => {
@@ -187,5 +187,5 @@ app.listen(PORT, () => {
   console.log(`📡 Serving static files from /public`);
 });
 
-// ── Bot Login (always last) ───────────────────────────────────
+// ── Bot Login ────────────────────────────────────────────────
 client.login(process.env.TOKEN);
